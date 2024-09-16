@@ -1,8 +1,10 @@
 本项目提供SysYF语言的中间表示(IR)优化的编译器实践框架。SysYF语言是全国编译系统设计赛要求实现的SysY语言的扩展语言，SysYF IR兼容LLVM IR。该项目由中国科学技术大学张昱老师研究组设计和开发，旨在引导更多学生和社会人员学习和实践编译器相关知识，开展语言设计与实现、程序分析、编译优化等研发，让越来越多的人有能力运用程序语言基础提供可靠、高效的软件解决方案。
 
-# 必做部分
+# 实验说明
+  
+## 必做关卡
 
-必做部分为优化分析部分。你需要实现若干优化和分析。
+必做部分共有四关（[第2关. 支配树](part1.md)、[第3关. Mem2Reg](part2.md)、[第4关. 活跃变量分析](part3.md)、[第5关. 检查pass](part4.md)）
 
 ## 编译命令的flag说明
 
@@ -53,11 +55,7 @@
 - Mem2Reg
 
   `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见`src/Optimize/Mem2Reg.cpp`)，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
-  
-## 必做关卡
 
-必做部分共有四关（[第2关. 支配树](part1.md)、[第3关. Mem2Reg](part2.md)、[第4关. 活跃变量分析](part3.md)、[第5关. 检查pass](part4.md)）
-
-## 使用Log输出程序信息
+## 使用Log方便调试
 
 该部分文档见[logging.md](doc/logging.md)。
