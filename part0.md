@@ -4,7 +4,9 @@
   
 ## 必做关卡
 
-必做部分共有四关（[第2关. 支配树](part1.md)、[第3关. Mem2Reg](part2.md)、[第4关. 活跃变量分析](part3.md)、[第5关. 检查pass](part4.md)）
+必做部分共有四关（[支配树](part1.md)、[Mem2Reg](part2.md)、[活跃变量分析](part3.md)、[检查pass](part4.md)）。
+
+> 每一关的文档在头歌平台关卡文档和代码仓库中都存在，命名为partN.md。文档中的仓库内相对链接在头歌平台关卡界面中失效。
 
 ## 编译命令的flag说明
 
@@ -40,21 +42,21 @@
 
 - Pass
 
-  `Pass`类是所有分析与优化Pass的基类（比如Mem2Reg、DominateTree、ComSubExprEli等），定义在`include/Optimize/Pass.h`中。该基类中有两个纯虚函数需要子类重写：一个是`virtual void execute() = 0`，该函数是pass的总控函数，该函数会被调用去执行该pass；另一个是`virtual const std::string get_name() const = 0`，该函数用于获得该pass的名字。
+  `Pass`类是所有分析与优化Pass的基类（比如Mem2Reg、DominateTree、ComSubExprEli等），定义在[`include/Optimize/Pass.h`](include/Optimize/Pass.h)中。该基类中有两个纯虚函数需要子类重写：一个是`virtual void execute() = 0`，该函数是pass的总控函数，该函数会被调用去执行该pass；另一个是`virtual const std::string get_name() const = 0`，该函数用于获得该pass的名字。
 
   该基类中有一个成员变量`Module* module`，被子类继承。这里`module`含义表示一个编译单元，是一个源程序文件对应的中间表示。
 
-  本实验中，你所实现的分析和优化pass均需继承自该类。你需要重写上述的`execute`函数和`get_name`函数。可以参考给出的`src/Optimize/Mem2Reg.cpp`和`src/Optimize/DominateTree.cpp`是如何继承Pass类并实现对应功能的。
+  本实验中，你所实现的分析和优化pass均需继承自该类。你需要重写上述的`execute`函数和`get_name`函数。可以参考给出的[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp)和[`src/Optimize/DominateTree.cpp`](src/Optimize/DominateTree.cpp)是如何继承Pass类并实现对应功能的。
 
 - PassMgr
 
-  `PassMgr`类负责管理Pass。定义在`include/Optimize/Pass.h`中。该类有两个私有成员变量:`module`和`pass_list`。`module`含义同上,`pass_list`为当前添加的所有pass的list。该类有两个公有的函数：`addPass`和`execute`。`addPass`函数用于向`pass_list`中添加pass，每次添加采用`push_back`的方式。`execute`函数用于顺序调用`pass_list`中pass的`execute`函数(即上述需要重写的`execute`函数)。`PassMgr`的使用实例可参见`src/main.cpp`。
+  `PassMgr`类负责管理Pass。定义在[`include/Optimize/Pass.h`](include/Optimize/Pass.h)中。该类有两个私有成员变量:`module`和`pass_list`。`module`含义同上,`pass_list`为当前添加的所有pass的list。该类有两个公有的函数：`addPass`和`execute`。`addPass`函数用于向`pass_list`中添加pass，每次添加采用`push_back`的方式。`execute`函数用于顺序调用`pass_list`中pass的`execute`函数(即上述需要重写的`execute`函数)。`PassMgr`的使用实例可参见[`src/main.cpp`](src/main.cpp)。
 
   本实验中你无需修改`Pass`类和`PassMgr`类。如果有修改，请在报告中说明。
 
 - Mem2Reg
 
-  `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见`src/Optimize/Mem2Reg.cpp`)，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
+  `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp))，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
 
 ## 使用Log方便调试
 

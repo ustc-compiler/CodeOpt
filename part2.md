@@ -4,7 +4,7 @@
 
 - **任务2-1**
 
-  你需要仔细阅读[`Mem2Reg.h`](include/Optimize/Mem2Reg.h)和[`Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp)，参考[静态单赋值构造](doc/%E9%9D%99%E6%80%81%E5%8D%95%E8%B5%8B%E5%80%BC%E6%A0%BC%E5%BC%8F%E6%9E%84%E9%80%A0.pdf)中的算法，将`Mem2Reg`优化遍的***流程***记录在报告中，并结合例子说明在`Mem2Reg`的***哪些阶段***分别***存储了什么***，***对IR做了什么处理***。
+  你需要仔细阅读[`include/Optimize/Mem2Reg.h`](include/Optimize/Mem2Reg.h)和[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp)，参考[静态单赋值构造](doc/%E9%9D%99%E6%80%81%E5%8D%95%E8%B5%8B%E5%80%BC%E6%A0%BC%E5%BC%8F%E6%9E%84%E9%80%A0.pdf)中的算法，将`Mem2Reg`优化遍的***流程***记录在报告中，并结合例子说明在`Mem2Reg`的***哪些阶段***分别***存储了什么***，***对IR做了什么处理***。
   - 为了体现`Mem2Reg`的效果，例子需要包含至少两层由条件分支、循环组成的嵌套结构，并且对同一个变量有在不同分支或者迭代中的定值和引用。
 
   两层嵌套结构例如

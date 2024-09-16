@@ -4,4 +4,4 @@
 
 - **任务4-1**
 
-  - **B4-1**. 基于你对LLVM IR Module的理解，在[include/Optimize/Check.h](include/Optimize/Check.h)和[src/Optimize/Check.cpp](src/Optimize/Check.cpp)中编写相应的约定验证代码，并在[main.cpp](src/main.cpp)或其他合适的位置插入相应的代码来利用你所写的检查器检查是否满足约定。将你检查的内容记录在报告[doc/reports/B4.md](doc/reports/B4.md)中，并说明检查理由。将检查器插入的代码位置记录在报告中，说明理由。
+  - **B4-1**. 基于你对LLVM IR Module的理解，在[`include/Optimize/Check.h`](include/Optimize/Check.h)和[`src/Optimize/Check.cpp`](src/Optimize/Check.cpp)中编写相应的约定验证代码，并在[`src/main.cpp`](src/main.cpp)或其他合适的位置插入相应的代码来利用你所写的检查器检查是否满足约定。将你检查的内容记录在报告[doc/reports/B4.md](doc/reports/B4.md)中，并说明检查理由。将检查器插入的代码位置记录在报告中，说明理由。
