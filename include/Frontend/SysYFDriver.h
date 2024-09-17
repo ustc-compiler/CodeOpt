@@ -33,7 +33,7 @@ public:
     
     // Run the parser on file F.
     // Return 0 on success.
-    SyntaxTree::Node* parse(const std::string& f);
+    SysYF::Ptr<SysYF::SyntaxTree::Node> parse(const std::string& f);
     // The name of the file being parsed.
     // Used later to pass the file name to the location tracker.
     std::string file;
@@ -44,7 +44,7 @@ public:
     void error(const yy::location& l, const std::string& m);
     void error(const std::string& m);
 
-    SyntaxTree::Node* root = nullptr;
+    SysYF::Ptr<SysYF::SyntaxTree::Node> root = nullptr;
 };
 
 #endif // _SYSYF_DRIVER_H_

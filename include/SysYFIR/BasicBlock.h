@@ -10,6 +10,10 @@
 #include <set>
 #include <string>
 
+namespace SysYF
+{
+namespace IR
+{
 class Function;
 class Instruction;
 class Module;
@@ -17,83 +21,105 @@ class Module;
 class BasicBlock : public Value
 {
 public:
-    static BasicBlock *create(Module *m, const std::string &name ,
-                            Function *parent ) {
+    static Ptr<BasicBlock> create(Ptr<Module> m, const std::string &name ,
+                            Ptr<Function> parent ) {
         auto prefix = name.empty() ? "" : "label_";
-        return new BasicBlock(m, prefix + name, parent);
+        RET_AFTER_INIT(BasicBlock, m, prefix + name, parent);
     }
 
     // return parent, or null if none.
-    Function *get_parent() { return parent_; }
+    Ptr<Function> get_parent() { return parent_; }
     
-    Module *get_module();
+    Ptr<Module> get_module();
 
     /****************api about cfg****************/
 
-    std::list<BasicBlock *> &get_pre_basic_blocks() { return pre_bbs_; }
-    std::list<BasicBlock *> &get_succ_basic_blocks() { return succ_bbs_; }
-    void add_pre_basic_block(BasicBlock *bb) { pre_bbs_.push_back(bb); }
-    void add_succ_basic_block(BasicBlock *bb) { succ_bbs_.push_back(bb); }
+    PtrList<BasicBlock> &get_pre_basic_blocks() { return pre_bbs_; }
+    PtrList<BasicBlock> &get_succ_basic_blocks() { return succ_bbs_; }
+    void add_pre_basic_block(Ptr<BasicBlock> bb) { pre_bbs_.push_back(bb); }
+    void add_succ_basic_block(Ptr<BasicBlock> bb) { succ_bbs_.push_back(bb); }
 
-    void remove_pre_basic_block(BasicBlock *bb) { pre_bbs_.remove(bb); }
-    void remove_succ_basic_block(BasicBlock *bb) { succ_bbs_.remove(bb); }
+    void remove_pre_basic_block(Ptr<BasicBlock> bb) { pre_bbs_.remove(bb); }
+    void remove_succ_basic_block(Ptr<BasicBlock> bb) { succ_bbs_.remove(bb); }
 
     /****************api about cfg****************/
 
     /// Returns the terminator instruction if the block is well formed or null
     /// if the block is not well formed.
-    const Instruction *get_terminator() const;
-    Instruction *get_terminator() {
-        return const_cast<Instruction *>(
-            static_cast<const BasicBlock *>(this)->get_terminator());
+    const Ptr<Instruction> get_terminator() const;
+    Ptr<Instruction> get_terminator() {
+        return const_pointer_cast<Instruction>(
+            static_pointer_cast<const BasicBlock>(shared_from_this())->get_terminator());
     }
     
-    void add_instruction(Instruction *instr);
-    void add_instruction(std::list<Instruction *>::iterator instr_pos, Instruction *instr);
-    void add_instr_begin(Instruction *instr);
+    void add_instruction(Ptr<Instruction> instr);
+    void add_instruction(PtrList<Instruction>::iterator instr_pos, Ptr<Instruction> instr);
+    void add_instr_begin(Ptr<Instruction> instr);
 
-    std::list<Instruction *>::iterator find_instruction(Instruction *instr);
+    PtrList<Instruction>::iterator find_instruction(Ptr<Instruction> instr);
 
-    void delete_instr(Instruction *instr);
+    void delete_instr(Ptr<Instruction> instr);
 
     bool empty() { return instr_list_.empty(); }
 
     int get_num_of_instr() { return instr_list_.size(); }
-    std::list<Instruction *> &get_instructions() { return instr_list_; }
+    PtrList<Instruction> &get_instructions() { return instr_list_; }
     
     void erase_from_parent();
     
     virtual std::string print() override;
 
     /****************api about dominate tree****************/
-    void set_idom(BasicBlock* bb){idom_ = bb;}
-    BasicBlock* get_idom(){return idom_;}
-    void add_dom_frontier(BasicBlock* bb){dom_frontier_.insert(bb);}
-    void add_rdom_frontier(BasicBlock* bb){rdom_frontier_.insert(bb);}
+    void set_idom(Ptr<BasicBlock> bb){idom_ = bb;}
+    Ptr<BasicBlock> get_idom(){return idom_;}
+    void add_dom_frontier(Ptr<BasicBlock> bb){dom_frontier_.insert(bb);}
+    void add_rdom_frontier(Ptr<BasicBlock> bb){rdom_frontier_.insert(bb);}
     void clear_rdom_frontier(){rdom_frontier_.clear();}
-    auto add_rdom(BasicBlock* bb){return rdoms_.insert(bb);}
+    auto add_rdom(Ptr<BasicBlock> bb){return rdoms_.insert(bb);}
     void clear_rdom(){rdoms_.clear();}
-    std::set<BasicBlock *> &get_dom_frontier(){return dom_frontier_;}
-    std::set<BasicBlock *> &get_rdom_frontier(){return rdom_frontier_;}
-    std::set<BasicBlock *> &get_rdoms(){return rdoms_;}
-    void set_live_in(std::set<Value*> in){live_in = in;}
-    void set_live_out(std::set<Value*> out){live_out = out;}
-    std::set<Value*>& get_live_in(){return live_in;}
-    std::set<Value*>& get_live_out(){return live_out;}
+    PtrSet<BasicBlock> &get_dom_frontier(){return dom_frontier_;}
+    PtrSet<BasicBlock> &get_rdom_frontier(){return rdom_frontier_;}
+    PtrSet<BasicBlock> &get_rdoms(){return rdoms_;}
 
+    /****************api about active var****************/
+    bool set_live_in(PtrSet<Value> in){
+        if (live_in == in) {
+            return false;
+        } else {
+            live_in = in;
+            return true;
+        }
+    }
+    bool set_live_out(PtrSet<Value> out){
+        if (live_out == out) {
+            return false;
+        } else {
+            live_out = out;
+            return true;
+        }
+    }
+
+    PtrSet<Value>& get_live_in(){return live_in;}
+    PtrSet<Value>& get_live_out(){return live_out;}
+    
 private:
-    explicit BasicBlock(Module *m, const std::string &name ,
-                        Function *parent );
-    std::list<BasicBlock *> pre_bbs_;
-    std::list<BasicBlock *> succ_bbs_;
-    std::list<Instruction *> instr_list_;
-    std::set<BasicBlock*> dom_frontier_;
-    std::set<BasicBlock*> rdom_frontier_;
-    std::set<BasicBlock*> rdoms_;
-    BasicBlock* idom_;
-    std::set<Value*> live_in;
-    std::set<Value*> live_out;
-    Function *parent_;
+    explicit BasicBlock(Ptr<Module> m, const std::string &name ,
+                        Ptr<Function> parent );
+    void init(Ptr<Module> m, const std::string &name ,
+                        Ptr<Function> parent );
+    PtrList<BasicBlock> pre_bbs_;
+    PtrList<BasicBlock> succ_bbs_;
+    PtrList<Instruction> instr_list_;
+    PtrSet<BasicBlock> dom_frontier_;
+    PtrSet<BasicBlock> rdom_frontier_;
+    PtrSet<BasicBlock> rdoms_;
+    Ptr<BasicBlock> idom_;
+    PtrSet<Value> live_in;
+    PtrSet<Value> live_out;
+    Ptr<Function> parent_;
 };
+
+}
+}
 
 #endif // _SYSYF_BASICBLOCK_H_

@@ -1,7 +1,9 @@
 #include "SyntaxTree.h"
 
-using namespace SyntaxTree;
-
+namespace SysYF 
+{
+namespace SyntaxTree
+{
 void Assembly::accept(Visitor &visitor) { visitor.visit(*this); }
 void FuncDef::accept(Visitor &visitor) { visitor.visit(*this); }
 void BinaryExpr::accept(Visitor &visitor) { visitor.visit(*this); }
@@ -24,3 +26,6 @@ void ContinueStmt::accept(Visitor &visitor) { visitor.visit(*this); }
 void UnaryCondExpr::accept(Visitor &visitor) { visitor.visit(*this); }
 void BinaryCondExpr::accept(Visitor &visitor) { visitor.visit(*this); }
 void InitVal::accept(Visitor &visitor) { visitor.visit(*this); }
+
+}
+}

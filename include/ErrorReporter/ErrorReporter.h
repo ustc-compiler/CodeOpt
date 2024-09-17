@@ -7,6 +7,8 @@
 #include <vector>
 #include "SyntaxTree.h"
 
+namespace SysYF
+{
 class ErrorReporter
 {
 public:
@@ -23,4 +25,5 @@ private:
     std::ostream &err;
 };
 
+}
 #endif  // _SYSYF_ERROR_REPORTER_H_

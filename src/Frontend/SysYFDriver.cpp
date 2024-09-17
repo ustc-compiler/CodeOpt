@@ -10,7 +10,7 @@ SysYFDriver::~SysYFDriver()
 {
 }
 
-SyntaxTree::Node* SysYFDriver::parse(const std::string &f)
+SysYF::Ptr<SysYF::SyntaxTree::Node> SysYFDriver::parse(const std::string &f)
 {
     file = f;
 

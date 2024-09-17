@@ -60,40 +60,40 @@ class SysYFDriver;
 %token LRBRACKET 303
 // Use variant-based semantic values: %type and %token expect genuine types
 
-%type <SyntaxTree::Assembly*>CompUnit
-%type <SyntaxTree::PtrList<SyntaxTree::GlobalDef>>GlobalDecl
-%type <SyntaxTree::PtrList<SyntaxTree::VarDef>>ConstDecl
-%type <SyntaxTree::PtrList<SyntaxTree::VarDef>>ConstDefList
-%type <SyntaxTree::Type>BType
-%type <SyntaxTree::VarDef*>ConstDef
-%type <SyntaxTree::PtrList<SyntaxTree::VarDef>>VarDecl
-%type <SyntaxTree::PtrList<SyntaxTree::VarDef>>VarDefList
-%type <SyntaxTree::VarDef*>VarDef
-%type <SyntaxTree::PtrList<SyntaxTree::Expr>>ArrayExpList
-%type <SyntaxTree::InitVal*>InitVal
-%type <SyntaxTree::InitVal*>InitValList
-%type <SyntaxTree::InitVal*>CommaInitValList
-%type <SyntaxTree::PtrList<SyntaxTree::Expr>>ExpList
-%type <SyntaxTree::PtrList<SyntaxTree::Expr>>CommaExpList
-%type <SyntaxTree::FuncDef*>FuncDef
-%type <SyntaxTree::BlockStmt*>Block
-%type <SyntaxTree::PtrList<SyntaxTree::Stmt>>BlockItemList
-%type <SyntaxTree::PtrList<SyntaxTree::Stmt>>BlockItem
-%type <SyntaxTree::Stmt*>Stmt
-%type <SyntaxTree::Expr*>OptionRet
-%type <SyntaxTree::LVal*>LVal
-%type <SyntaxTree::Expr*>Exp
-%type <SyntaxTree::Literal*>Number
+%type <SysYF::Ptr<SysYF::SyntaxTree::Assembly>>CompUnit
+%type <SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>>GlobalDecl
+%type <SysYF::PtrVec<SysYF::SyntaxTree::VarDef>>ConstDecl
+%type <SysYF::PtrVec<SysYF::SyntaxTree::VarDef>>ConstDefList
+%type <SysYF::SyntaxTree::Type>BType
+%type <SysYF::Ptr<SysYF::SyntaxTree::VarDef>>ConstDef
+%type <SysYF::PtrVec<SysYF::SyntaxTree::VarDef>>VarDecl
+%type <SysYF::PtrVec<SysYF::SyntaxTree::VarDef>>VarDefList
+%type <SysYF::Ptr<SysYF::SyntaxTree::VarDef>>VarDef
+%type <SysYF::PtrVec<SysYF::SyntaxTree::Expr>>ArrayExpList
+%type <SysYF::Ptr<SysYF::SyntaxTree::InitVal>>InitVal
+%type <SysYF::Ptr<SysYF::SyntaxTree::InitVal>>InitValList
+%type <SysYF::Ptr<SysYF::SyntaxTree::InitVal>>CommaInitValList
+%type <SysYF::PtrVec<SysYF::SyntaxTree::Expr>>ExpList
+%type <SysYF::PtrVec<SysYF::SyntaxTree::Expr>>CommaExpList
+%type <SysYF::Ptr<SysYF::SyntaxTree::FuncDef>>FuncDef
+%type <SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>>Block
+%type <SysYF::PtrVec<SysYF::SyntaxTree::Stmt>>BlockItemList
+%type <SysYF::PtrVec<SysYF::SyntaxTree::Stmt>>BlockItem
+%type <SysYF::Ptr<SysYF::SyntaxTree::Stmt>>Stmt
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>OptionRet
+%type <SysYF::Ptr<SysYF::SyntaxTree::LVal>>LVal
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>Exp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Literal>>Number
 
-%type <SyntaxTree::FuncParam*>FuncFParam
-%type <SyntaxTree::PtrList<SyntaxTree::FuncParam>>FParamList
-%type <SyntaxTree::PtrList<SyntaxTree::FuncParam>>CommaFParamList
-%type <SyntaxTree::Expr*>RelExp
-%type <SyntaxTree::Expr*>EqExp
-%type <SyntaxTree::Expr*>LAndExp
-%type <SyntaxTree::Expr*>LOrExp
-%type <SyntaxTree::Expr*>CondExp
-%type <SyntaxTree::Stmt*>IfStmt
+%type <SysYF::Ptr<SysYF::SyntaxTree::FuncParam>>FuncFParam
+%type <SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>>FParamList
+%type <SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>>CommaFParamList
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>RelExp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>EqExp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>LAndExp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>LOrExp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Expr>>CondExp
+%type <SysYF::Ptr<SysYF::SyntaxTree::Stmt>>IfStmt
 
 // No %destructors are needed, since memory will be reclaimed by the
 // regular destructors.
@@ -115,22 +115,22 @@ CompUnit:CompUnit GlobalDecl{
 		$$=$1;
 	} 
 	| GlobalDecl{
-		$$=new SyntaxTree::Assembly();
+		$$=SysYF::Ptr<SysYF::SyntaxTree::Assembly>(new SysYF::SyntaxTree::Assembly());
 		$$->global_defs.insert($$->global_defs.end(), $1.begin(), $1.end());
   }
 	;
 
 GlobalDecl:ConstDecl{
-    $$=SyntaxTree::PtrList<SyntaxTree::GlobalDef>();
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
     $$.insert($$.end(), $1.begin(), $1.end());
   }
 	| VarDecl{
-    $$=SyntaxTree::PtrList<SyntaxTree::GlobalDef>();
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
     $$.insert($$.end(), $1.begin(), $1.end());
   }
   | FuncDef{
-    $$=SyntaxTree::PtrList<SyntaxTree::GlobalDef>();
-    $$.push_back(SyntaxTree::Ptr<SyntaxTree::GlobalDef>($1));
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
+    $$.push_back(SysYF::Ptr<SysYF::SyntaxTree::GlobalDef>($1));
   }
 	;
 
@@ -142,31 +142,31 @@ ConstDecl:CONST BType ConstDefList SEMICOLON{
   }
 	;
 ConstDefList:ConstDefList COMMA ConstDef{
-    $1.push_back(SyntaxTree::Ptr<SyntaxTree::VarDef>($3));
+    $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>($3));
     $$=$1;
   }
 	| ConstDef{
-    $$=SyntaxTree::PtrList<SyntaxTree::VarDef>();
-    $$.push_back(SyntaxTree::Ptr<SyntaxTree::VarDef>($1));
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::VarDef>();
+    $$.push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>($1));
   }
 	;
 
 BType:INT{
-  $$=SyntaxTree::Type::INT;
+  $$=SysYF::SyntaxTree::Type::INT;
   }
   | FLOAT {
-  $$=SyntaxTree::Type::FLOAT;
+  $$=SysYF::SyntaxTree::Type::FLOAT;
   }
 ;
 
 
 ConstDef:IDENTIFIER ArrayExpList ASSIGN InitVal{
-    $$=new SyntaxTree::VarDef();
+    $$=SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     $$->is_constant = true;
     $$->is_inited = true;
     $$->name=$1;
     $$->array_length = $2;
-    $$->initializers = SyntaxTree::Ptr<SyntaxTree::InitVal>($4);
+    $$->initializers = SysYF::Ptr<SysYF::SyntaxTree::InitVal>($4);
     $$->loc = @$;
   }
 	;
@@ -180,46 +180,46 @@ VarDecl:BType VarDefList SEMICOLON{
 	;
 
 VarDefList:VarDefList COMMA VarDef{
-    $1.push_back(SyntaxTree::Ptr<SyntaxTree::VarDef>($3));
+    $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>($3));
     $$=$1;
   }
 	| VarDef{
-    $$=SyntaxTree::PtrList<SyntaxTree::VarDef>();
-    $$.push_back(SyntaxTree::Ptr<SyntaxTree::VarDef>($1));
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::VarDef>();
+    $$.push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>($1));
   }
 	;
 
 VarDef:IDENTIFIER ArrayExpList{
-    $$=new SyntaxTree::VarDef();
+    $$=SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     $$->name=$1;
     $$->array_length = $2;
     $$->is_inited = false;
     $$->loc = @$;
   }
 	| IDENTIFIER ArrayExpList ASSIGN InitVal{
-    $$ = new SyntaxTree::VarDef();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     $$->name = $1;
     $$->array_length = $2;
-    $$->initializers = SyntaxTree::Ptr<SyntaxTree::InitVal>($4);
+    $$->initializers = SysYF::Ptr<SysYF::SyntaxTree::InitVal>($4);
     $$->is_inited = true;
     $$->loc = @$;
   }
 	;
 
 ArrayExpList:ArrayExpList LBRACKET Exp RBRACKET{
-    $1.push_back(SyntaxTree::Ptr<SyntaxTree::Expr>($3));
+    $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>($3));
     $$=$1;
   }
 	| %empty{
-    $$=SyntaxTree::PtrList<SyntaxTree::Expr>();
+    $$=SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
   ;
 
 InitVal: Exp{
-    $$ = new SyntaxTree::InitVal();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     $$->isExp = true;
-    $$->elementList = SyntaxTree::PtrList<SyntaxTree::InitVal>();
-    $$->expr = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
+    $$->elementList = SysYF::PtrVec<SysYF::SyntaxTree::InitVal>();
+    $$->expr = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
     $$->loc = @$;
   }
   | LBRACE InitValList RBRACE{
@@ -228,61 +228,61 @@ InitVal: Exp{
   ;
 
 InitValList: CommaInitValList InitVal{
-    $1->elementList.push_back(SyntaxTree::Ptr<SyntaxTree::InitVal>($2));
+    $1->elementList.push_back(SysYF::Ptr<SysYF::SyntaxTree::InitVal>($2));
     $$ = $1;
   }
   | %empty{
-    $$ = new SyntaxTree::InitVal();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     $$->isExp = false;
-    $$->elementList = SyntaxTree::PtrList<SyntaxTree::InitVal>();
-    //$$->elementList = std::vector<SyntaxTree::Ptr<SyntaxTree::InitVal>>();
+    $$->elementList = SysYF::PtrVec<SysYF::SyntaxTree::InitVal>();
+    //$$->elementList = std::vector<SysYF::Ptr<SysYF::SyntaxTree::InitVal>>();
     $$->expr = nullptr;
     $$->loc = @$;
   }
   ;
 
 CommaInitValList: CommaInitValList InitVal COMMA{
-    $1->elementList.push_back(SyntaxTree::Ptr<SyntaxTree::InitVal>($2));
+    $1->elementList.push_back(SysYF::Ptr<SysYF::SyntaxTree::InitVal>($2));
     $$ = $1;
   }
   | %empty{
-    $$ = new SyntaxTree::InitVal();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     $$->isExp = false;
-    $$->elementList = SyntaxTree::PtrList<SyntaxTree::InitVal>();
-    //$$->elementList = std::vector<SyntaxTree::Ptr<SyntaxTree::InitVal>>();
+    $$->elementList = SysYF::PtrVec<SysYF::SyntaxTree::InitVal>();
+    //$$->elementList = std::vector<SysYF::Ptr<SysYF::SyntaxTree::InitVal>>();
     $$->expr = nullptr;
     $$->loc = @$;
   }
   ;
 
 ExpList:CommaExpList Exp{
-    $1.push_back(SyntaxTree::Ptr<SyntaxTree::Expr>($2));
+    $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>($2));
     $$ = $1;
   }
   | %empty{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Expr>();
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
 	;
 
 CommaExpList:CommaExpList Exp COMMA{
-    $1.push_back(SyntaxTree::Ptr<SyntaxTree::Expr>($2));
+    $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>($2));
     $$ = $1;
   }
   | %empty{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Expr>();
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
   ;
 
 
 FuncFParam:BType IDENTIFIER ArrayExpList{
-  $$ = new SyntaxTree::FuncParam();
+  $$ = SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(new SysYF::SyntaxTree::FuncParam());
   $$->param_type = $1;
   $$->name = $2;
   $$->array_index = $3;
   $$->loc = @$;
 }
 | BType IDENTIFIER LRBRACKET ArrayExpList{
-   $$ = new SyntaxTree::FuncParam();
+   $$ = SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(new SysYF::SyntaxTree::FuncParam());
    $$->param_type = $1;
    $$->name = $2;
    $$->array_index = $4;
@@ -292,46 +292,46 @@ FuncFParam:BType IDENTIFIER ArrayExpList{
 ;
 
 FParamList: CommaFParamList FuncFParam{
-  $1.push_back(SyntaxTree::Ptr<SyntaxTree::FuncParam>($2));
+  $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::FuncParam>($2));
   $$ = $1;
 }
 | %empty{
-  $$ = SyntaxTree::PtrList<SyntaxTree::FuncParam>();
+  $$ = SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>();
 }
 ;
 
 CommaFParamList:CommaFParamList FuncFParam COMMA{
-  $1.push_back(SyntaxTree::Ptr<SyntaxTree::FuncParam>($2));
+  $1.push_back(SysYF::Ptr<SysYF::SyntaxTree::FuncParam>($2));
   $$ = $1;
 }
 | %empty{
-  $$ = SyntaxTree::PtrList<SyntaxTree::FuncParam>();
+  $$ = SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>();
 }
 ;
 FuncDef:BType IDENTIFIER LPARENTHESE FParamList RPARENTHESE Block{
-    $$ = new SyntaxTree::FuncDef();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::FuncDef>(new SysYF::SyntaxTree::FuncDef());
     $$->ret_type = $1;
     $$->name = $2;
-    auto tmp = new SyntaxTree::FuncFParamList();
+    auto tmp = SysYF::Ptr<SysYF::SyntaxTree::FuncFParamList>(new SysYF::SyntaxTree::FuncFParamList());
     tmp->params = $4;
-    $$->param_list = SyntaxTree::Ptr<SyntaxTree::FuncFParamList>(tmp);
-    $$->body = SyntaxTree::Ptr<SyntaxTree::BlockStmt>($6);
+    $$->param_list = SysYF::Ptr<SysYF::SyntaxTree::FuncFParamList>(tmp);
+    $$->body = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>($6);
     $$->loc = @$;
   }
   | VOID IDENTIFIER LPARENTHESE FParamList RPARENTHESE Block{
-    $$ = new SyntaxTree::FuncDef();
-    $$->ret_type = SyntaxTree::Type::VOID;
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::FuncDef>(new SysYF::SyntaxTree::FuncDef());
+    $$->ret_type = SysYF::SyntaxTree::Type::VOID;
     $$->name = $2;
-    auto tmp = new SyntaxTree::FuncFParamList();
+    auto tmp = SysYF::Ptr<SysYF::SyntaxTree::FuncFParamList>(new SysYF::SyntaxTree::FuncFParamList());
     tmp->params = $4;
-    $$->param_list = SyntaxTree::Ptr<SyntaxTree::FuncFParamList>(tmp);
-    $$->body = SyntaxTree::Ptr<SyntaxTree::BlockStmt>($6);
+    $$->param_list = SysYF::Ptr<SysYF::SyntaxTree::FuncFParamList>(tmp);
+    $$->body = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>($6);
     $$->loc = @$;
   }
   ;
 
 Block:LBRACE BlockItemList RBRACE{
-    $$ = new SyntaxTree::BlockStmt();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>(new SysYF::SyntaxTree::BlockStmt());
     $$->body = $2;
     $$->loc = @$;
   }
@@ -342,40 +342,40 @@ BlockItemList:BlockItemList BlockItem{
     $$ = $1;
   }
   | %empty{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Stmt>();
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
   }
   ;
 
 BlockItem:VarDecl{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Stmt>();
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
     $$.insert($$.end(), $1.begin(), $1.end());
   }
   | ConstDecl{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Stmt>();
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
     $$.insert($$.end(), $1.begin(), $1.end());
   }
   | Stmt{
-    $$ = SyntaxTree::PtrList<SyntaxTree::Stmt>();
-    $$.push_back(SyntaxTree::Ptr<SyntaxTree::Stmt>($1));
+    $$ = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
+    $$.push_back(SysYF::Ptr<SysYF::SyntaxTree::Stmt>($1));
   }
   ;
 
 Stmt:LVal ASSIGN Exp SEMICOLON{
-    auto temp = new SyntaxTree::AssignStmt();
-    temp->target = SyntaxTree::Ptr<SyntaxTree::LVal>($1);
-    temp->value = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::AssignStmt>(new SysYF::SyntaxTree::AssignStmt());
+    temp->target = SysYF::Ptr<SysYF::SyntaxTree::LVal>($1);
+    temp->value = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp SEMICOLON{
-    auto temp = new SyntaxTree::ExprStmt();
-    temp->exp = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::ExprStmt>(new SysYF::SyntaxTree::ExprStmt());
+    temp->exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
     $$ = temp;
     $$->loc = @$;
   }
   | RETURN OptionRet SEMICOLON{
-    auto temp = new SyntaxTree::ReturnStmt();
-    temp->ret = SyntaxTree::Ptr<SyntaxTree::Expr>($2);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::ReturnStmt>(new SysYF::SyntaxTree::ReturnStmt());
+    temp->ret = SysYF::Ptr<SysYF::SyntaxTree::Expr>($2);
     $$ = temp;
     $$->loc = @$;
   }
@@ -383,9 +383,9 @@ Stmt:LVal ASSIGN Exp SEMICOLON{
     $$ = $1;
   }
   | WHILE LPARENTHESE CondExp RPARENTHESE Stmt{
-    auto temp = new SyntaxTree::WhileStmt();
-    temp->cond_exp = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
-    temp->statement = SyntaxTree::Ptr<SyntaxTree::Stmt>($5);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::WhileStmt>(new SysYF::SyntaxTree::WhileStmt());
+    temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
+    temp->statement = SysYF::Ptr<SysYF::SyntaxTree::Stmt>($5);
     $$ = temp;
     $$->loc = @$;
   }
@@ -393,32 +393,32 @@ Stmt:LVal ASSIGN Exp SEMICOLON{
     $$ = $1;
   }
   | BREAK SEMICOLON {
-    $$ = new SyntaxTree::BreakStmt();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::BreakStmt>(new SysYF::SyntaxTree::BreakStmt());
     $$->loc = @$;
   }
   | CONTINUE SEMICOLON {
-    $$ = new SyntaxTree::ContinueStmt();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::ContinueStmt>(new SysYF::SyntaxTree::ContinueStmt());
     $$->loc = @$;
   }
   | SEMICOLON{
-    $$ = new SyntaxTree::EmptyStmt();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::EmptyStmt>(new SysYF::SyntaxTree::EmptyStmt());
     $$->loc = @$;
   }
   ;
 
 IfStmt:IF LPARENTHESE CondExp RPARENTHESE Stmt {
-    auto temp = new SyntaxTree::IfStmt();
-    temp->cond_exp = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
-    temp->if_statement = SyntaxTree::Ptr<SyntaxTree::Stmt>($5);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::IfStmt>(new SysYF::SyntaxTree::IfStmt());
+    temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
+    temp->if_statement = SysYF::Ptr<SysYF::SyntaxTree::Stmt>($5);
     temp->else_statement = nullptr;
     $$ = temp;
     $$->loc = @$;
   }
   | IF LPARENTHESE CondExp RPARENTHESE Stmt ELSE Stmt {
-    auto temp = new SyntaxTree::IfStmt();
-    temp->cond_exp = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
-    temp->if_statement = SyntaxTree::Ptr<SyntaxTree::Stmt>($5);
-    temp->else_statement = SyntaxTree::Ptr<SyntaxTree::Stmt>($7);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::IfStmt>(new SysYF::SyntaxTree::IfStmt());
+    temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
+    temp->if_statement = SysYF::Ptr<SysYF::SyntaxTree::Stmt>($5);
+    temp->else_statement = SysYF::Ptr<SysYF::SyntaxTree::Stmt>($7);
     $$ = temp;
     $$->loc = @$;
   }
@@ -433,7 +433,7 @@ OptionRet:Exp{
   ;
 
 LVal:IDENTIFIER ArrayExpList{
-    $$ = new SyntaxTree::LVal();
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::LVal>(new SysYF::SyntaxTree::LVal());
     $$->name = $1;
     $$->array_index = $2;
     $$->loc = @$;
@@ -445,63 +445,63 @@ LVal:IDENTIFIER ArrayExpList{
 %precedence UPLUS UMINUS UNOT;
 
 Exp:PLUS Exp %prec UPLUS{
-    auto temp = new SyntaxTree::UnaryExpr();
-    temp->op = SyntaxTree::UnaryOp::PLUS;
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($2);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryExpr>(new SysYF::SyntaxTree::UnaryExpr());
+    temp->op = SysYF::SyntaxTree::UnaryOp::PLUS;
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($2);
     $$ = temp;
     $$->loc = @$;
   }
   | MINUS Exp %prec UMINUS{
-    auto temp = new SyntaxTree::UnaryExpr();
-    temp->op = SyntaxTree::UnaryOp::MINUS;
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($2);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryExpr>(new SysYF::SyntaxTree::UnaryExpr());
+    temp->op = SysYF::SyntaxTree::UnaryOp::MINUS;
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($2);
     $$ = temp;
     $$->loc = @$;
   }
   | NOT Exp %prec UNOT{
-    auto temp = new SyntaxTree::UnaryCondExpr();
-    temp->op = SyntaxTree::UnaryCondOp::NOT;
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($2);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryCondExpr>(new SysYF::SyntaxTree::UnaryCondExpr());
+    temp->op = SysYF::SyntaxTree::UnaryCondOp::NOT;
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($2);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp PLUS Exp{
-    auto temp = new SyntaxTree::BinaryExpr();
-    temp->op = SyntaxTree::BinOp::PLUS;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
+    temp->op = SysYF::SyntaxTree::BinOp::PLUS;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp MINUS Exp{
-    auto temp = new SyntaxTree::BinaryExpr();
-    temp->op = SyntaxTree::BinOp::MINUS;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
+    temp->op = SysYF::SyntaxTree::BinOp::MINUS;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp MULTIPLY Exp{
-    auto temp = new SyntaxTree::BinaryExpr();
-    temp->op = SyntaxTree::BinOp::MULTIPLY;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
+    temp->op = SysYF::SyntaxTree::BinOp::MULTIPLY;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp DIVIDE Exp{
-    auto temp = new SyntaxTree::BinaryExpr();
-    temp->op = SyntaxTree::BinOp::DIVIDE;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
+    temp->op = SysYF::SyntaxTree::BinOp::DIVIDE;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   | Exp MODULO Exp{
-    auto temp = new SyntaxTree::BinaryExpr();
-    temp->op = SyntaxTree::BinOp::MODULO;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
+    temp->op = SysYF::SyntaxTree::BinOp::MODULO;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
@@ -509,7 +509,7 @@ Exp:PLUS Exp %prec UPLUS{
     $$ = $2;
   }
   | IDENTIFIER LPARENTHESE ExpList RPARENTHESE {
-    auto temp = new SyntaxTree::FuncCallStmt();
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::FuncCallStmt>(new SysYF::SyntaxTree::FuncCallStmt());
     temp->name = $1;
     temp->params = $3;
     $$ = temp;
@@ -524,34 +524,34 @@ Exp:PLUS Exp %prec UPLUS{
   ;
 
 RelExp:RelExp LT Exp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::LT;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::LT;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   |RelExp LTE Exp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::LTE;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::LTE;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   |RelExp GT Exp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::GT;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::GT;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   |RelExp GTE Exp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::GTE;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::GTE;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
@@ -561,18 +561,18 @@ RelExp:RelExp LT Exp{
   ;
 
 EqExp:EqExp EQ RelExp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::EQ;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::EQ;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
   |EqExp NEQ RelExp{
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::NEQ;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::NEQ;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
@@ -582,10 +582,10 @@ EqExp:EqExp EQ RelExp{
   ;
 
 LAndExp:LAndExp LOGICAND EqExp {
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::LAND;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::LAND;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
@@ -595,10 +595,10 @@ LAndExp:LAndExp LOGICAND EqExp {
   ;
 
 LOrExp:LOrExp LOGICOR LAndExp {
-    auto temp = new SyntaxTree::BinaryCondExpr();
-    temp->op = SyntaxTree::BinaryCondOp::LOR;
-    temp->lhs = SyntaxTree::Ptr<SyntaxTree::Expr>($1);
-    temp->rhs = SyntaxTree::Ptr<SyntaxTree::Expr>($3);
+    auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
+    temp->op = SysYF::SyntaxTree::BinaryCondOp::LOR;
+    temp->lhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($1);
+    temp->rhs = SysYF::Ptr<SysYF::SyntaxTree::Expr>($3);
     $$ = temp;
     $$->loc = @$;
   }
@@ -613,14 +613,14 @@ CondExp:LOrExp{
   ;
 
 Number: INTCONST {
-    $$ = new SyntaxTree::Literal();
-    $$->literal_type = SyntaxTree::Type::INT;
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::Literal>(new SysYF::SyntaxTree::Literal());
+    $$->literal_type = SysYF::SyntaxTree::Type::INT;
     $$->int_const = $1;
     $$->loc = @$;
   }
   | FLOATCONST {
-    $$ = new SyntaxTree::Literal();
-    $$->literal_type = SyntaxTree::Type::FLOAT;
+    $$ = SysYF::Ptr<SysYF::SyntaxTree::Literal>(new SysYF::SyntaxTree::Literal());
+    $$->literal_type = SysYF::SyntaxTree::Type::FLOAT;
     $$->float_const = $1;
     $$->loc = @$;
   }

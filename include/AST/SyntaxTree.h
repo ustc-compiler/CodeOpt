@@ -6,16 +6,12 @@
 #include <string>
 
 #include "location.hh"
+#include "internal_types.h"
 
+namespace SysYF 
+{
 namespace SyntaxTree
 {
-// Use unique postd::stringtype to reference stored objects
-template <typename T>
-using Ptr = std::shared_ptr<T>;
-
-// List of reference of type
-template <typename T>
-using PtrList = std::vector<Ptr<T>>;
 
 using Position = yy::location;
 
@@ -108,7 +104,7 @@ struct Node
 //node for initial value
 struct InitVal: Node{
     bool isExp;
-    PtrList<InitVal> elementList;
+    PtrVec<InitVal> elementList;
     //std::vector<Ptr<InitVal>> elementList;
     Ptr<Expr> expr;
     void accept(Visitor &visitor) final;
@@ -117,7 +113,7 @@ struct InitVal: Node{
 // Root node of an ordinary syntax tree.
 struct Assembly : Node
 {
-    PtrList<GlobalDef> global_defs;
+    PtrVec<GlobalDef> global_defs;
     void accept(Visitor &visitor) final;
 };
 
@@ -151,7 +147,7 @@ struct VarDef : Stmt, GlobalDef
     Type btype;
     std::string name;
     bool is_inited; // This is used to verify `{}`
-    PtrList<Expr> array_length; // empty for non-array variables
+    PtrVec<Expr> array_length; // empty for non-array variables
     Ptr<InitVal> initializers;
     void accept(Visitor &visitor) final;
 };
@@ -174,7 +170,7 @@ struct ReturnStmt : Stmt
 // BlockStmt statement.
 struct BlockStmt : Stmt
 {
-    PtrList<Stmt> body;
+    PtrVec<Stmt> body;
     void accept(Visitor &visitor) final;
 };
 
@@ -239,7 +235,7 @@ struct UnaryExpr : AddExpr
 struct LVal : AddExpr
 {
     std::string name;
-    PtrList<Expr> array_index; // nullptr if not indexed as array
+    PtrVec<Expr> array_index; // nullptr if not indexed as array
     void accept(Visitor &visitor) final;
 };
 
@@ -257,7 +253,7 @@ struct Literal : AddExpr
 struct FuncCallStmt : AddExpr
 {
     std::string name;
-    PtrList<Expr> params;
+    PtrVec<Expr> params;
     void accept(Visitor &visitor) final;
 };
 
@@ -265,13 +261,13 @@ struct FuncParam : Node
 {
     std::string name;
     Type param_type;
-    PtrList<Expr> array_index; // nullptr if not indexed as array
+    PtrVec<Expr> array_index; // nullptr if not indexed as array
     void accept(Visitor &visitor) final;
 };
 
 struct FuncFParamList : Node
 {
-    PtrList<FuncParam> params;
+    PtrVec<FuncParam> params;
     void accept(Visitor &visitor) final;
 };
 
@@ -327,7 +323,8 @@ public:
     virtual void visit(BinaryCondExpr &node) = 0;
     virtual void visit(InitVal &node) = 0;
 };
+
 } 
-// end namespace SyntaxTree
+}
 
 #endif // _SYSYF_SYNTAX_TREE_H_

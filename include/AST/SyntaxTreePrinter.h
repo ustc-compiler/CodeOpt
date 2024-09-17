@@ -3,6 +3,10 @@
 
 #include "SyntaxTree.h"
 
+namespace SysYF 
+{
+namespace SyntaxTree
+{
 class SyntaxTreePrinter : public SyntaxTree::Visitor
 {
 public:
@@ -32,5 +36,8 @@ public:
 private:
     int indent = 0;
 };
+
+}
+}
 
 #endif  // _SYSYF_SYNTAX_TREE_PRINTER_H_

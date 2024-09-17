@@ -8,6 +8,10 @@
 #include <stack>
 #include <deque>
 
+namespace SysYF 
+{
+namespace SyntaxTree
+{
 class SyntaxTreeChecker : public SyntaxTree::Visitor {
    public:
     SyntaxTreeChecker(ErrorReporter& e) : err(e) {}
@@ -63,7 +67,7 @@ class SyntaxTreeChecker : public SyntaxTree::Visitor {
         return false;
     }
 
-    using PtrFuncFParamList = SyntaxTree::Ptr<SyntaxTree::FuncFParamList>;
+    using PtrFuncFParamList = Ptr<SyntaxTree::FuncFParamList>;
     struct Function{
         bool ret_int;
         std::deque<bool> args_int;
@@ -108,5 +112,8 @@ enum class ErrorType {
     FuncDuplicated,
     FuncParams
 };
+
+}
+}
 
 #endif  // _SYSYF_SYNTAX_TREE_CHECKER_H_

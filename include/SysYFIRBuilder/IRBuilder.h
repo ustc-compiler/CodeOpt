@@ -9,7 +9,10 @@
 #include <map>
 #include "SyntaxTree.h"
 
-
+namespace SysYF
+{
+namespace IR
+{
 class Scope {
 public:
     // enter a new scope
@@ -32,9 +35,9 @@ public:
     // return true if successful
     // return false if this name already exits
     // but func name could be same with variable name
-    bool push(std::string name, Value *val) {
+    bool push(std::string name, Ptr<Value> val) {
         bool result;
-        if (dynamic_cast<Function *>(val)){
+        if (dynamic_pointer_cast<Function>(val)){
             result = (name2func[name2func.size() - 1].insert({name, val})).second;
         }
         else{
@@ -43,7 +46,7 @@ public:
         return result;
     }
 
-    Value* find(std::string name, bool isfunc) {
+    Ptr<Value> find(std::string name, bool isfunc) {
         if (isfunc){
             for (auto s = name2func.rbegin(); s!= name2func.rend();s++) {
                 auto iter = s->find(name);
@@ -65,8 +68,8 @@ public:
 
 
 private:
-    std::vector<std::map<std::string, Value *>> name2var;
-    std::vector<std::map<std::string, Value *>> name2func;
+    std::vector<std::map<std::string, Ptr<Value> >> name2var;
+    std::vector<std::map<std::string, Ptr<Value> >> name2func;
 };
 
 class IRBuilder: public SyntaxTree::Visitor
@@ -95,106 +98,106 @@ private:
     virtual void visit(SyntaxTree::BreakStmt &) override final;
     virtual void visit(SyntaxTree::ContinueStmt &) override final;
 
-    IRStmtBuilder *builder;
+    Ptr<IRStmtBuilder> builder;
     Scope scope;
-    std::unique_ptr<Module> module;
-public:
-    IRBuilder(){
-        module = std::unique_ptr<Module>(new Module("SysYF code"));
-        builder = new IRStmtBuilder(nullptr, module.get());
-        auto TyVoid = Type::get_void_type(module.get());
-        auto TyInt32 = Type::get_int32_type(module.get());
-        auto TyInt32Ptr = Type::get_int32_ptr_type(module.get());
-        auto TyFloat = Type::get_float_type(module.get());
-        auto TyFloatPtr = Type::get_float_ptr_type(module.get());
+    Ptr<Module> module;
 
-        auto input_type = FunctionType::get(TyInt32, {});
+    IRBuilder() {
+        module = Module::create("SysYF code");
+        builder = IRStmtBuilder::create(nullptr, module);
+        auto TyVoid = Type::get_void_type(module);
+        auto TyInt32 = Type::get_int32_type(module);
+        auto TyInt32Ptr = Type::get_int32_ptr_type(module);
+        auto TyFloat = Type::get_float_type(module);
+        auto TyFloatPtr = Type::get_float_ptr_type(module);
+
+        auto input_type = FunctionType::create(TyInt32, {});
         auto get_int =
             Function::create(
                     input_type,
                     "get_int",
-                    module.get());
+                    module);
 
-        input_type = FunctionType::get(TyFloat, {});
+        input_type = FunctionType::create(TyFloat, {});
         auto get_float =
             Function::create(
                     input_type,
                     "get_float",
-                    module.get());
+                    module);
 
-        input_type = FunctionType::get(TyInt32, {});
+        input_type = FunctionType::create(TyInt32, {});
         auto get_char =
             Function::create(
                     input_type,
                     "get_char",
-                    module.get());
+                    module);
 
-        std::vector<Type *> input_params;
-        std::vector<Type *>().swap(input_params);
+        PtrVec<Type>  input_params;
+        PtrVec<Type> ().swap(input_params);
         input_params.push_back(TyInt32Ptr);
-        input_type = FunctionType::get(TyInt32, input_params);
+        input_type = FunctionType::create(TyInt32, input_params);
         auto get_int_array =
             Function::create(
                     input_type,
                     "get_int_array",
-                    module.get());
+                    module);
 
-        std::vector<Type *>().swap(input_params);
+        PtrVec<Type> ().swap(input_params);
         input_params.push_back(TyFloatPtr);
-        input_type = FunctionType::get(TyInt32, input_params);
+        input_type = FunctionType::create(TyInt32, input_params);
         auto get_float_array =
             Function::create(
                     input_type,
                     "get_float_array",
-                    module.get());
+                    module);
 
-        std::vector<Type *> output_params;
-        std::vector<Type *>().swap(output_params);
+        PtrVec<Type>  output_params;
+        PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
-        auto output_type = FunctionType::get(TyVoid, output_params);
+        auto output_type = FunctionType::create(TyVoid, output_params);
         auto put_int =
             Function::create(
                     output_type,
                     "put_int",
-                    module.get());
+                    module);
 
-        std::vector<Type *>().swap(output_params);
+        PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyFloat);
-        output_type = FunctionType::get(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params);
         auto put_float =
             Function::create(
                     output_type,
                     "put_float",
-                    module.get());
+                    module);
 
-        std::vector<Type *>().swap(output_params);
+        PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
-        output_type = FunctionType::get(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params);
         auto put_char =
             Function::create(
                     output_type,
                     "put_char",
-                    module.get());
+                    module);
 
-        std::vector<Type *>().swap(output_params);
+        PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
         output_params.push_back(TyInt32Ptr);
-        output_type = FunctionType::get(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params);
         auto put_int_array =
             Function::create(
                     output_type,
                     "put_int_array",
-                    module.get());
+                    module);
 
-        std::vector<Type *>().swap(output_params);
+        PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
         output_params.push_back(TyFloatPtr);
-        output_type = FunctionType::get(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params);
         auto put_float_array =
             Function::create(
                     output_type,
                     "put_float_array",
-                    module.get());
+                    module);
 
         scope.enter();
         scope.push("getint", get_int);
@@ -208,10 +211,16 @@ public:
         scope.push("putarray", put_int_array);
         scope.push("putfloatarray", put_float_array);
     }
-    std::unique_ptr<Module> getModule() {
-        return std::move(module);
+public:
+    static Ptr<IRBuilder> create() {
+        return Ptr<IRBuilder>(new IRBuilder());
+    }
+    Ptr<Module> getModule() {
+        return module;
     }
 };
 
+}
+}
 
 #endif // _SYSYF_IR_BUILDER_H_

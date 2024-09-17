@@ -1,4 +1,4 @@
-// A Bison parser, made by GNU Bison 3.7.6.
+// A Bison parser, made by GNU Bison 3.8.2.
 
 // Skeleton interface for Bison LALR(1) parsers in C++
 
@@ -32,7 +32,7 @@
 
 
 /**
- ** \file /home/hzq/SysYF_IR_Lab/2021_sysycompiler_ir_lab/SysYF_TA/build/SysYFParser.h
+ ** \file ./SysYFParser.h
  ** Define the yy::parser class.
  */
 
@@ -42,16 +42,16 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_YY_HOME_HZQ_SYSYF_IR_LAB_2021_SYSYCOMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
-# define YY_YY_HOME_HZQ_SYSYF_IR_LAB_2021_SYSYCOMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
+#ifndef YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
+# define YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
 // "%code requires" blocks.
-#line 12 "/home/hzq/SysYF_IR_Lab/2021_sysycompiler_ir_lab/SysYF_TA/grammar/SysYFParser.yy"
+#line 12 "../../grammar/SysYFParser.yy"
 
 #include <string>
 #include "SyntaxTree.h"
 class SysYFDriver;
 
-#line 55 "/home/hzq/SysYF_IR_Lab/2021_sysycompiler_ir_lab/SysYF_TA/build/SysYFParser.h"
+#line 55 "./SysYFParser.h"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -127,12 +127,18 @@ class SysYFDriver;
 # define YY_USE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
+# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
+# else
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -185,7 +191,7 @@ class SysYFDriver;
 #endif
 
 namespace yy {
-#line 189 "/home/hzq/SysYF_IR_Lab/2021_sysycompiler_ir_lab/SysYF_TA/build/SysYFParser.h"
+#line 195 "./SysYFParser.h"
 
 
 
@@ -194,27 +200,32 @@ namespace yy {
   class SysYFParser
   {
   public:
-#ifndef YYSTYPE
+#ifdef YYSTYPE
+# ifdef __GNUC__
+#  pragma GCC message "bison: do not #define YYSTYPE in C++, use %define api.value.type"
+# endif
+    typedef YYSTYPE value_type;
+#else
   /// A buffer to store and retrieve objects.
   ///
   /// Sort of a variant, but does not keep track of the nature
   /// of the stored data, since that knowledge is available
   /// via the current parser state.
-  class semantic_type
+  class value_type
   {
   public:
     /// Type of *this.
-    typedef semantic_type self_type;
+    typedef value_type self_type;
 
     /// Empty construction.
-    semantic_type () YY_NOEXCEPT
-      : yybuffer_ ()
+    value_type () YY_NOEXCEPT
+      : yyraw_ ()
       , yytypeid_ (YY_NULLPTR)
     {}
 
     /// Construct and fill.
     template <typename T>
-    semantic_type (YY_RVREF (T) t)
+    value_type (YY_RVREF (T) t)
       : yytypeid_ (&typeid (T))
     {
       YY_ASSERT (sizeof (T) <= size);
@@ -223,13 +234,13 @@ namespace yy {
 
 #if 201103L <= YY_CPLUSPLUS
     /// Non copyable.
-    semantic_type (const self_type&) = delete;
+    value_type (const self_type&) = delete;
     /// Non copyable.
     self_type& operator= (const self_type&) = delete;
 #endif
 
     /// Destruction, allowed only if empty.
-    ~semantic_type () YY_NOEXCEPT
+    ~value_type () YY_NOEXCEPT
     {
       YY_ASSERT (!yytypeid_);
     }
@@ -373,7 +384,7 @@ namespace yy {
   private:
 #if YY_CPLUSPLUS < 201103L
     /// Non copyable.
-    semantic_type (const self_type&);
+    value_type (const self_type&);
     /// Non copyable.
     self_type& operator= (const self_type&);
 #endif
@@ -383,7 +394,7 @@ namespace yy {
     T*
     yyas_ () YY_NOEXCEPT
     {
-      void *yyp = yybuffer_.yyraw;
+      void *yyp = yyraw_;
       return static_cast<T*> (yyp);
      }
 
@@ -392,7 +403,7 @@ namespace yy {
     const T*
     yyas_ () const YY_NOEXCEPT
     {
-      const void *yyp = yybuffer_.yyraw;
+      const void *yyp = yyraw_;
       return static_cast<const T*> (yyp);
      }
 
@@ -400,10 +411,10 @@ namespace yy {
     union union_type
     {
       // CompUnit
-      char dummy1[sizeof (SyntaxTree::Assembly*)];
+      char dummy1[sizeof (SysYF::Ptr<SysYF::SyntaxTree::Assembly>)];
 
       // Block
-      char dummy2[sizeof (SyntaxTree::BlockStmt*)];
+      char dummy2[sizeof (SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>)];
 
       // OptionRet
       // Exp
@@ -412,57 +423,57 @@ namespace yy {
       // LAndExp
       // LOrExp
       // CondExp
-      char dummy3[sizeof (SyntaxTree::Expr*)];
+      char dummy3[sizeof (SysYF::Ptr<SysYF::SyntaxTree::Expr>)];
 
       // FuncDef
-      char dummy4[sizeof (SyntaxTree::FuncDef*)];
+      char dummy4[sizeof (SysYF::Ptr<SysYF::SyntaxTree::FuncDef>)];
 
       // FuncFParam
-      char dummy5[sizeof (SyntaxTree::FuncParam*)];
+      char dummy5[sizeof (SysYF::Ptr<SysYF::SyntaxTree::FuncParam>)];
 
       // InitVal
       // InitValList
       // CommaInitValList
-      char dummy6[sizeof (SyntaxTree::InitVal*)];
+      char dummy6[sizeof (SysYF::Ptr<SysYF::SyntaxTree::InitVal>)];
 
       // LVal
-      char dummy7[sizeof (SyntaxTree::LVal*)];
+      char dummy7[sizeof (SysYF::Ptr<SysYF::SyntaxTree::LVal>)];
 
       // Number
-      char dummy8[sizeof (SyntaxTree::Literal*)];
+      char dummy8[sizeof (SysYF::Ptr<SysYF::SyntaxTree::Literal>)];
+
+      // Stmt
+      // IfStmt
+      char dummy9[sizeof (SysYF::Ptr<SysYF::SyntaxTree::Stmt>)];
+
+      // ConstDef
+      // VarDef
+      char dummy10[sizeof (SysYF::Ptr<SysYF::SyntaxTree::VarDef>)];
 
       // ArrayExpList
       // ExpList
       // CommaExpList
-      char dummy9[sizeof (SyntaxTree::PtrList<SyntaxTree::Expr>)];
+      char dummy11[sizeof (SysYF::PtrVec<SysYF::SyntaxTree::Expr>)];
 
       // FParamList
       // CommaFParamList
-      char dummy10[sizeof (SyntaxTree::PtrList<SyntaxTree::FuncParam>)];
+      char dummy12[sizeof (SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>)];
 
       // GlobalDecl
-      char dummy11[sizeof (SyntaxTree::PtrList<SyntaxTree::GlobalDef>)];
+      char dummy13[sizeof (SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>)];
 
       // BlockItemList
       // BlockItem
-      char dummy12[sizeof (SyntaxTree::PtrList<SyntaxTree::Stmt>)];
+      char dummy14[sizeof (SysYF::PtrVec<SysYF::SyntaxTree::Stmt>)];
 
       // ConstDecl
       // ConstDefList
       // VarDecl
       // VarDefList
-      char dummy13[sizeof (SyntaxTree::PtrList<SyntaxTree::VarDef>)];
-
-      // Stmt
-      // IfStmt
-      char dummy14[sizeof (SyntaxTree::Stmt*)];
+      char dummy15[sizeof (SysYF::PtrVec<SysYF::SyntaxTree::VarDef>)];
 
       // BType
-      char dummy15[sizeof (SyntaxTree::Type)];
-
-      // ConstDef
-      // VarDef
-      char dummy16[sizeof (SyntaxTree::VarDef*)];
+      char dummy16[sizeof (SysYF::SyntaxTree::Type)];
 
       // FLOATCONST
       char dummy17[sizeof (float)];
@@ -482,18 +493,19 @@ namespace yy {
     union
     {
       /// Strongest alignment constraints.
-      long double yyalign_me;
+      long double yyalign_me_;
       /// A buffer large enough to store any of the semantic values.
-      char yyraw[size];
-    } yybuffer_;
+      char yyraw_[size];
+    };
 
     /// Whether the content is built: if defined, the name of the stored type.
     const std::type_info *yytypeid_;
   };
 
-#else
-    typedef YYSTYPE semantic_type;
 #endif
+    /// Backward compatibility (Bison 3.8).
+    typedef value_type semantic_type;
+
     /// Symbol locations.
     typedef location location_type;
 
@@ -580,7 +592,7 @@ namespace yy {
     };
 
     /// Token kind, as returned by yylex.
-    typedef token::yytokentype token_kind_type;
+    typedef token::token_kind_type token_kind_type;
 
     /// Backward compatibility alias (Bison 3.6).
     typedef token_kind_type token_type;
@@ -702,7 +714,7 @@ namespace yy {
       typedef Base super_type;
 
       /// Default constructor.
-      basic_symbol ()
+      basic_symbol () YY_NOEXCEPT
         : value ()
         , location ()
       {}
@@ -717,11 +729,11 @@ namespace yy {
         switch (this->kind ())
     {
       case symbol_kind::S_CompUnit: // CompUnit
-        value.move< SyntaxTree::Assembly* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Assembly> > (std::move (that.value));
         break;
 
       case symbol_kind::S_Block: // Block
-        value.move< SyntaxTree::BlockStmt* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > (std::move (that.value));
         break;
 
       case symbol_kind::S_OptionRet: // OptionRet
@@ -731,70 +743,70 @@ namespace yy {
       case symbol_kind::S_LAndExp: // LAndExp
       case symbol_kind::S_LOrExp: // LOrExp
       case symbol_kind::S_CondExp: // CondExp
-        value.move< SyntaxTree::Expr* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Expr> > (std::move (that.value));
         break;
 
       case symbol_kind::S_FuncDef: // FuncDef
-        value.move< SyntaxTree::FuncDef* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > (std::move (that.value));
         break;
 
       case symbol_kind::S_FuncFParam: // FuncFParam
-        value.move< SyntaxTree::FuncParam* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > (std::move (that.value));
         break;
 
       case symbol_kind::S_InitVal: // InitVal
       case symbol_kind::S_InitValList: // InitValList
       case symbol_kind::S_CommaInitValList: // CommaInitValList
-        value.move< SyntaxTree::InitVal* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::InitVal> > (std::move (that.value));
         break;
 
       case symbol_kind::S_LVal: // LVal
-        value.move< SyntaxTree::LVal* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::LVal> > (std::move (that.value));
         break;
 
       case symbol_kind::S_Number: // Number
-        value.move< SyntaxTree::Literal* > (std::move (that.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Literal> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_IfStmt: // IfStmt
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Stmt> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_ConstDef: // ConstDef
+      case symbol_kind::S_VarDef: // VarDef
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::VarDef> > (std::move (that.value));
         break;
 
       case symbol_kind::S_ArrayExpList: // ArrayExpList
       case symbol_kind::S_ExpList: // ExpList
       case symbol_kind::S_CommaExpList: // CommaExpList
-        value.move< SyntaxTree::PtrList<SyntaxTree::Expr> > (std::move (that.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::Expr> > (std::move (that.value));
         break;
 
       case symbol_kind::S_FParamList: // FParamList
       case symbol_kind::S_CommaFParamList: // CommaFParamList
-        value.move< SyntaxTree::PtrList<SyntaxTree::FuncParam> > (std::move (that.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > (std::move (that.value));
         break;
 
       case symbol_kind::S_GlobalDecl: // GlobalDecl
-        value.move< SyntaxTree::PtrList<SyntaxTree::GlobalDef> > (std::move (that.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > (std::move (that.value));
         break;
 
       case symbol_kind::S_BlockItemList: // BlockItemList
       case symbol_kind::S_BlockItem: // BlockItem
-        value.move< SyntaxTree::PtrList<SyntaxTree::Stmt> > (std::move (that.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > (std::move (that.value));
         break;
 
       case symbol_kind::S_ConstDecl: // ConstDecl
       case symbol_kind::S_ConstDefList: // ConstDefList
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_VarDefList: // VarDefList
-        value.move< SyntaxTree::PtrList<SyntaxTree::VarDef> > (std::move (that.value));
-        break;
-
-      case symbol_kind::S_Stmt: // Stmt
-      case symbol_kind::S_IfStmt: // IfStmt
-        value.move< SyntaxTree::Stmt* > (std::move (that.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > (std::move (that.value));
         break;
 
       case symbol_kind::S_BType: // BType
-        value.move< SyntaxTree::Type > (std::move (that.value));
-        break;
-
-      case symbol_kind::S_ConstDef: // ConstDef
-      case symbol_kind::S_VarDef: // VarDef
-        value.move< SyntaxTree::VarDef* > (std::move (that.value));
+        value.move< SysYF::SyntaxTree::Type > (std::move (that.value));
         break;
 
       case symbol_kind::S_FLOATCONST: // FLOATCONST
@@ -834,13 +846,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::Assembly*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::Assembly>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::Assembly*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::Assembly>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -848,13 +860,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::BlockStmt*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::BlockStmt*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -862,13 +874,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::Expr*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::Expr>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::Expr*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::Expr>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -876,13 +888,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::FuncDef*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::FuncDef>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::FuncDef*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::FuncDef>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -890,13 +902,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::FuncParam*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::FuncParam>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::FuncParam*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::FuncParam>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -904,13 +916,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::InitVal*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::InitVal>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::InitVal*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::InitVal>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -918,13 +930,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::LVal*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::LVal>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::LVal*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::LVal>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -932,13 +944,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::Literal*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::Literal>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::Literal*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::Literal>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -946,13 +958,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::PtrList<SyntaxTree::Expr>&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::Stmt>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::PtrList<SyntaxTree::Expr>& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::Stmt>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -960,13 +972,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::PtrList<SyntaxTree::FuncParam>&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::Ptr<SysYF::SyntaxTree::VarDef>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::PtrList<SyntaxTree::FuncParam>& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::Ptr<SysYF::SyntaxTree::VarDef>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -974,13 +986,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::PtrList<SyntaxTree::GlobalDef>&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::PtrVec<SysYF::SyntaxTree::Expr>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::PtrList<SyntaxTree::GlobalDef>& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::PtrVec<SysYF::SyntaxTree::Expr>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -988,13 +1000,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::PtrList<SyntaxTree::Stmt>&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::PtrList<SyntaxTree::Stmt>& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -1002,13 +1014,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::PtrList<SyntaxTree::VarDef>&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::PtrList<SyntaxTree::VarDef>& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -1016,13 +1028,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::Stmt*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::PtrVec<SysYF::SyntaxTree::Stmt>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::Stmt*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::PtrVec<SysYF::SyntaxTree::Stmt>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -1030,13 +1042,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::Type&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::PtrVec<SysYF::SyntaxTree::VarDef>&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::Type& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::PtrVec<SysYF::SyntaxTree::VarDef>& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -1044,13 +1056,13 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, SyntaxTree::VarDef*&& v, location_type&& l)
+      basic_symbol (typename Base::kind_type t, SysYF::SyntaxTree::Type&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
         , location (std::move (l))
       {}
 #else
-      basic_symbol (typename Base::kind_type t, const SyntaxTree::VarDef*& v, const location_type& l)
+      basic_symbol (typename Base::kind_type t, const SysYF::SyntaxTree::Type& v, const location_type& l)
         : Base (t)
         , value (v)
         , location (l)
@@ -1105,6 +1117,8 @@ namespace yy {
         clear ();
       }
 
+
+
       /// Destroy contents, and record that is empty.
       void clear () YY_NOEXCEPT
       {
@@ -1122,11 +1136,11 @@ namespace yy {
 switch (yykind)
     {
       case symbol_kind::S_CompUnit: // CompUnit
-        value.template destroy< SyntaxTree::Assembly* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ();
         break;
 
       case symbol_kind::S_Block: // Block
-        value.template destroy< SyntaxTree::BlockStmt* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ();
         break;
 
       case symbol_kind::S_OptionRet: // OptionRet
@@ -1136,70 +1150,70 @@ switch (yykind)
       case symbol_kind::S_LAndExp: // LAndExp
       case symbol_kind::S_LOrExp: // LOrExp
       case symbol_kind::S_CondExp: // CondExp
-        value.template destroy< SyntaxTree::Expr* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
         break;
 
       case symbol_kind::S_FuncDef: // FuncDef
-        value.template destroy< SyntaxTree::FuncDef* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ();
         break;
 
       case symbol_kind::S_FuncFParam: // FuncFParam
-        value.template destroy< SyntaxTree::FuncParam* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ();
         break;
 
       case symbol_kind::S_InitVal: // InitVal
       case symbol_kind::S_InitValList: // InitValList
       case symbol_kind::S_CommaInitValList: // CommaInitValList
-        value.template destroy< SyntaxTree::InitVal* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ();
         break;
 
       case symbol_kind::S_LVal: // LVal
-        value.template destroy< SyntaxTree::LVal* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::LVal> > ();
         break;
 
       case symbol_kind::S_Number: // Number
-        value.template destroy< SyntaxTree::Literal* > ();
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::Literal> > ();
+        break;
+
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_IfStmt: // IfStmt
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ();
+        break;
+
+      case symbol_kind::S_ConstDef: // ConstDef
+      case symbol_kind::S_VarDef: // VarDef
+        value.template destroy< SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ();
         break;
 
       case symbol_kind::S_ArrayExpList: // ArrayExpList
       case symbol_kind::S_ExpList: // ExpList
       case symbol_kind::S_CommaExpList: // CommaExpList
-        value.template destroy< SyntaxTree::PtrList<SyntaxTree::Expr> > ();
+        value.template destroy< SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
         break;
 
       case symbol_kind::S_FParamList: // FParamList
       case symbol_kind::S_CommaFParamList: // CommaFParamList
-        value.template destroy< SyntaxTree::PtrList<SyntaxTree::FuncParam> > ();
+        value.template destroy< SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > ();
         break;
 
       case symbol_kind::S_GlobalDecl: // GlobalDecl
-        value.template destroy< SyntaxTree::PtrList<SyntaxTree::GlobalDef> > ();
+        value.template destroy< SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ();
         break;
 
       case symbol_kind::S_BlockItemList: // BlockItemList
       case symbol_kind::S_BlockItem: // BlockItem
-        value.template destroy< SyntaxTree::PtrList<SyntaxTree::Stmt> > ();
+        value.template destroy< SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ();
         break;
 
       case symbol_kind::S_ConstDecl: // ConstDecl
       case symbol_kind::S_ConstDefList: // ConstDefList
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_VarDefList: // VarDefList
-        value.template destroy< SyntaxTree::PtrList<SyntaxTree::VarDef> > ();
-        break;
-
-      case symbol_kind::S_Stmt: // Stmt
-      case symbol_kind::S_IfStmt: // IfStmt
-        value.template destroy< SyntaxTree::Stmt* > ();
+        value.template destroy< SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ();
         break;
 
       case symbol_kind::S_BType: // BType
-        value.template destroy< SyntaxTree::Type > ();
-        break;
-
-      case symbol_kind::S_ConstDef: // ConstDef
-      case symbol_kind::S_VarDef: // VarDef
-        value.template destroy< SyntaxTree::VarDef* > ();
+        value.template destroy< SysYF::SyntaxTree::Type > ();
         break;
 
       case symbol_kind::S_FLOATCONST: // FLOATCONST
@@ -1238,7 +1252,7 @@ switch (yykind)
       void move (basic_symbol& s);
 
       /// The semantic value.
-      semantic_type value;
+      value_type value;
 
       /// The location.
       location_type location;
@@ -1253,22 +1267,24 @@ switch (yykind)
     /// Type access provider for token (enum) based symbols.
     struct by_kind
     {
-      /// Default constructor.
-      by_kind ();
-
-#if 201103L <= YY_CPLUSPLUS
-      /// Move constructor.
-      by_kind (by_kind&& that);
-#endif
-
-      /// Copy constructor.
-      by_kind (const by_kind& that);
-
       /// The symbol kind as needed by the constructor.
       typedef token_kind_type kind_type;
 
+      /// Default constructor.
+      by_kind () YY_NOEXCEPT;
+
+#if 201103L <= YY_CPLUSPLUS
+      /// Move constructor.
+      by_kind (by_kind&& that) YY_NOEXCEPT;
+#endif
+
+      /// Copy constructor.
+      by_kind (const by_kind& that) YY_NOEXCEPT;
+
       /// Constructor from (external) token numbers.
-      by_kind (kind_type t);
+      by_kind (kind_type t) YY_NOEXCEPT;
+
+
 
       /// Record that this symbol is empty.
       void clear () YY_NOEXCEPT;
@@ -1298,17 +1314,18 @@ switch (yykind)
       typedef basic_symbol<by_kind> super_type;
 
       /// Empty symbol.
-      symbol_type () {}
+      symbol_type () YY_NOEXCEPT {}
 
       /// Constructor for valueless symbols, and symbols from each type.
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, location_type l)
-        : super_type(token_type (tok), std::move (l))
+        : super_type (token_kind_type (tok), std::move (l))
 #else
       symbol_type (int tok, const location_type& l)
-        : super_type(token_type (tok), l)
+        : super_type (token_kind_type (tok), l)
 #endif
       {
+#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::TOK_YYEOF
                    || tok == token::TOK_YYerror
                    || (token::TOK_YYUNDEF <= tok && tok <= token::TOK_END)
@@ -1316,37 +1333,44 @@ switch (yykind)
                    || (token::TOK_LETTER <= tok && tok <= token::TOK_LT)
                    || tok == token::TOK_LRBRACKET
                    || (token::TOK_UPLUS <= tok && tok <= token::TOK_UNOT));
+#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, float v, location_type l)
-        : super_type(token_type (tok), std::move (v), std::move (l))
+        : super_type (token_kind_type (tok), std::move (v), std::move (l))
 #else
       symbol_type (int tok, const float& v, const location_type& l)
-        : super_type(token_type (tok), v, l)
+        : super_type (token_kind_type (tok), v, l)
 #endif
       {
+#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::TOK_FLOATCONST);
+#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, int v, location_type l)
-        : super_type(token_type (tok), std::move (v), std::move (l))
+        : super_type (token_kind_type (tok), std::move (v), std::move (l))
 #else
       symbol_type (int tok, const int& v, const location_type& l)
-        : super_type(token_type (tok), v, l)
+        : super_type (token_kind_type (tok), v, l)
 #endif
       {
+#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::TOK_INTCONST);
+#endif
       }
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v, location_type l)
-        : super_type(token_type (tok), std::move (v), std::move (l))
+        : super_type (token_kind_type (tok), std::move (v), std::move (l))
 #else
       symbol_type (int tok, const std::string& v, const location_type& l)
-        : super_type(token_type (tok), v, l)
+        : super_type (token_kind_type (tok), v, l)
 #endif
       {
+#if !defined _MSC_VER || defined __clang__
         YY_ASSERT (tok == token::TOK_IDENTIFIER
                    || tok == token::TOK_STRINGCONST);
+#endif
       }
     };
 
@@ -1395,7 +1419,7 @@ switch (yykind)
     /// YYSYMBOL.  No bounds checking.
     static std::string symbol_name (symbol_kind_type yysymbol);
 
-    // Implementation of make_symbol for each symbol type.
+    // Implementation of make_symbol for each token kind.
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
@@ -2237,19 +2261,19 @@ switch (yykind)
 
     /// Whether the given \c yypact_ value indicates a defaulted state.
     /// \param yyvalue   the value to check
-    static bool yy_pact_value_is_default_ (int yyvalue);
+    static bool yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT;
 
     /// Whether the given \c yytable_ value indicates a syntax error.
     /// \param yyvalue   the value to check
-    static bool yy_table_value_is_error_ (int yyvalue);
+    static bool yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT;
 
     static const signed char yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token kind \a t to a symbol kind.
     /// In theory \a t should be a token_kind_type, but character literals
-    /// are valid, yet not members of the token_type enum.
-    static symbol_kind_type yytranslate_ (int t);
+    /// are valid, yet not members of the token_kind_type enum.
+    static symbol_kind_type yytranslate_ (int t) YY_NOEXCEPT;
 
     /// Convert the symbol name \a n to a form suitable for a diagnostic.
     static std::string yytnamerr_ (const char *yystr);
@@ -2281,14 +2305,14 @@ switch (yykind)
 
     static const unsigned char yycheck_[];
 
-    // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-    // symbol of state STATE-NUM.
+    // YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
+    // state STATE-NUM.
     static const signed char yystos_[];
 
-    // YYR1[YYN] -- Symbol number of symbol that rule YYN derives.
+    // YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.
     static const signed char yyr1_[];
 
-    // YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.
+    // YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.
     static const signed char yyr2_[];
 
 
@@ -2387,7 +2411,7 @@ switch (yykind)
       typedef typename S::size_type size_type;
       typedef typename std::ptrdiff_t index_type;
 
-      stack (size_type n = 200)
+      stack (size_type n = 200) YY_NOEXCEPT
         : seq_ (n)
       {}
 
@@ -2466,7 +2490,7 @@ switch (yykind)
       class slice
       {
       public:
-        slice (const stack& stack, index_type range)
+        slice (const stack& stack, index_type range) YY_NOEXCEPT
           : stack_ (stack)
           , range_ (range)
         {}
@@ -2516,7 +2540,7 @@ switch (yykind)
     void yypush_ (const char* m, state_type s, YY_MOVE_REF (symbol_type) sym);
 
     /// Pop \a n symbols from the stack.
-    void yypop_ (int n = 1);
+    void yypop_ (int n = 1) YY_NOEXCEPT;
 
     /// Constants.
     enum
@@ -2534,7 +2558,7 @@ switch (yykind)
 
   inline
   SysYFParser::symbol_kind_type
-  SysYFParser::yytranslate_ (int t)
+  SysYFParser::yytranslate_ (int t) YY_NOEXCEPT
   {
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
@@ -2580,7 +2604,7 @@ switch (yykind)
     if (t <= 0)
       return symbol_kind::S_YYEOF;
     else if (t <= code_max)
-      return YY_CAST (symbol_kind_type, translate_table[t]);
+      return static_cast <symbol_kind_type> (translate_table[t]);
     else
       return symbol_kind::S_YYUNDEF;
   }
@@ -2595,11 +2619,11 @@ switch (yykind)
     switch (this->kind ())
     {
       case symbol_kind::S_CompUnit: // CompUnit
-        value.copy< SyntaxTree::Assembly* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::Assembly> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_Block: // Block
-        value.copy< SyntaxTree::BlockStmt* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_OptionRet: // OptionRet
@@ -2609,70 +2633,70 @@ switch (yykind)
       case symbol_kind::S_LAndExp: // LAndExp
       case symbol_kind::S_LOrExp: // LOrExp
       case symbol_kind::S_CondExp: // CondExp
-        value.copy< SyntaxTree::Expr* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::Expr> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_FuncDef: // FuncDef
-        value.copy< SyntaxTree::FuncDef* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_FuncFParam: // FuncFParam
-        value.copy< SyntaxTree::FuncParam* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_InitVal: // InitVal
       case symbol_kind::S_InitValList: // InitValList
       case symbol_kind::S_CommaInitValList: // CommaInitValList
-        value.copy< SyntaxTree::InitVal* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::InitVal> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_LVal: // LVal
-        value.copy< SyntaxTree::LVal* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::LVal> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_Number: // Number
-        value.copy< SyntaxTree::Literal* > (YY_MOVE (that.value));
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::Literal> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_IfStmt: // IfStmt
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::Stmt> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_ConstDef: // ConstDef
+      case symbol_kind::S_VarDef: // VarDef
+        value.copy< SysYF::Ptr<SysYF::SyntaxTree::VarDef> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_ArrayExpList: // ArrayExpList
       case symbol_kind::S_ExpList: // ExpList
       case symbol_kind::S_CommaExpList: // CommaExpList
-        value.copy< SyntaxTree::PtrList<SyntaxTree::Expr> > (YY_MOVE (that.value));
+        value.copy< SysYF::PtrVec<SysYF::SyntaxTree::Expr> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_FParamList: // FParamList
       case symbol_kind::S_CommaFParamList: // CommaFParamList
-        value.copy< SyntaxTree::PtrList<SyntaxTree::FuncParam> > (YY_MOVE (that.value));
+        value.copy< SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_GlobalDecl: // GlobalDecl
-        value.copy< SyntaxTree::PtrList<SyntaxTree::GlobalDef> > (YY_MOVE (that.value));
+        value.copy< SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_BlockItemList: // BlockItemList
       case symbol_kind::S_BlockItem: // BlockItem
-        value.copy< SyntaxTree::PtrList<SyntaxTree::Stmt> > (YY_MOVE (that.value));
+        value.copy< SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_ConstDecl: // ConstDecl
       case symbol_kind::S_ConstDefList: // ConstDefList
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_VarDefList: // VarDefList
-        value.copy< SyntaxTree::PtrList<SyntaxTree::VarDef> > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S_Stmt: // Stmt
-      case symbol_kind::S_IfStmt: // IfStmt
-        value.copy< SyntaxTree::Stmt* > (YY_MOVE (that.value));
+        value.copy< SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_BType: // BType
-        value.copy< SyntaxTree::Type > (YY_MOVE (that.value));
-        break;
-
-      case symbol_kind::S_ConstDef: // ConstDef
-      case symbol_kind::S_VarDef: // VarDef
-        value.copy< SyntaxTree::VarDef* > (YY_MOVE (that.value));
+        value.copy< SysYF::SyntaxTree::Type > (YY_MOVE (that.value));
         break;
 
       case symbol_kind::S_FLOATCONST: // FLOATCONST
@@ -2696,12 +2720,14 @@ switch (yykind)
 
 
 
+
   template <typename Base>
   SysYFParser::symbol_kind_type
   SysYFParser::basic_symbol<Base>::type_get () const YY_NOEXCEPT
   {
     return this->kind ();
   }
+
 
   template <typename Base>
   bool
@@ -2718,11 +2744,11 @@ switch (yykind)
     switch (this->kind ())
     {
       case symbol_kind::S_CompUnit: // CompUnit
-        value.move< SyntaxTree::Assembly* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Assembly> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_Block: // Block
-        value.move< SyntaxTree::BlockStmt* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_OptionRet: // OptionRet
@@ -2732,70 +2758,70 @@ switch (yykind)
       case symbol_kind::S_LAndExp: // LAndExp
       case symbol_kind::S_LOrExp: // LOrExp
       case symbol_kind::S_CondExp: // CondExp
-        value.move< SyntaxTree::Expr* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Expr> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_FuncDef: // FuncDef
-        value.move< SyntaxTree::FuncDef* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_FuncFParam: // FuncFParam
-        value.move< SyntaxTree::FuncParam* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_InitVal: // InitVal
       case symbol_kind::S_InitValList: // InitValList
       case symbol_kind::S_CommaInitValList: // CommaInitValList
-        value.move< SyntaxTree::InitVal* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::InitVal> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_LVal: // LVal
-        value.move< SyntaxTree::LVal* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::LVal> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_Number: // Number
-        value.move< SyntaxTree::Literal* > (YY_MOVE (s.value));
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Literal> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_Stmt: // Stmt
+      case symbol_kind::S_IfStmt: // IfStmt
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::Stmt> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_ConstDef: // ConstDef
+      case symbol_kind::S_VarDef: // VarDef
+        value.move< SysYF::Ptr<SysYF::SyntaxTree::VarDef> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_ArrayExpList: // ArrayExpList
       case symbol_kind::S_ExpList: // ExpList
       case symbol_kind::S_CommaExpList: // CommaExpList
-        value.move< SyntaxTree::PtrList<SyntaxTree::Expr> > (YY_MOVE (s.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::Expr> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_FParamList: // FParamList
       case symbol_kind::S_CommaFParamList: // CommaFParamList
-        value.move< SyntaxTree::PtrList<SyntaxTree::FuncParam> > (YY_MOVE (s.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_GlobalDecl: // GlobalDecl
-        value.move< SyntaxTree::PtrList<SyntaxTree::GlobalDef> > (YY_MOVE (s.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_BlockItemList: // BlockItemList
       case symbol_kind::S_BlockItem: // BlockItem
-        value.move< SyntaxTree::PtrList<SyntaxTree::Stmt> > (YY_MOVE (s.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_ConstDecl: // ConstDecl
       case symbol_kind::S_ConstDefList: // ConstDefList
       case symbol_kind::S_VarDecl: // VarDecl
       case symbol_kind::S_VarDefList: // VarDefList
-        value.move< SyntaxTree::PtrList<SyntaxTree::VarDef> > (YY_MOVE (s.value));
-        break;
-
-      case symbol_kind::S_Stmt: // Stmt
-      case symbol_kind::S_IfStmt: // IfStmt
-        value.move< SyntaxTree::Stmt* > (YY_MOVE (s.value));
+        value.move< SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_BType: // BType
-        value.move< SyntaxTree::Type > (YY_MOVE (s.value));
-        break;
-
-      case symbol_kind::S_ConstDef: // ConstDef
-      case symbol_kind::S_VarDef: // VarDef
-        value.move< SyntaxTree::VarDef* > (YY_MOVE (s.value));
+        value.move< SysYF::SyntaxTree::Type > (YY_MOVE (s.value));
         break;
 
       case symbol_kind::S_FLOATCONST: // FLOATCONST
@@ -2820,13 +2846,13 @@ switch (yykind)
 
   // by_kind.
   inline
-  SysYFParser::by_kind::by_kind ()
+  SysYFParser::by_kind::by_kind () YY_NOEXCEPT
     : kind_ (symbol_kind::S_YYEMPTY)
   {}
 
 #if 201103L <= YY_CPLUSPLUS
   inline
-  SysYFParser::by_kind::by_kind (by_kind&& that)
+  SysYFParser::by_kind::by_kind (by_kind&& that) YY_NOEXCEPT
     : kind_ (that.kind_)
   {
     that.clear ();
@@ -2834,14 +2860,16 @@ switch (yykind)
 #endif
 
   inline
-  SysYFParser::by_kind::by_kind (const by_kind& that)
+  SysYFParser::by_kind::by_kind (const by_kind& that) YY_NOEXCEPT
     : kind_ (that.kind_)
   {}
 
   inline
-  SysYFParser::by_kind::by_kind (token_kind_type t)
+  SysYFParser::by_kind::by_kind (token_kind_type t) YY_NOEXCEPT
     : kind_ (yytranslate_ (t))
   {}
+
+
 
   inline
   void
@@ -2865,6 +2893,7 @@ switch (yykind)
     return kind_;
   }
 
+
   inline
   SysYFParser::symbol_kind_type
   SysYFParser::by_kind::type_get () const YY_NOEXCEPT
@@ -2872,10 +2901,11 @@ switch (yykind)
     return this->kind ();
   }
 
+
 } // yy
-#line 2877 "/home/hzq/SysYF_IR_Lab/2021_sysycompiler_ir_lab/SysYF_TA/build/SysYFParser.h"
+#line 2907 "./SysYFParser.h"
 
 
 
 
-#endif // !YY_YY_HOME_HZQ_SYSYF_IR_LAB_2021_SYSYCOMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
+#endif // !YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED

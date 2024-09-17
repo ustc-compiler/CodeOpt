@@ -1,5 +1,8 @@
 #include "RDominateTree.h"
 
+namespace SysYF {
+namespace IR {
+
 void RDominateTree::execute() {
     for(auto f:module->get_functions()){
         if(f->get_basic_blocks().empty()){
@@ -15,7 +18,7 @@ void RDominateTree::execute() {
     }
 }
 
-void RDominateTree::get_post_order(BasicBlock *bb, std::set<BasicBlock *> &visited) {
+void RDominateTree::get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock> &visited) {
     visited.insert(bb);
     auto parents = bb->get_pre_basic_blocks();
     for(auto parent : parents){
@@ -28,7 +31,7 @@ void RDominateTree::get_post_order(BasicBlock *bb, std::set<BasicBlock *> &visit
     reverse_post_order.push_back(bb);
 }
 
-void RDominateTree::get_revserse_post_order(Function *f) {
+void RDominateTree::get_revserse_post_order(Ptr<Function> f) {
     rdoms.clear();
     reverse_post_order.clear();
     bb2int.clear();
@@ -44,12 +47,12 @@ void RDominateTree::get_revserse_post_order(Function *f) {
         std::cerr << "err function:\n" << f->print() << std::endl;
         exit(1);
     }
-    std::set<BasicBlock*> visited = {};
-    get_post_order(exit_block,visited);
+    PtrSet<BasicBlock> visited = {};
+    get_post_order(exit_block, visited);
     reverse_post_order.reverse();
 }
 
-void RDominateTree::get_bb_irdom(Function *f) {
+void RDominateTree::get_bb_irdom(Ptr<Function> f) {
     get_revserse_post_order(f);
 
     auto root = exit_block;
@@ -69,7 +72,7 @@ void RDominateTree::get_bb_irdom(Function *f) {
                 continue;
             }
             auto rpreds = bb->get_succ_basic_blocks();
-            BasicBlock* new_irdom = nullptr;
+            Ptr<BasicBlock> new_irdom = nullptr;
             for(auto rpred_bb:rpreds){
                 if(rdoms[bb2int[rpred_bb]] != nullptr){
                     new_irdom = rpred_bb;
@@ -78,7 +81,7 @@ void RDominateTree::get_bb_irdom(Function *f) {
             }
             for(auto rpred_bb:rpreds){
                 if(rdoms[bb2int[rpred_bb]] != nullptr){
-                    new_irdom = intersect(rpred_bb,new_irdom);
+                    new_irdom = intersect(rpred_bb, new_irdom);
                 }
             }
             if(rdoms[bb2int[bb]] != new_irdom){
@@ -89,7 +92,7 @@ void RDominateTree::get_bb_irdom(Function *f) {
     }
 }
 
-void RDominateTree::get_bb_rdoms(Function *f) {
+void RDominateTree::get_bb_rdoms(Ptr<Function> f) {
     for(auto bb:f->get_basic_blocks()){
         if(bb==exit_block){
             continue;
@@ -102,9 +105,9 @@ void RDominateTree::get_bb_rdoms(Function *f) {
     }
 }
 
-void RDominateTree::get_bb_rdom_front(Function *f) {
+void RDominateTree::get_bb_rdom_front(Ptr<Function> f) {
     auto all_bbs = f->get_basic_blocks();
-    for(auto bb_iter=all_bbs.rbegin();bb_iter!=all_bbs.rend();bb_iter++){//reverse bb order;
+    for(auto bb_iter=all_bbs.rbegin(); bb_iter!=all_bbs.rend(); bb_iter++){//reverse bb order;
         auto bb = *bb_iter;
         auto b_rpred = bb->get_succ_basic_blocks();
         if(b_rpred.size() >= 2){
@@ -119,7 +122,7 @@ void RDominateTree::get_bb_rdom_front(Function *f) {
     }
 }
 
-BasicBlock* RDominateTree::intersect(BasicBlock *b1, BasicBlock *b2) {
+Ptr<BasicBlock> RDominateTree::intersect(Ptr<BasicBlock> b1, Ptr<BasicBlock> b2) {
     auto finger1 = b1;
     auto finger2 = b2;
     while(finger1!=finger2){
@@ -131,4 +134,7 @@ BasicBlock* RDominateTree::intersect(BasicBlock *b1, BasicBlock *b2) {
         }
     }
     return finger1;
+}
+
+}
 }

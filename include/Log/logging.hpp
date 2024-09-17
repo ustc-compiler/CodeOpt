@@ -8,6 +8,10 @@
 #include <stdarg.h>
 #include <stack>
 
+namespace SysYF
+{
+namespace Log
+{
 std::string format(const char *fmt, ...);
 
 int get_env_LOG_level();
@@ -111,4 +115,6 @@ std::string get_short_name(const char *file_path);
 #define LOG_DISABLE LogWriter::Push(false);
 #define LOG_POP LogWriter::Pop();
 
+}
+}
 #endif

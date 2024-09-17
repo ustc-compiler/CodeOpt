@@ -6,8 +6,13 @@
 #include "Constant.h"
 #include "BasicBlock.h"
 
+namespace SysYF
+{
+namespace IR
+{
 class BasicBlock;
 class Function;
+class Instruction;
 
 class Instruction : public User
 {
@@ -44,17 +49,12 @@ public:
         fptosi,
         sitofp,
     };
-    // create instruction, auto insert to bb
-    // ty here is result type
-    Instruction(Type *ty, OpID id, unsigned num_ops,
-                BasicBlock *parent);
-    Instruction(Type *ty, OpID id, unsigned num_ops);
-    inline const BasicBlock *get_parent() const { return parent_; }
-    inline BasicBlock *get_parent() { return parent_; }
-    void set_parent(BasicBlock *parent) { this->parent_ = parent; }
+    inline const Ptr<BasicBlock> get_parent() const { return parent_; }
+    inline Ptr<BasicBlock> get_parent() { return parent_; }
+    void set_parent(Ptr<BasicBlock> parent) { this->parent_ = parent; }
     // Return the function this instruction belongs to.
-    Function *get_function();
-    Module *get_module();
+    Ptr<Function> get_function();
+    Ptr<Module> get_module();
 
     OpID get_instr_type() { return op_id_; }
     std::string get_instr_op_name() {
@@ -118,21 +118,11 @@ public:
     bool is_fptosi() { return op_id_ == fptosi; }
     bool is_sitofp() { return op_id_ == sitofp; }
 
-    bool is_int_binary()
+    bool isBinary()
     {
-        return (is_add() || is_sub() || is_mul() || is_div() || is_rem()) && 
+        return (is_add() || is_sub() || is_mul() || is_div() || is_rem() || 
+                is_fadd() || is_fsub() || is_fmul() || is_fdiv()) && 
                 (get_num_operand() == 2);
-    }
-
-    bool is_float_binary()
-    {
-        return (is_fadd() || is_fsub() || is_fmul() || is_fdiv()) && 
-                (get_num_operand() == 2);
-    }
-
-    bool is_binary()
-    {
-        return is_int_binary() || is_float_binary();
     }
 
     bool isTerminator() { return is_br() || is_ret(); }
@@ -141,33 +131,42 @@ public:
     int get_id() const{return id_;}
 
 private:
-    BasicBlock *parent_;
     OpID op_id_;
     int id_;
     unsigned num_ops_;
+    Ptr<BasicBlock> parent_;
+    // must be called after Instruction() in any derived class
+    void insert_to_bb();
+    
+protected:
+    // create instruction, but not insert to bb (insert to bb in method create in the derived class)
+    // ty here is result type
+    explicit Instruction(Ptr<Type> ty, OpID id, unsigned num_ops, Ptr<BasicBlock> parent = nullptr);
+    void init(Ptr<Type> ty, OpID id, unsigned num_ops, Ptr<BasicBlock> parent = nullptr);
 };
 
 class BinaryInst : public Instruction
 {
 private:
-    BinaryInst(Type *ty, OpID id, Value *v1, Value *v2,
-               BasicBlock *bb);
+    explicit BinaryInst(Ptr<Type> ty, OpID id, Ptr<Value> v1, Ptr<Value> v2,
+               Ptr<BasicBlock> bb);
 
 public:
-    static BinaryInst *create_add(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_sub(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_mul(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_sdiv(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_srem(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_fadd(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_fsub(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_fmul(Value *v1, Value *v2, BasicBlock *bb, Module *m);
-    static BinaryInst *create_fdiv(Value *v1, Value *v2, BasicBlock *bb, Module *m);
+    static Ptr<BinaryInst> create_add(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_sub(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_mul(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_sdiv(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_srem(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_fadd(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_fsub(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_fmul(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
+    static Ptr<BinaryInst> create_fdiv(Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb, Ptr<Module> m);
 
     virtual std::string print() override;
 
 private:
-    void assertValid();
+    void init(Ptr<Type> ty, OpID id, Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb);
+    void assertValid() {}
 };
 
 class CmpInst : public Instruction
@@ -184,12 +183,12 @@ public:
     };
 
 private:
-    CmpInst(Type *ty, CmpOp op, Value *lhs, Value *rhs,
-            BasicBlock *bb);
+    explicit CmpInst(Ptr<Type> ty, CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs,
+            Ptr<BasicBlock> bb);
 
 public:
-    static CmpInst *create_cmp(CmpOp op, Value *lhs, Value *rhs,
-                               BasicBlock *bb, Module *m);
+    static Ptr<CmpInst> create_cmp(CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs,
+                               Ptr<BasicBlock> bb, Ptr<Module> m);
 
     CmpOp get_cmp_op() { return cmp_op_; }
 
@@ -197,8 +196,8 @@ public:
 
 private:
     CmpOp cmp_op_;
-
-    void assertValid();
+    void init(Ptr<Type> ty, CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs, Ptr<BasicBlock> bb);
+    void assertValid() {}
 };
 
 class FCmpInst : public Instruction
@@ -215,12 +214,13 @@ public:
     };
 
 private:
-    FCmpInst(Type *ty, CmpOp op, Value *lhs, Value *rhs,
-            BasicBlock *bb);
+    explicit FCmpInst(Ptr<Type> ty, CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs,
+            Ptr<BasicBlock> bb);
+    void init(Ptr<Type> ty, CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs, Ptr<BasicBlock> bb);
 
 public:
-    static FCmpInst *create_fcmp(CmpOp op, Value *lhs, Value *rhs,
-                               BasicBlock *bb, Module *m);
+    static Ptr<FCmpInst> create_fcmp(CmpOp op, Ptr<Value> lhs, Ptr<Value> rhs,
+                               Ptr<BasicBlock> bb, Ptr<Module> m);
 
     CmpOp get_cmp_op() { return cmp_op_; }
 
@@ -229,18 +229,20 @@ public:
 private:
     CmpOp cmp_op_;
 
-    void assertValid();
+    void assertValid() {}
 };
 
 class CallInst : public Instruction
 {
-protected:
-    CallInst(Function *func, std::vector<Value *> args, BasicBlock *bb);
-    CallInst(Type *ret_ty, std::vector<Value *> args, BasicBlock *bb);
+private:
+    explicit CallInst(Ptr<Function> func, PtrVec<Value> args, Ptr<BasicBlock> bb);
+    void init(Ptr<Function> func, PtrVec<Value> args, Ptr<BasicBlock> bb);
+    explicit CallInst(Ptr<Type> ret_ty, PtrVec<Value> args, Ptr<BasicBlock> bb);
+    void init(Ptr<Type> ret_ty, PtrVec<Value> args, Ptr<BasicBlock> bb);
 
 public:
-    static CallInst *create(Function *func, std::vector<Value *> args, BasicBlock *bb);
-    FunctionType *get_function_type() const;
+    static Ptr<CallInst> create(Ptr<Function> func, PtrVec<Value> args, Ptr<BasicBlock> bb);
+    Ptr<FunctionType> get_function_type() const;
 
     virtual std::string print() override;
 
@@ -249,16 +251,21 @@ public:
 class BranchInst : public Instruction
 {
 private:
-    BranchInst(Value *cond, BasicBlock *if_true, BasicBlock *if_false,
-               BasicBlock *bb);
-    BranchInst(Value *cond, BasicBlock *bb);
-    BranchInst(BasicBlock *if_true, BasicBlock *bb);
-    BranchInst(BasicBlock *bb);
+    explicit BranchInst(Ptr<Value> cond, Ptr<BasicBlock> if_true, Ptr<BasicBlock> if_false,
+               Ptr<BasicBlock> bb);
+    void init(Ptr<Value> cond, Ptr<BasicBlock> if_true, Ptr<BasicBlock> if_false,
+              Ptr<BasicBlock> bb);
+    explicit BranchInst(Ptr<Value> cond, Ptr<BasicBlock> bb);
+    void init(Ptr<Value> cond, Ptr<BasicBlock> bb);
+    explicit BranchInst(Ptr<BasicBlock> if_true, Ptr<BasicBlock> bb);
+    void init(Ptr<BasicBlock> if_true, Ptr<BasicBlock> bb);
+    explicit BranchInst(Ptr<BasicBlock> bb);
+    void init(Ptr<BasicBlock> bb);
 
 public:
-    static BranchInst *create_cond_br(Value *cond, BasicBlock *if_true, BasicBlock *if_false,
-                                      BasicBlock *bb);
-    static BranchInst *create_br(BasicBlock *if_true, BasicBlock *bb);
+    static Ptr<BranchInst> create_cond_br(Ptr<Value> cond, Ptr<BasicBlock> if_true, Ptr<BasicBlock> if_false,
+                                      Ptr<BasicBlock> bb);
+    static Ptr<BranchInst> create_br(Ptr<BasicBlock> if_true, Ptr<BasicBlock> bb);
 
     bool is_cond_br() const;
 
@@ -269,12 +276,14 @@ public:
 class ReturnInst : public Instruction
 {
 private:
-    ReturnInst(Value *val, BasicBlock *bb);
-    ReturnInst(BasicBlock *bb);
+    explicit ReturnInst(Ptr<Value> val, Ptr<BasicBlock> bb);
+    void init(Ptr<Value> val, Ptr<BasicBlock> bb);
+    explicit ReturnInst(Ptr<BasicBlock> bb);
+    void init(Ptr<BasicBlock> bb);
 
 public:
-    static ReturnInst *create_ret(Value *val, BasicBlock *bb);
-    static ReturnInst *create_void_ret(BasicBlock *bb);
+    static Ptr<ReturnInst> create_ret(Ptr<Value> val, Ptr<BasicBlock> bb);
+    static Ptr<ReturnInst> create_void_ret(Ptr<BasicBlock> bb);
     bool is_void_ret() const;
 
     virtual std::string print() override;
@@ -284,29 +293,31 @@ public:
 class GetElementPtrInst : public Instruction
 {
 private:
-    GetElementPtrInst(Value *ptr, std::vector<Value *> idxs, BasicBlock *bb);
+    explicit GetElementPtrInst(Ptr<Value> ptr, PtrVec<Value> idxs, Ptr<BasicBlock> bb);
+    void init(Ptr<Value> ptr, PtrVec<Value> idxs, Ptr<BasicBlock> bb);
 
 public:
-    static Type *get_element_type(Value *ptr, std::vector<Value *> idxs);
-    static GetElementPtrInst *create_gep(Value *ptr, std::vector<Value *> idxs, BasicBlock *bb);
-    Type *get_element_type() const;
+    static Ptr<Type> get_element_type(Ptr<Value> ptr, PtrVec<Value> idxs);
+    static Ptr<GetElementPtrInst> create_gep(Ptr<Value> ptr, PtrVec<Value> idxs, Ptr<BasicBlock> bb);
+    Ptr<Type> get_element_type() const;
 
     virtual std::string print() override;
 
 private:
-    Type *element_ty_;
+    Ptr<Type> element_ty_;
 };
 
 class StoreInst : public Instruction
 {
 private:
-    StoreInst(Value *val, Value *ptr, BasicBlock *bb);
+    explicit StoreInst(Ptr<Value> val, Ptr<Value> ptr, Ptr<BasicBlock> bb);
+    void init(Ptr<Value> val, Ptr<Value> ptr, Ptr<BasicBlock> bb);
 
 public:
-    static StoreInst *create_store(Value *val, Value *ptr, BasicBlock *bb);
+    static Ptr<StoreInst> create_store(Ptr<Value> val, Ptr<Value> ptr, Ptr<BasicBlock> bb);
 
-    Value *get_rval() { return this->get_operand(0); }
-    Value *get_lval() { return this->get_operand(1); }
+    Ptr<Value> get_rval() { return this->get_operand(0); }
+    Ptr<Value> get_lval() { return this->get_operand(1); }
 
     virtual std::string print() override;
 
@@ -315,13 +326,14 @@ public:
 class LoadInst : public Instruction
 {
 private:
-    LoadInst(Type *ty, Value *ptr, BasicBlock *bb);
+    explicit LoadInst(Ptr<Type> ty, Ptr<Value> ptr, Ptr<BasicBlock> bb);
+    void init(Ptr<Type> ty, Ptr<Value> ptr, Ptr<BasicBlock> bb);
 
 public:
-    static LoadInst *create_load(Type *ty, Value *ptr, BasicBlock *bb);
-    Value *get_lval() { return this->get_operand(0); }
+    static Ptr<LoadInst> create_load(Ptr<Type> ty, Ptr<Value> ptr, Ptr<BasicBlock> bb);
+    Ptr<Value> get_lval() { return this->get_operand(0); }
 
-    Type *get_load_type() const;
+    Ptr<Type> get_load_type() const;
 
     virtual std::string print() override;
 
@@ -330,77 +342,82 @@ public:
 class AllocaInst : public Instruction
 {
 private:
-    AllocaInst(Type *ty, BasicBlock *bb);
+    explicit AllocaInst(Ptr<Type> ty, Ptr<BasicBlock> bb);
+    void init(Ptr<Type> ty, Ptr<BasicBlock> bb);
 
 public:
-    static AllocaInst *create_alloca(Type *ty, BasicBlock *bb);
+    static Ptr<AllocaInst> create_alloca(Ptr<Type> ty, Ptr<BasicBlock> bb);
 
-    Type *get_alloca_type() const;
+    Ptr<Type> get_alloca_type() const;
 
     virtual std::string print() override;
 
 private:
-    Type *alloca_ty_;
+    Ptr<Type> alloca_ty_;
 };
 
 class ZextInst : public Instruction
 {
 private:
-    ZextInst(OpID op, Value *val, Type *ty, BasicBlock *bb);
+    explicit ZextInst(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
+    void init(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
 public:
-    static ZextInst *create_zext(Value *val, Type *ty, BasicBlock *bb);
+    static Ptr<ZextInst> create_zext(Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
-    Type *get_dest_type() const;
+    Ptr<Type> get_dest_type() const;
 
     virtual std::string print() override;
 
 private:
-    Type *dest_ty_;
+    Ptr<Type> dest_ty_;
 };
 
 class FpToSiInst : public Instruction
 {
 private:
-    FpToSiInst(OpID op, Value *val, Type *ty, BasicBlock *bb);
+    explicit FpToSiInst(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
+    void init(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
 public:
-    static FpToSiInst *create_fptosi(Value *val, Type *ty, BasicBlock *bb);
+    static Ptr<FpToSiInst> create_fptosi(Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
-    Type *get_dest_type() const;
+    Ptr<Type> get_dest_type() const;
 
     virtual std::string print() override;
 
 private:
-    Type *dest_ty_;
+    Ptr<Type> dest_ty_;
 };
 
 class SiToFpInst : public Instruction
 {
 private:
-    SiToFpInst(OpID op, Value *val, Type *ty, BasicBlock *bb);
+    explicit SiToFpInst(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
+    void init(OpID op, Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
 public:
-    static SiToFpInst *create_sitofp(Value *val, Type *ty, BasicBlock *bb);
+    static Ptr<SiToFpInst> create_sitofp(Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
-    Type *get_dest_type() const;
+    Ptr<Type> get_dest_type() const;
 
     virtual std::string print() override;
 
 private:
-    Type *dest_ty_;
+    Ptr<Type> dest_ty_;
 };
 
 class PhiInst : public Instruction
 {
 private:
-    PhiInst(OpID op, std::vector<Value *> vals, std::vector<BasicBlock *> val_bbs, Type *ty, BasicBlock *bb);
+    explicit PhiInst(OpID op, PtrVec<Value> vals, PtrVec<BasicBlock> val_bbs, Ptr<Type> ty, Ptr<BasicBlock> bb);
+    void init(OpID op, PtrVec<Value> vals, PtrVec<BasicBlock> val_bbs, Ptr<Type> ty, Ptr<BasicBlock> bb);
 
 public:
-    static PhiInst *create_phi(Type *ty, BasicBlock *bb);
-    Value *get_lval() { return l_val_; }
-    void set_lval(Value *l_val) { l_val_ = l_val; }
-    void add_phi_pair_operand(Value *val, Value *pre_bb)
+    static Ptr<PhiInst> create_phi(Ptr<Type> ty, Ptr<BasicBlock> bb);
+    Ptr<Value> get_lval() { return l_val_; }
+    void set_lval(Ptr<Value> l_val) { l_val_ = l_val; }
+    void add_phi_pair_operand(Ptr<Value> val, Ptr<Value> pre_bb)
     {
         this->add_operand(val);
         this->add_operand(pre_bb);
@@ -408,8 +425,11 @@ public:
     virtual std::string print() override;
 
 private:
-    Value *l_val_;
+    Ptr<Value> l_val_;
 
 };
+
+}
+}
 
 #endif // _SYSYF_INSTRUCTION_H_

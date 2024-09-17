@@ -6,32 +6,36 @@
 #include <list>
 #include "Module.h"
 
+namespace SysYF{
+namespace IR{
 
 class Pass{
 public:
-    explicit Pass(Module* m){module = m;}
+    explicit Pass(Ptr<Module> m){module = m;}
     virtual void execute() = 0;
     virtual const std::string get_name() const = 0;
 protected:
-    Module* module;
+    Ptr<Module> module;
 };
 
 template<typename T>
-using PassList = std::list<T*>;
+using PassList = PtrList<T>;
 
 class PassMgr{
 public:
-    explicit PassMgr(Module* m){module = m;pass_list = PassList<Pass>();}
-    template <typename PassTy> void addPass(){pass_list.push_back(new PassTy(module));}
+    explicit PassMgr(Ptr<Module> m){module = m;pass_list = PassList<Pass>();}
+    template <typename PassTy> void addPass(){pass_list.push_back(Ptr<Pass>(new PassTy(module)));}
     void execute() {
         for (auto pass : pass_list) {
             pass->execute();
         }
     }
 private:
-    Module* module;
+    Ptr<Module> module;
     PassList<Pass> pass_list;
 };
 
+}
+}
 
 #endif // SYSYF_PASS_H

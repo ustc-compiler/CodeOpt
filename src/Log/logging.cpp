@@ -1,5 +1,10 @@
 #include "logging.hpp"
 
+namespace SysYF
+{
+namespace Log
+{
+
 std::stack<bool> LogWriter::log_enable_stack;
 
 int get_env_LOG_level() {
@@ -119,4 +124,7 @@ std::string format(const char *fmt, ...)
     r.resize(static_cast<size_t>(len));
  
     return r;
+}
+
+}
 }

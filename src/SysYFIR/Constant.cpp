@@ -1,21 +1,34 @@
 #include "Constant.h"
 #include "Module.h"
+#include "internal_macros.h"
 #include <iostream>
 #include <sstream>
+#include <string.h>
 
-ConstantInt *ConstantInt::get(int val, Module *m)
+namespace SysYF
 {
-    return new ConstantInt(Type::get_int32_type(m), val);
-}
-ConstantInt *ConstantInt::get(bool val, Module *m)
+namespace IR
 {
-    return new ConstantInt(Type::get_int1_type(m),val?1:0);
+void ConstantInt::init(Ptr<Type> ty, int val)
+{
+    Constant::init(ty, "", 0);
 }
+
+Ptr<ConstantInt> ConstantInt::create(int val, Ptr<Module> m)
+{
+    RET_AFTER_INIT(ConstantInt, Type::get_int32_type(m), val);
+}
+
+Ptr<ConstantInt> ConstantInt::create(bool val, Ptr<Module> m)
+{
+    RET_AFTER_INIT(ConstantInt, Type::get_int1_type(m), val?1:0);
+}
+
 std::string ConstantInt::print()
 {
     std::string const_ir;
-    Type *ty = this->get_type();
-    if ( ty->is_integer_type() && static_cast<IntegerType *>(ty)->get_num_bits() == 1 )
+    Ptr<Type> ty = this->get_type();
+    if ( ty->is_integer_type() && static_pointer_cast<IntegerType>(ty)->get_num_bits() == 1 )
     {
         //int1
         const_ir += (this->get_value() == 0) ? "false" : "true";
@@ -28,35 +41,49 @@ std::string ConstantInt::print()
     return const_ir;
 }
 
-ConstantFloat *ConstantFloat::get(float val, Module *m)
+void ConstantFloat::init(Ptr<Type> ty, float val)
 {
-    return new ConstantFloat(Type::get_float_type(m), val);
+    Constant::init(ty, "", 0);
 }
+
+Ptr<ConstantFloat> ConstantFloat::create(float val, Ptr<Module> m)
+{
+    RET_AFTER_INIT(ConstantFloat, Type::get_float_type(m), val);
+}
+
 std::string ConstantFloat::print()
 {
     std::stringstream fp_ir_ss;
     std::string fp_ir;
     double val = this->get_value();
-    fp_ir_ss << "0x"<< std::hex << *(uint64_t *)&val << std::endl;
+    uint64_t hex_val = 0;
+    memcpy(&hex_val, &val, sizeof(double));
+    fp_ir_ss << "0x"<< std::hex << hex_val << std::endl;
     fp_ir_ss >> fp_ir; 
     return fp_ir;
 }
 
-ConstantArray::ConstantArray(ArrayType *ty, const std::vector<Constant*> &val)
+ConstantArray::ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
     : Constant(ty, "", val.size()) 
 {
-    for (int i = 0; i < val.size(); i++)
+
+}
+
+void ConstantArray::init(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
+{
+    Constant::init(ty, "", val.size());
+    for (unsigned int i = 0; i < val.size(); i++)
         set_operand(i, val[i]);
     this->const_array.assign(val.begin(),val.end());
 }
 
-Constant *ConstantArray::get_element_value(int index) {
+Ptr<Constant> ConstantArray::get_element_value(int index) {
     return this->const_array[index];
 }
 
-ConstantArray *ConstantArray::get(ArrayType *ty, const std::vector<Constant*> &val)
+Ptr<ConstantArray> ConstantArray::create(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
 {
-    return new ConstantArray(ty, val);
+    RET_AFTER_INIT(ConstantArray, ty, val);
 }
 
 std::string ConstantArray::print()
@@ -66,7 +93,7 @@ std::string ConstantArray::print()
     const_ir += this->get_type()->get_array_element_type()->print();
     const_ir += " ";
     const_ir += get_element_value(0)->print();
-    for ( int i = 1 ; i < this->get_size_of_array() ; i++ ){
+    for (unsigned int i = 1; i < this->get_size_of_array(); i++) {
         const_ir += ", ";
         const_ir += this->get_type()->get_array_element_type()->print();
         const_ir += " ";
@@ -76,12 +103,20 @@ std::string ConstantArray::print()
     return const_ir;
 }
 
-ConstantZero *ConstantZero::get(Type *ty, Module *m) 
+void ConstantZero::init(Ptr<Type> ty)
 {
-    return new ConstantZero(ty);
+    Constant::init(ty, "", 0);
+}
+
+Ptr<ConstantZero> ConstantZero::create(Ptr<Type> ty, Ptr<Module> m) 
+{
+    RET_AFTER_INIT(ConstantZero, ty);
 }
 
 std::string ConstantZero::print()
 {
     return "zeroinitializer";
+}
+
+}
 }

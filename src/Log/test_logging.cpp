@@ -1,6 +1,8 @@
 // 引入头文件
 #include "logging.hpp"
 
+using namespace SysYF::Log;
+
 void test() {
     LOG_DISABLE //  向Log栈顶push false
     LOG(DEBUG) << "won't be output";    //  因为Log栈栈顶是false，所以不会打印

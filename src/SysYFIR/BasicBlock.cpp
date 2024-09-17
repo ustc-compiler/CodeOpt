@@ -7,48 +7,58 @@
 #endif
 #include <algorithm>
 
-BasicBlock::BasicBlock(Module *m, const std::string &name = "",
-                      Function *parent = nullptr)
+namespace SysYF
+{
+namespace IR
+{
+BasicBlock::BasicBlock(Ptr<Module> m, const std::string &name = "",
+                      Ptr<Function> parent = nullptr)
     : Value(Type::get_label_type(m), name), parent_(parent)
 {
 #ifdef DEBUG
     assert(parent && "currently parent should not be nullptr");
 #endif
-    parent_->add_basic_block(this);
+    // parent_->add_basic_block(dynamic_pointer_cast<BasicBlock>(shared_from_this()));
 }
 
-Module *BasicBlock::get_module()
+void BasicBlock::init(Ptr<Module> m, const std::string &name = "",
+                      Ptr<Function> parent = nullptr)
+{
+    parent_->add_basic_block(dynamic_pointer_cast<BasicBlock>(shared_from_this()));
+}
+
+Ptr<Module> BasicBlock::get_module()
 {
     return get_parent()->get_parent();
 }
 
-void BasicBlock::add_instruction(Instruction *instr)
+void BasicBlock::add_instruction(Ptr<Instruction> instr)
 {
     instr_list_.push_back(instr);
 }
 
-void BasicBlock::add_instruction(std::list<Instruction *>::iterator instr_pos, Instruction *instr)
+void BasicBlock::add_instruction(PtrList<Instruction>::iterator instr_pos, Ptr<Instruction> instr)
 {
     instr_list_.insert(instr_pos, instr);
 }
 
-void BasicBlock::add_instr_begin(Instruction *instr)
+void BasicBlock::add_instr_begin(Ptr<Instruction> instr)
 {
     instr_list_.push_front(instr);
 }
 
-std::list<Instruction *>::iterator BasicBlock::find_instruction(Instruction *instr)
+PtrList<Instruction>::iterator BasicBlock::find_instruction(Ptr<Instruction> instr)
 {
     return std::find(instr_list_.begin(), instr_list_.end(), instr);
 }
 
-void BasicBlock::delete_instr( Instruction *instr )
+void BasicBlock::delete_instr( Ptr<Instruction> instr )
 {
     instr_list_.remove(instr);
     instr->remove_use_of_ops();
 }
 
-const Instruction *BasicBlock::get_terminator() const
+const Ptr<Instruction> BasicBlock::get_terminator() const
 {
     if (instr_list_.empty()){
         return nullptr;
@@ -71,7 +81,7 @@ const Instruction *BasicBlock::get_terminator() const
 
 void BasicBlock::erase_from_parent()
 {
-    this->get_parent()->remove(this);
+    this->get_parent()->remove(dynamic_pointer_cast<BasicBlock>(shared_from_this()));
 }
 
 std::string BasicBlock::print()
@@ -106,4 +116,7 @@ std::string BasicBlock::print()
     }
 
     return bb_ir;
+}
+
+}
 }

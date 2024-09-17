@@ -1,6 +1,9 @@
 #include "SyntaxTreeChecker.h"
 
-using namespace SyntaxTree;
+namespace SysYF 
+{
+namespace SyntaxTree
+{
 
 void SyntaxTreeChecker::visit(Assembly& node) {
     enter_scope();
@@ -157,4 +160,7 @@ void SyntaxTreeChecker::visit(SyntaxTree::InitVal& node) {
             element->accept(*this);
         }
     }
+}
+
+}
 }

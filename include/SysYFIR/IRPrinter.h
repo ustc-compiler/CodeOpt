@@ -1,3 +1,6 @@
+#ifndef _SYSYF_IPRINTER_H_
+#define _SYSYF_IPRINTER_H_
+
 #include "Value.h"
 #include "Module.h"
 #include "Function.h"
@@ -8,6 +11,15 @@
 #include "User.h"
 #include "Type.h"
 
-std::string print_as_op( Value *v, bool print_ty );
-std::string print_cmp_type( CmpInst::CmpOp op);
-std::string print_fcmp_type( FCmpInst::CmpOp op);
+namespace SysYF
+{
+namespace IR
+{
+std::string print_as_op(Ptr<Value> v, bool print_ty );
+std::string print_cmp_type(CmpInst::CmpOp op);
+std::string print_fcmp_type(FCmpInst::CmpOp op);
+
+}
+}
+
+#endif

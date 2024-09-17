@@ -8,14 +8,14 @@
   在本次实验的框架中,`BasicBlock`类实现了4个和活跃变量分析相关的函数，你需要调用它们，设置所有`BasicBlock`的入口与出口处的活跃变量，以完成实验：  
 
   ```cpp
-  // 设置该BasicBlock入口处的活跃变量集合
-  void set_live_in(std::set<Value*> in){live_in = in;}
-  // 设置该BasicBlock出口处的活跃变量集合
-  void set_live_out(std::set<Value*> out){live_out = out;}
+  // 设置该BasicBlock入口处的活跃变量集合。若活跃变量集合发生改变，返回true, 否则返回false。
+  bool set_live_in(PtrSet<Value> in)
+  // 设置该BasicBlock出口处的活跃变量集合。若活跃变量集合发生改变，返回true, 否则返回false。
+  bool set_live_out(PtrSet<Value> out)
   // 获取该BasicBlock入口处的活跃变量集合
-  std::set<Value*>& get_live_in(){return live_in;}
+  PtrSet<Value>& get_live_in()
   // 获取该BasicBlock出口处的活跃变量集合
-  std::set<Value*>& get_live_out(){return live_out;}
+  PtrSet<Value>& get_live_out()
   ```
 
   `ActiveVar`类中的`execute`函数会被调用来执行你实现的活跃变量分析算法，你需要将你的实现流程体现在该函数中。

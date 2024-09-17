@@ -4,8 +4,10 @@
 #include <string>
 #include <iostream>
 
-using namespace SyntaxTree;
-
+namespace SysYF 
+{
+namespace SyntaxTree
+{
 std::map<Type, std::string> type2str = {
     {Type::INT, "int"},
     {Type::VOID, "void"},
@@ -309,4 +311,7 @@ void SyntaxTreePrinter::visit(ContinueStmt &node)
     print_indent();
     std::cout << "continue";
     std::cout << ";" <<std::endl;
+}
+
+}
 }

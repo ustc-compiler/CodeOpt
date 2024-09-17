@@ -3,11 +3,11 @@
 #include "SysYFDriver.h"
 #include "SyntaxTreePrinter.h"
 #include "ErrorReporter.h"
-#include "SyntaxTreeChecker.h"
 #include "Pass.h"
 #include "DominateTree.h"
 #include "Mem2Reg.h"
 #include "ActiveVar.h"
+#include "SyntaxTreeChecker.h"
 
 
 void print_help(const std::string& exe_name) {
@@ -20,11 +20,13 @@ void print_help(const std::string& exe_name) {
 
 int main(int argc, char *argv[])
 {
-    IRBuilder builder;
+    using namespace SysYF;
+
     SysYFDriver driver;
-    SyntaxTreePrinter printer;
+    SyntaxTree::SyntaxTreePrinter printer;
     ErrorReporter reporter(std::cerr);
-    SyntaxTreeChecker checker(reporter);
+    SyntaxTree::SyntaxTreeChecker checker(reporter);
+    auto builder = IR::IRBuilder::create();
 
     bool print_ast = false;
     bool emit_ir = false;
@@ -80,21 +82,21 @@ int main(int argc, char *argv[])
     if (check)
         root->accept(checker);
     if (emit_ir) {
-        root->accept(builder);
-        auto m = builder.getModule();
+        root->accept(*builder);
+        auto m = builder->getModule();
         m->set_file_name(filename);
         m->set_print_name();
         if(optimize){
-            PassMgr passmgr(m.get());
-            passmgr.addPass<DominateTree>();
-            passmgr.addPass<Mem2Reg>();
+            IR::PassMgr passmgr(m);
+            passmgr.addPass<IR::DominateTree>();
+            passmgr.addPass<IR::Mem2Reg>();
             if(optimize_all){
-                passmgr.addPass<ActiveVar>();
+                passmgr.addPass<IR::ActiveVar>();
                 //  ...
             }
             else {
                 if(av){
-                    passmgr.addPass<ActiveVar>();
+                    passmgr.addPass<IR::ActiveVar>();
                 }
                 //  ...
             }

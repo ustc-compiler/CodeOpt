@@ -4,13 +4,18 @@
 #include "Value.h"
 #include "Type.h"
 
+namespace SysYF
+{
+namespace IR
+{
 class Constant : public User
 {
-private:
+protected:
+    explicit Constant(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0)
+    : User(ty, name, num_ops) {}
+    void init(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0) {}
     // int value;
 public:
-    Constant(Type *ty, const std::string &name = "", unsigned num_ops = 0)
-        : User(ty, name, num_ops) {}
     ~Constant() = default;
 };
 
@@ -18,14 +23,16 @@ class ConstantInt : public Constant
 {
 private:
     int value_;
-    ConstantInt(Type* ty,int val) 
+    explicit ConstantInt(Ptr<Type> ty, int val) 
         : Constant(ty,"",0),value_(val) {}
+    void init(Ptr<Type> ty, int val);
+
 public:
     
-    static int get_value(ConstantInt *const_val) { return const_val->value_; }
+    static int get_value(Ptr<ConstantInt> const_val) { return const_val->value_; }
     int get_value() { return value_; }
-    static ConstantInt *get(int val, Module *m);
-    static ConstantInt *get(bool val, Module *m);
+    static Ptr<ConstantInt> create(int val, Ptr<Module> m);
+    static Ptr<ConstantInt> create(bool val, Ptr<Module> m);
     virtual std::string print() override;
 };
 
@@ -33,31 +40,34 @@ class ConstantFloat : public Constant
 {
 private:
     float value_;
-    ConstantFloat(Type* ty,float val) 
+    explicit ConstantFloat(Ptr<Type>  ty,float val) 
         : Constant(ty,"",0),value_(val) {}
+    void init(Ptr<Type> ty, float val);
+
 public:
     
-    static float get_value(ConstantFloat *const_val) { return const_val->value_; }
+    static float get_value(Ptr<ConstantFloat> const_val) { return const_val->value_; }
     float get_value() { return value_; }
-    static ConstantFloat *get(float val, Module *m);
+    static Ptr<ConstantFloat> create(float val, Ptr<Module> m);
     virtual std::string print() override;
 };
 
 class ConstantArray : public Constant
 {
 private:
-    std::vector<Constant*> const_array;
+    PtrVec<Constant> const_array;
+    explicit ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
+    void init(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
 
-    ConstantArray(ArrayType *ty, const std::vector<Constant*> &val);
 public:
     
-    ~ConstantArray()=default;
+    ~ConstantArray() = default;
 
-    Constant* get_element_value(int index);
+    Ptr<Constant> get_element_value(int index);
 
     unsigned get_size_of_array() { return const_array.size(); } 
 
-    static ConstantArray *get(ArrayType *ty, const std::vector<Constant*> &val);
+    static Ptr<ConstantArray> create(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
 
     virtual std::string print() override;
 };
@@ -65,11 +75,16 @@ public:
 class ConstantZero : public Constant 
 {
 private:
-    ConstantZero(Type *ty)
+    explicit ConstantZero(Ptr<Type> ty)
         : Constant(ty,"",0) {}
+    void init(Ptr<Type> ty);
+
 public:
-    static ConstantZero *get(Type *ty, Module *m);
+    static Ptr<ConstantZero> create(Ptr<Type> ty, Ptr<Module> m);
     virtual std::string print() override;
 };
+
+}
+}
 
 #endif //_SYSYF_CONSTANT_H_

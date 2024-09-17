@@ -1,6 +1,10 @@
 #include "IRPrinter.h"
 
-std::string print_as_op( Value *v, bool print_ty )
+namespace SysYF
+{
+namespace IR
+{
+std::string print_as_op( Ptr<Value> v, bool print_ty )
 {
     std::string op_ir;
     if( print_ty )
@@ -9,15 +13,15 @@ std::string print_as_op( Value *v, bool print_ty )
         op_ir += " ";
     }
 
-    if (dynamic_cast<GlobalVariable *>(v))
+    if (dynamic_pointer_cast<GlobalVariable>(v))
     {
         op_ir += "@"+v->get_name();
     }
-    else if ( dynamic_cast<Function *>(v) )
+    else if (dynamic_pointer_cast<Function>(v) )
     {
         op_ir += "@"+v->get_name();
     }
-    else if ( dynamic_cast<Constant *>(v))
+    else if (dynamic_pointer_cast<Constant>(v))
     {
         op_ir += v->print();
     }
@@ -83,4 +87,7 @@ std::string print_fcmp_type( FCmpInst::CmpOp op )
         break;
     }
     return "wrong fcmpop";
+}
+
+}
 }

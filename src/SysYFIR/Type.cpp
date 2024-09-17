@@ -5,77 +5,86 @@
 #include <cassert>
 #endif
 
-Type::Type(TypeID tid, Module *m)
+namespace SysYF
+{
+namespace IR
+{
+Type::Type(TypeID tid, Ptr<Module> m)
 {
     tid_ = tid;
     m_ = m;
 }
 
-Module *Type::get_module()
+Ptr<Type> Type::create(TypeID tid, Ptr<Module> m)
+{
+    RET_AFTER_INIT(Type, tid, m);
+}
+
+Ptr<Module> Type::get_module()
 {
     return m_;
 }
 
-bool Type::is_eq_type(Type *ty1, Type *ty2)
+bool Type::is_eq_type(Ptr<Type> ty1, Ptr<Type> ty2)
 {
     return ty1 == ty2;
 }
 
-Type *Type::get_void_type(Module *m)
+Ptr<Type> Type::get_void_type(Ptr<Module> m)
 {
     return m->get_void_type();
 }
 
-Type *Type::get_label_type(Module *m)
+Ptr<Type> Type::get_label_type(Ptr<Module> m)
 {
     return m->get_label_type();
 }
 
-IntegerType *Type::get_int1_type(Module *m)
+Ptr<IntegerType> Type::get_int1_type(Ptr<Module> m)
 {
     return m->get_int1_type();
 }
 
-IntegerType *Type::get_int32_type(Module *m)
+Ptr<IntegerType> Type::get_int32_type(Ptr<Module> m)
 {
     return m->get_int32_type();
 }
 
-FloatType *Type::get_float_type(Module *m)
+Ptr<FloatType> Type::get_float_type(Ptr<Module> m)
 {
     return m->get_float_type();
 }
 
-PointerType *Type::get_pointer_type(Type *contained)
+Ptr<PointerType> Type::get_pointer_type(Ptr<Type> contained)
 {
     return PointerType::get(contained);
 }
 
-ArrayType *Type::get_array_type(Type *contained, unsigned num_elements)
+Ptr<ArrayType> Type::get_array_type(Ptr<Type> contained, unsigned num_elements)
 {
     return ArrayType::get(contained, num_elements);
 }
 
-PointerType *Type::get_int32_ptr_type(Module *m)
+Ptr<PointerType> Type::get_int32_ptr_type(Ptr<Module> m)
 {
     return m->get_int32_ptr_type();
 }
 
-PointerType *Type::get_float_ptr_type(Module *m)
+Ptr<PointerType> Type::get_float_ptr_type(Ptr<Module> m)
 {
     return m->get_float_ptr_type();
 }
 
-Type *Type::get_pointer_element_type(){ 
+Ptr<Type> Type::get_pointer_element_type(){ 
     if( this->is_pointer_type() )
-        return static_cast<PointerType *>(this)->get_element_type();
+        return static_pointer_cast<PointerType>(shared_from_this())->get_element_type();
     else
         return nullptr;
 }
 
-Type *Type::get_array_element_type(){
+Ptr<Type> Type::get_array_element_type(){
     if( this->is_array_type() )
-        return static_cast<ArrayType *>(this)->get_element_type();
+        return static_pointer_cast<ArrayType>(shared_from_this())->get_element_type();
     else
         return nullptr;
 }
@@ -84,7 +93,7 @@ int Type::get_size()
 {
     if (this->is_integer_type()) 
     {
-        auto bits = static_cast<IntegerType *>(this)->get_num_bits() / 8;
+        auto bits = static_pointer_cast<IntegerType>(shared_from_this())->get_num_bits() / 8;
         return bits > 0 ? bits : 1;        
     }
     if (this->is_float_type()) 
@@ -93,8 +102,8 @@ int Type::get_size()
     }
     if (this->is_array_type()) 
     {
-        auto element_size = static_cast<ArrayType *>(this)->get_element_type()->get_size();
-        auto num_elements = static_cast<ArrayType *>(this)->get_num_of_elements();
+        auto element_size = static_pointer_cast<ArrayType>(shared_from_this())->get_element_type()->get_size();
+        auto num_elements = static_pointer_cast<ArrayType>(shared_from_this())->get_num_of_elements();
         return element_size * num_elements;
     }
     if (this->is_pointer_type()) 
@@ -123,19 +132,19 @@ std::string Type::print(){
         break;
     case IntegerTyID:
         type_ir += "i";
-        type_ir += std::to_string( static_cast<IntegerType *>(this)->get_num_bits());
+        type_ir += std::to_string( static_pointer_cast<IntegerType>(shared_from_this())->get_num_bits());
         break;
     case FloatTyID:
         type_ir += "float";
         break;
     case FunctionTyID:
-        type_ir += static_cast<FunctionType *>(this)->get_return_type()->print();
+        type_ir += static_pointer_cast<FunctionType>(shared_from_this())->get_return_type()->print();
         type_ir += " (";
-        for( int i = 0 ; i < static_cast<FunctionType *>(this)->get_num_of_args() ; i++)
+        for(unsigned int i = 0 ; i < static_pointer_cast<FunctionType>(shared_from_this())->get_num_of_args() ; i++)
         {
             if(i)
                 type_ir += ", ";
-            type_ir += static_cast<FunctionType *>(this)->get_param_type(i)->print();
+            type_ir += static_pointer_cast<FunctionType>(shared_from_this())->get_param_type(i)->print();
         }
         type_ir += ")";
         break;
@@ -145,9 +154,9 @@ std::string Type::print(){
         break;
     case ArrayTyID:
         type_ir += "[";
-        type_ir += std::to_string( static_cast<ArrayType *>(this)->get_num_of_elements());
+        type_ir += std::to_string( static_pointer_cast<ArrayType>(shared_from_this())->get_num_of_elements());
         type_ir += " x ";
-        type_ir += static_cast<ArrayType *>(this)->get_element_type()->print();
+        type_ir += static_pointer_cast<ArrayType>(shared_from_this())->get_element_type()->print();
         type_ir += "]";
         break;
     default:
@@ -156,14 +165,16 @@ std::string Type::print(){
     return type_ir;
 }
 
-IntegerType::IntegerType(unsigned num_bits , Module *m)
+IntegerType::IntegerType(unsigned num_bits , Ptr<Module> m)
     : Type(Type::IntegerTyID, m), num_bits_(num_bits)
 {
+
 }
 
-IntegerType *IntegerType::get(unsigned num_bits, Module *m )
+
+Ptr<IntegerType> IntegerType::create(unsigned num_bits, Ptr<Module> m )
 {
-    return new IntegerType(num_bits, m);
+    RET_AFTER_INIT(IntegerType, num_bits, m);
 }
 
 unsigned IntegerType::get_num_bits()
@@ -171,17 +182,18 @@ unsigned IntegerType::get_num_bits()
     return num_bits_;
 }
 
-FloatType::FloatType(Module *m)
+FloatType::FloatType(Ptr<Module> m)
     : Type(Type::FloatTyID, m)
 {
+
 }
 
-FloatType *FloatType::get(Module *m )
+Ptr<FloatType> FloatType::create(Ptr<Module> m )
 {
-    return new FloatType(m);
+    RET_AFTER_INIT(FloatType, m);
 }
 
-FunctionType::FunctionType(Type *result, std::vector<Type *> params)
+FunctionType::FunctionType(Ptr<Type> result, PtrVec<Type>  params)
     : Type(Type::FunctionTyID, nullptr)
 {
 #ifdef DEBUG
@@ -198,20 +210,19 @@ FunctionType::FunctionType(Type *result, std::vector<Type *> params)
     }
 }
 
-bool FunctionType::is_valid_return_type(Type *ty)
+Ptr<FunctionType> FunctionType::create(Ptr<Type> result, PtrVec<Type>  params)
+{
+    RET_AFTER_INIT(FunctionType, result, params);
+}
+
+bool FunctionType::is_valid_return_type(Ptr<Type> ty)
 {
     return ty->is_integer_type() || ty->is_void_type();
 }
 
-bool FunctionType::is_valid_argument_type(Type *ty)
+bool FunctionType::is_valid_argument_type(Ptr<Type> ty)
 {
     return ty->is_integer_type() || ty->is_pointer_type();
-}
-
-FunctionType *FunctionType::get(Type *result,
-                            std::vector<Type*> params)
-{
-    return new FunctionType(result, params);
 }
 
 unsigned FunctionType::get_num_of_args() const
@@ -219,17 +230,17 @@ unsigned FunctionType::get_num_of_args() const
     return args_.size();
 }
 
-Type *FunctionType::get_param_type(unsigned i) const
+Ptr<Type> FunctionType::get_param_type(unsigned i) const
 {
     return args_[i];
 }
 
-Type *FunctionType::get_return_type() const
+Ptr<Type> FunctionType::get_return_type() const
 {
     return result_;
 }
 
-ArrayType::ArrayType(Type *contained, unsigned num_elements)
+ArrayType::ArrayType(Ptr<Type> contained, unsigned num_elements)
     : Type(Type::ArrayTyID, contained->get_module()), num_elements_(num_elements)
 {
 #ifdef DEBUG
@@ -238,23 +249,36 @@ ArrayType::ArrayType(Type *contained, unsigned num_elements)
     contained_ = contained;
 }
 
-bool ArrayType::is_valid_element_type(Type *ty)
+bool ArrayType::is_valid_element_type(Ptr<Type> ty)
 {
     return ty->is_integer_type()||ty->is_array_type()||ty->is_float_type();
 }
 
-ArrayType *ArrayType::get(Type *contained, unsigned num_elements)
+Ptr<ArrayType> ArrayType::get(Ptr<Type> contained, unsigned num_elements)
 {
     return contained->get_module()->get_array_type(contained, num_elements);
 }
 
-PointerType::PointerType(Type *contained)
+Ptr<ArrayType> ArrayType::create(Ptr<Type> contained, unsigned num_elements)
+{
+    RET_AFTER_INIT(ArrayType, contained, num_elements);
+}
+
+PointerType::PointerType(Ptr<Type> contained)
     : Type(Type::PointerTyID, contained->get_module()), contained_(contained)
 {
     
 }
 
-PointerType *PointerType::get(Type *contained)
+Ptr<PointerType> PointerType::get(Ptr<Type> contained)
 {
     return contained->get_module()->get_pointer_type(contained);
+}
+
+Ptr<PointerType> PointerType::create(Ptr<Type> contained)
+{
+    RET_AFTER_INIT(PointerType, contained);
+}
+
+}
 }

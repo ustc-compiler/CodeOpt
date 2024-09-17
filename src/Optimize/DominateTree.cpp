@@ -1,9 +1,15 @@
+#include "BasicBlock.h"
+#include "Function.h"
 #include "Pass.h"
 #include "DominateTree.h"
+#include "internal_types.h"
+
+namespace SysYF {
+namespace IR {
 
 void DominateTree::execute() {
-    for(auto f:module->get_functions()){
-        if(f->get_basic_blocks().empty()){
+    for (auto f: module->get_functions()) {
+        if (f->get_basic_blocks().empty()) {
             continue;
         }
         get_bb_idom(f);
@@ -11,12 +17,12 @@ void DominateTree::execute() {
     }
 }
 
-void DominateTree::get_post_order(BasicBlock *bb,std::set<BasicBlock*>& visited) {
+void DominateTree::get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock> &visited) {
     visited.insert(bb);
     auto children = bb->get_succ_basic_blocks();
-    for(auto child : children){
+    for (auto child: children) {
         auto is_visited = visited.find(child);
-        if(is_visited == visited.end()){
+        if (is_visited == visited.end()) {
             get_post_order(child, visited);
         }
     }
@@ -24,18 +30,18 @@ void DominateTree::get_post_order(BasicBlock *bb,std::set<BasicBlock*>& visited)
     reverse_post_order.push_back(bb);
 }
 
-void DominateTree::get_revserse_post_order(Function *f) {
+void DominateTree::get_revserse_post_order(Ptr<Function> f) {
     doms.clear();
     reverse_post_order.clear();
     bb2int.clear();
     auto entry = f->get_entry_block();
-    std::set<BasicBlock*> visited = {};
-    get_post_order(entry,visited);
+    PtrSet<BasicBlock> visited = {};
+    get_post_order(entry, visited);
     reverse_post_order.reverse();
 }
 
 //ref:https://www.cs.rice.edu/~keith/EMBED/dom.pdf
-void DominateTree::get_bb_idom(Function *f) {
+void DominateTree::get_bb_idom(Ptr<Function> f) {
     get_revserse_post_order(f);
 
     auto root = f->get_entry_block();
@@ -54,7 +60,7 @@ void DominateTree::get_bb_idom(Function *f) {
                 continue;
             }
             auto preds = bb->get_pre_basic_blocks();
-            BasicBlock* new_idom = nullptr;
+            Ptr<BasicBlock> new_idom = nullptr;
             for(auto pred_bb:preds){
                 if(doms[bb2int[pred_bb]] != nullptr){
                     new_idom = pred_bb;
@@ -78,7 +84,7 @@ void DominateTree::get_bb_idom(Function *f) {
     }
 }
 
-void DominateTree::get_bb_dom_front(Function *f) {
+void DominateTree::get_bb_dom_front(Ptr<Function> f) {
     for(auto b:f->get_basic_blocks()){
         auto b_pred = b->get_pre_basic_blocks();
         if(b_pred.size() >= 2){
@@ -93,10 +99,10 @@ void DominateTree::get_bb_dom_front(Function *f) {
     }
 }
 
-BasicBlock* DominateTree::intersect(BasicBlock *b1, BasicBlock *b2) {
+Ptr<BasicBlock> DominateTree::intersect(Ptr<BasicBlock> b1, Ptr<BasicBlock> b2) {
     auto finger1 = b1;
     auto finger2 = b2;
-    while(finger1!=finger2){
+    while(finger1 != finger2){
         while(bb2int[finger1]<bb2int[finger2]){
             finger1 = doms[bb2int[finger1]];
         }
@@ -105,4 +111,7 @@ BasicBlock* DominateTree::intersect(BasicBlock *b1, BasicBlock *b2) {
         }
     }
     return finger1;
+}
+
+}
 }

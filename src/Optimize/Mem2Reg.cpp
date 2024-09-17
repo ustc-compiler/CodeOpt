@@ -1,5 +1,9 @@
 #include "Mem2Reg.h"
 #include "IRBuilder.h"
+#include <cstddef>
+
+namespace SysYF {
+namespace IR {
 
 void Mem2Reg::execute(){
     for(auto fun: module->get_functions()){
@@ -18,16 +22,16 @@ void Mem2Reg::execute(){
 
 void Mem2Reg::insideBlockForwarding(){
     for(auto bb: func_->get_basic_blocks()){
-        std::map<Value *, Instruction *> defined_list;
-        std::map<Instruction *, Value *> forward_list;
-        std::map<Value *, Value *> new_value;
-        std::set<Instruction *> delete_list;
+        Map<Ptr<Value>, Ptr<Instruction>> defined_list;
+        Map<Ptr<Instruction>, Ptr<Value>> forward_list;
+        Map<Ptr<Value>, Ptr<Value>> new_value;
+        PtrSet<Instruction> delete_list;
         for(auto inst: bb->get_instructions()){
             if(!isLocalVarOp(inst))continue;
             if(inst->get_instr_type() == Instruction::OpID::store){
-                Value* lvalue = static_cast<StoreInst *>(inst)->get_lval();
-                Value* rvalue = static_cast<StoreInst *>(inst)->get_rval();
-                auto load_inst = dynamic_cast<Instruction*>(rvalue);
+                Ptr<Value> lvalue = static_pointer_cast<StoreInst>(inst)->get_lval();
+                Ptr<Value> rvalue = static_pointer_cast<StoreInst>(inst)->get_rval();
+                auto load_inst = dynamic_pointer_cast<Instruction>(rvalue);
                 if(load_inst && forward_list.find(load_inst) != forward_list.end()){
                     rvalue = forward_list.find(load_inst)->second;
                 }
@@ -47,19 +51,18 @@ void Mem2Reg::insideBlockForwarding(){
                 }
             }
             else if(inst->get_instr_type() == Instruction::OpID::load){
-                Value* lvalue = static_cast<LoadInst *>(inst)->get_lval();
-                Value* rvalue = dynamic_cast<Value *>(inst);
+                Ptr<Value> lvalue = static_pointer_cast<LoadInst>(inst)->get_lval();
                 if(defined_list.find(lvalue) == defined_list.end())continue;
-                Value* value = new_value.find(lvalue)->second;
+                Ptr<Value> value = new_value.find(lvalue)->second;
                 forward_list.insert({inst, value});
             }
         }
 
         for(auto submap: forward_list){
-            Instruction * inst = submap.first; 
-            Value * value = submap.second;
+            auto inst = submap.first; 
+            auto value = submap.second;
             for(auto use: inst->get_use_list()){
-                Instruction * use_inst = dynamic_cast<Instruction *>(use.val_);
+                auto use_inst = dynamic_pointer_cast<Instruction>(use.val_);
                 use_inst->set_operand(use.arg_no_, value);
             }
             bb->delete_instr(inst);
@@ -71,17 +74,17 @@ void Mem2Reg::insideBlockForwarding(){
 }
 
 void Mem2Reg::genPhi(){
-    std::set<Value *> globals;
-    std::map<Value *, std::set<BasicBlock *>> defined_in_block;
+    PtrSet<Value> globals;
+    Map<Ptr<Value>, PtrSet<BasicBlock>> defined_in_block;
     for(auto bb: func_->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!isLocalVarOp(inst))continue;
             if(inst->get_instr_type() == Instruction::OpID::load){
-                Value* lvalue = static_cast<LoadInst *>(inst)->get_lval();
+                Ptr<Value> lvalue = static_pointer_cast<LoadInst>(inst)->get_lval();
                 globals.insert(lvalue);
             }
             else if(inst->get_instr_type() == Instruction::OpID::store){
-                Value* lvalue = static_cast<StoreInst *>(inst)->get_lval();
+                Ptr<Value> lvalue = static_pointer_cast<StoreInst>(inst)->get_lval();
                 if(defined_in_block.find(lvalue) != defined_in_block.end()){
                     defined_in_block.find(lvalue)->second.insert(bb);
                 }
@@ -92,13 +95,13 @@ void Mem2Reg::genPhi(){
         }
     }
 
-    std::map<BasicBlock *, std::set<Value *>> bb_phi_list;
+    Map<Ptr<BasicBlock>, PtrSet<Value>> bb_phi_list;
 
     for(auto var: globals){
         auto define_bbs = defined_in_block.find(var)->second;
-        std::vector<BasicBlock *> queue;
+        PtrVec<BasicBlock> queue;
         queue.assign(define_bbs.begin(), define_bbs.end());
-        int iter_pointer = 0;
+        size_t iter_pointer = 0;
         for(; iter_pointer < queue.size(); iter_pointer++){
             for(auto bb_domfront: queue[iter_pointer]->get_dom_frontier()){
                 if(bb_phi_list.find(bb_domfront) != bb_phi_list.end()){
@@ -126,32 +129,32 @@ void Mem2Reg::genPhi(){
 }
 
 void Mem2Reg::valueDefineCounting(){
-    define_var = std::map<BasicBlock *, std::vector<Value*>>();
+    define_var = Map<Ptr<BasicBlock>, PtrVec<Value>>();
     for(auto bb: func_->get_basic_blocks()){
         define_var.insert({bb, {}});
         for(auto inst: bb->get_instructions()){
             if(inst->get_instr_type() == Instruction::OpID::phi){
-                auto lvalue = dynamic_cast<PhiInst *>(inst)->get_lval();
+                auto lvalue = dynamic_pointer_cast<PhiInst>(inst)->get_lval();
                 define_var.find(bb)->second.push_back(lvalue);
             }
             else if(inst->get_instr_type() == Instruction::OpID::store){
                 if(!isLocalVarOp(inst))continue;
-                auto lvalue = dynamic_cast<StoreInst *>(inst)->get_lval();
+                auto lvalue = dynamic_pointer_cast<StoreInst>(inst)->get_lval();
                 define_var.find(bb)->second.push_back(lvalue);
             }
         }
     }
 }
 
-std::map<Value *, std::vector<Value *>> value_status;
-std::set<BasicBlock *> visited;
+Map<Ptr<Value>, PtrVec<Value>> value_status;
+PtrSet<BasicBlock> visited;
 
-void Mem2Reg::valueForwarding(BasicBlock* bb){
-    std::set<Instruction *> delete_list;
+void Mem2Reg::valueForwarding(Ptr<BasicBlock> bb){
+    PtrSet<Instruction> delete_list;
     visited.insert(bb);
     for(auto inst: bb->get_instructions()){
         if(inst->get_instr_type() != Instruction::OpID::phi)break;
-        auto lvalue = dynamic_cast<PhiInst *>(inst)->get_lval();
+        auto lvalue = dynamic_pointer_cast<PhiInst>(inst)->get_lval();
         auto value_list = value_status.find(lvalue);
         if(value_list != value_status.end()){
             value_list->second.push_back(inst);
@@ -165,13 +168,13 @@ void Mem2Reg::valueForwarding(BasicBlock* bb){
         if(inst->get_instr_type() == Instruction::OpID::phi)continue;
         if(!isLocalVarOp(inst))continue;
         if(inst->get_instr_type() == Instruction::OpID::load){
-            Value* lvalue = static_cast<LoadInst *>(inst)->get_lval();
-            Value* new_value = *(value_status.find(lvalue)->second.end() - 1);
+            auto lvalue = static_pointer_cast<LoadInst>(inst)->get_lval();
+            auto new_value = *(value_status.find(lvalue)->second.end() - 1);
             inst->replace_all_use_with(new_value);
         }
         else if(inst->get_instr_type() == Instruction::OpID::store){
-            Value* lvalue = static_cast<StoreInst *>(inst)->get_lval();
-            Value* rvalue = static_cast<StoreInst *>(inst)->get_rval();
+            auto lvalue = static_pointer_cast<StoreInst>(inst)->get_lval();
+            auto rvalue = static_pointer_cast<StoreInst>(inst)->get_rval();
             if(value_status.find(lvalue) != value_status.end()){
                 value_status.find(lvalue)->second.push_back(rvalue);
             }
@@ -185,11 +188,11 @@ void Mem2Reg::valueForwarding(BasicBlock* bb){
     for(auto succbb: bb->get_succ_basic_blocks()){
         for(auto inst: succbb->get_instructions()){
             if(inst->get_instr_type() == Instruction::OpID::phi){
-                auto phi = dynamic_cast<PhiInst *>(inst);
+                auto phi = dynamic_pointer_cast<PhiInst>(inst);
                 auto lvalue = phi->get_lval();
                 if(value_status.find(lvalue) != value_status.end()){
                     if(value_status.find(lvalue)->second.size() > 0){
-                        Value * new_value = *(value_status.find(lvalue)->second.end() - 1);
+                        auto new_value = *(value_status.find(lvalue)->second.end() - 1);
                         phi->add_phi_pair_operand(new_value, bb);
                     }
                     else{
@@ -226,10 +229,10 @@ void Mem2Reg::valueForwarding(BasicBlock* bb){
 
 void Mem2Reg::removeAlloc(){
     for(auto bb: func_->get_basic_blocks()){
-        std::set<Instruction *> delete_list;
+        PtrSet<Instruction> delete_list;
         for(auto inst: bb->get_instructions()){
             if(inst->get_instr_type() != Instruction::OpID::alloca)continue;
-            auto alloc_inst = dynamic_cast<AllocaInst *>(inst);
+            auto alloc_inst = dynamic_pointer_cast<AllocaInst>(inst);
             if(alloc_inst->get_alloca_type()->is_integer_type() || alloc_inst->get_alloca_type()->is_float_type() ||
                alloc_inst->get_alloca_type()->is_pointer_type())delete_list.insert(inst);
         }
@@ -240,34 +243,34 @@ void Mem2Reg::removeAlloc(){
 }
 
 void Mem2Reg::phiStatistic(){
-    std::map<Value *, Value *> value_map;
+    Map<Ptr<Value>, Ptr<Value>> value_map;
     for(auto bb: func_->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!inst->is_phi())continue;
-            auto phi_value = dynamic_cast<Value *>(inst);
+            auto phi_value = dynamic_pointer_cast<Value>(inst);
             if(value_map.find(phi_value) == value_map.end()){
-                value_map.insert({phi_value, dynamic_cast<PhiInst *>(inst)->get_lval()});
+                value_map.insert({phi_value, dynamic_pointer_cast<PhiInst>(inst)->get_lval()});
             }
         }
     }
     for(auto bb: func_->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!inst->is_phi())continue;
-            auto phi_value = dynamic_cast<Value *>(inst);
+            auto phi_value = dynamic_pointer_cast<Value>(inst);
 #ifdef DEBUG
             std::cout << "phi find: " << phi_value->print() << "\n";
 #endif
-            Value * reduced_value;
+            Ptr<Value> reduced_value;
             if(value_map.find(phi_value) != value_map.end()){
                 reduced_value = value_map.find(phi_value)->second;
             }
             else{
-                reduced_value = dynamic_cast<PhiInst *>(inst)->get_lval();
+                reduced_value = dynamic_pointer_cast<PhiInst>(inst)->get_lval();
                 value_map.insert({phi_value, reduced_value});
             }
             for(auto opr: inst->get_operands()){
-                if(dynamic_cast<BasicBlock *>(opr))continue;
-                if(dynamic_cast<Constant *>(opr))continue;
+                if(dynamic_pointer_cast<BasicBlock>(opr))continue;
+                if(dynamic_pointer_cast<Constant>(opr))continue;
                 if(no_union_set.find(opr) != no_union_set.end())continue;
                 if(value_map.find(opr) != value_map.end()){
                     auto opr_reduced_value = value_map.find(opr)->second;
@@ -299,11 +302,11 @@ void Mem2Reg::phiStatistic(){
         }
     }
 
-    std::map<Value *, std::set<Value *>> reversed_value_map;
+    Map<Ptr<Value>, PtrSet<Value>> reversed_value_map;
 
     for(auto map_item: value_map){
-        Value* vreg = map_item.first;
-        Value* lvalue = map_item.second;
+        auto vreg = map_item.first;
+        auto lvalue = map_item.second;
         if(reversed_value_map.find(lvalue) != reversed_value_map.end()){
             reversed_value_map.find(lvalue)->second.insert(vreg);
         }
@@ -317,3 +320,5 @@ void Mem2Reg::phiStatistic(){
     }
 }
 
+}
+}
