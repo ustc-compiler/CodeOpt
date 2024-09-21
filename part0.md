@@ -18,10 +18,10 @@
 
 同时保留了`-emit-ast`参数用于从AST复原代码，`-check`参数用于静态检查。
 
-若要开启单项优化，`-av`代表开启活跃变量分析。如果需要开启优化或者分析，则必须在命令行中搭配`-O`参数使用，否则无效。比如，若你想开启活跃变量分析或者其他分析优化遍，就需要使用如下命令：
+若要开启单项优化，`-lv`代表开启活跃变量分析。如果需要开启优化或者分析，则必须在命令行中搭配`-O`参数使用，否则无效。比如，若你想开启活跃变量分析或者其他分析优化遍，就需要使用如下命令：
 
 ```shell
-./compiler -emit-ir -O -av test.sy -o test.ll
+./compiler -emit-ir -O -lv test.sy -o test.ll
 ```
 
 **注意：**以下两条命令产生的IR是不同的:
@@ -42,11 +42,13 @@
 
 - Pass
 
-  `Pass`类是所有分析与优化Pass的基类（比如Mem2Reg、DominateTree、ComSubExprEli等），定义在[`include/Optimize/Pass.h`](include/Optimize/Pass.h)中。该基类中有两个纯虚函数需要子类重写：一个是`virtual void execute() = 0`，该函数是pass的总控函数，该函数会被调用去执行该pass；另一个是`virtual const std::string get_name() const = 0`，该函数用于获得该pass的名字。
+  `Pass`类是所有分析与优化Pass的基类（比如Mem2Reg、DominateTree、LiveVar等），定义在[`include/Optimize/Pass.h`](include/Optimize/Pass.h)中。该基类中有两个纯虚函数需要子类重写：一个是`virtual void execute() = 0`，该函数是pass的总控函数，该函数会被调用去执行该pass；另一个是`virtual const std::string get_name() const = 0`，该函数用于获得该pass的名字。
 
   该基类中有一个成员变量`Module* module`，被子类继承。这里`module`含义表示一个编译单元，是一个源程序文件对应的中间表示。
 
   本实验中，你所实现的分析和优化pass均需继承自该类。你需要重写上述的`execute`函数和`get_name`函数。可以参考给出的[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp)和[`src/Optimize/DominateTree.cpp`](src/Optimize/DominateTree.cpp)是如何继承Pass类并实现对应功能的。
+
+  > 这里的`Pass`对应于LLVM中的[`ModulePass`](https://llvm.org/docs/WritingAnLLVMPass.html#the-modulepass-class)。LLVM还有其他类型的`Pass`，如`FunctionPass`, `LoopPass`等，针对不同规模的IR进行分析和优化，感兴趣的同学可以进一步查看[Writing an LLVM Pass (legacy PM version)](https://llvm.org/docs/WritingAnLLVMPass.html)。
 
 - PassMgr
 
@@ -56,7 +58,9 @@
 
 - Mem2Reg
 
-  `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp))，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
+  `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value(register)，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp))，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
+
+  > 参考链接: [LLVM对mem2reg的说明](https://llvm.org/docs/Passes.html#mem2reg-promote-memory-to-register), [LLVM的mem2reg实现](https://llvm.org/doxygen/Mem2Reg_8cpp_source.html)
 
 ## 使用Log方便调试
 

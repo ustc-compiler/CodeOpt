@@ -26,6 +26,7 @@
         - [ICmp FCmp](#icmp-fcmp)
         - [Call](#call)
         - [GetElementPtr](#getelementptr)
+        - [Phi](#phi)
   - [C++ APIs](#c-apis)
     - [核心类概念图](#核心类概念图)
     - [BasicBlock](#basicblock)
@@ -254,6 +255,21 @@
   - `%2 = getelementptr i32, i32* %1 i32 %0` 
 - 参数解释：第一个参数是计算基础类型，第二第三个参数表示索引开始的指针类型及指针，`[]`表示可重复参数，里面表示的数组索引的偏移类型及偏移值。（思考指针类型为`[10 x i32]`指针和`i32`指针`getelementptr`用法的不同）
 - 概念：`getelementptr`指令用于获取数组结构的元素的地址。 它仅执行地址计算，并且不访问内存。
+
+##### Phi
+- 格式：`<result> = phi <type> [ <val0>, <label0> ], ...`
+- 例子：
+  - `%indvar = phi i32 [ 0, %LoopHeader ], [ %nextindvar, %Loop ]`
+- 参数解释：`<val0>`表示从`<label0>`基本块跳转到达`phi`指令所处的基本块后被赋给`<result>`的值。
+- 概念：`phi`指令用于实现SSA图中的$\Phi$结点，动态语义为根据控制流的变化自动选择源基本块`<label0>`所对应的源值`<val0>`。同一个基本块中的`phi`指令并行执行，并行赋值。对于下述代码，如果控制流从`%label1`到达`%label0`，则`%1`将获取到PC处于`%label1`基本块时`%2`的旧值，`%2`将获取到PC处于`%label1`基本块时`%1`的旧值，而不是`%1`的新值。`phi`指令一定是基本块的开始指令。
+
+```llvm
+%label0:
+  %1 = phi [%2, %label1], [%3, %label2]
+  %2 = phi [%1, %label1], [%4, %label2]
+```
+
+对`phi`指令的更加详细解释可以参考[LLVM LangRef 'phi' instruction](https://llvm.org/docs/LangRef.html#phi-instruction), [Single-Static Assignment Form and PHI — Mapping High Level Constructs to LLVM IR documentation](https://mapping-high-level-constructs-to-llvm-ir.readthedocs.io/en/latest/control-structures/ssa-phi.html)等资料。
 
 ## C++ APIs
 

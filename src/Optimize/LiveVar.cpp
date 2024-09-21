@@ -1,4 +1,4 @@
-#include "ActiveVar.h"
+#include "LiveVar.h"
 #include <fstream>
 
 #include <algorithm>
@@ -8,7 +8,7 @@ namespace SysYF
 namespace IR
 {
 
-void ActiveVar::execute() {
+void LiveVar::execute() {
     //  请不要修改该代码。在被评测时不要在中间的代码中重新调用set_print_name
     module->set_print_name();
 
@@ -28,9 +28,9 @@ void ActiveVar::execute() {
     return ;
 }
 
-void ActiveVar::dump() {
+void LiveVar::dump() {
     std::fstream f;
-    f.open(avdump, std::ios::out);
+    f.open(lvdump, std::ios::out);
     for (auto &func: module->get_functions()) {
         for (auto &bb: func->get_basic_blocks()) {
             f << bb->get_name() << std::endl;

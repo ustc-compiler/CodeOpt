@@ -81,7 +81,7 @@ public:
     PtrSet<BasicBlock> &get_rdom_frontier(){return rdom_frontier_;}
     PtrSet<BasicBlock> &get_rdoms(){return rdoms_;}
 
-    /****************api about active var****************/
+    /****************api about live var****************/
     bool set_live_in(PtrSet<Value> in){
         if (live_in == in) {
             return false;

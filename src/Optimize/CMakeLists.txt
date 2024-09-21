@@ -4,6 +4,6 @@ add_library(
         DominateTree.cpp
         RDominateTree.cpp
         Mem2Reg.cpp
-        ActiveVar.cpp
+        LiveVar.cpp
         Check.cpp
 )

@@ -6,14 +6,14 @@
 #include "Pass.h"
 #include "DominateTree.h"
 #include "Mem2Reg.h"
-#include "ActiveVar.h"
+#include "LiveVar.h"
 #include "SyntaxTreeChecker.h"
 
 
 void print_help(const std::string& exe_name) {
   std::cout << "Usage: " << exe_name
             << " [ -h | --help ] [ -p | --trace_parsing ] [ -s | --trace_scanning ] [ -emit-ast ] [ -check ]"
-            << " [ -emit-ir ] [ -O2 ] [ -O ] [ -av ] [ -o <output-file> ]"
+            << " [ -emit-ir ] [ -O2 ] [ -O ] [ -lv ] [ -o <output-file> ]"
             << " <input-file>"
             << std::endl;
 }
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     bool optimize_all = false;
     bool optimize = false;
 
-    bool av = false;
+    bool lv = false;
 
     std::string filename = "-";
     std::string output_llvm_file = "-";
@@ -68,8 +68,8 @@ int main(int argc, char *argv[])
         else if (argv[i] == std::string("-O")){
             optimize = true;
         }
-        else if(argv[i] == std::string("-av")){
-            av = true;
+        else if(argv[i] == std::string("-lv")){
+            lv = true;
         }
         //  ...
         else {
@@ -91,12 +91,12 @@ int main(int argc, char *argv[])
             passmgr.addPass<IR::DominateTree>();
             passmgr.addPass<IR::Mem2Reg>();
             if(optimize_all){
-                passmgr.addPass<IR::ActiveVar>();
+                passmgr.addPass<IR::LiveVar>();
                 //  ...
             }
             else {
-                if(av){
-                    passmgr.addPass<IR::ActiveVar>();
+                if(lv){
+                    passmgr.addPass<IR::LiveVar>();
                 }
                 //  ...
             }
