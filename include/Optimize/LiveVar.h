@@ -12,8 +12,6 @@ class LiveVar : public Pass
 public:
     LiveVar(Ptr<Module> m) : Pass(m) {}
     void execute() final;
-    void get_def_use();
-    void get_live_in_live_out();
     const std::string get_name() const override {return name;}
     void dump();
 private:

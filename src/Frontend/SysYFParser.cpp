@@ -42,12 +42,12 @@
 
 
 // Unqualified %code blocks.
-#line 35 "../../grammar/SysYFParser.yy"
+#line 35 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
 
 #include "SysYFDriver.h"
 #define yylex driver.lexer.yylex
 
-#line 51 "./SysYFParser.cpp"
+#line 51 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
 
 
 #ifndef YY_
@@ -139,7 +139,7 @@
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 143 "./SysYFParser.cpp"
+#line 143 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
 
   /// Build a parser object.
   SysYFParser::SysYFParser (SysYFDriver& driver_yyarg)
@@ -775,13 +775,13 @@ namespace yy {
 
 
     // User initialization code.
-#line 24 "../../grammar/SysYFParser.yy"
+#line 24 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
 {
 // Initialize the initial location.
 yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
 }
 
-#line 785 "./SysYFParser.cpp"
+#line 785 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
 
 
     /* Initialize the stack.  The initial state will be set in
@@ -1011,107 +1011,107 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
           switch (yyn)
             {
   case 2: // Begin: CompUnit END
-#line 106 "../../grammar/SysYFParser.yy"
+#line 106 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
     yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()->loc = yylhs.location;
     driver.root = yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ();
     return 0;
   }
-#line 1021 "./SysYFParser.cpp"
+#line 1021 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 3: // CompUnit: CompUnit GlobalDecl
-#line 113 "../../grammar/SysYFParser.yy"
+#line 113 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                             {
 		yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()->global_defs.insert(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()->global_defs.end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().end());
 		yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()=yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ();
 	}
-#line 1030 "./SysYFParser.cpp"
+#line 1030 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 4: // CompUnit: GlobalDecl
-#line 117 "../../grammar/SysYFParser.yy"
+#line 117 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
 		yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()=SysYF::Ptr<SysYF::SyntaxTree::Assembly>(new SysYF::SyntaxTree::Assembly());
 		yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()->global_defs.insert(yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Assembly> > ()->global_defs.end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().end());
   }
-#line 1039 "./SysYFParser.cpp"
+#line 1039 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 5: // GlobalDecl: ConstDecl
-#line 123 "../../grammar/SysYFParser.yy"
+#line 123 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ()=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().insert(yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().end());
   }
-#line 1048 "./SysYFParser.cpp"
+#line 1048 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 6: // GlobalDecl: VarDecl
-#line 127 "../../grammar/SysYFParser.yy"
+#line 127 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ()=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().insert(yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().end());
   }
-#line 1057 "./SysYFParser.cpp"
+#line 1057 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 7: // GlobalDecl: FuncDef
-#line 131 "../../grammar/SysYFParser.yy"
+#line 131 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
            {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ()=SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::GlobalDef> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::GlobalDef>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()));
   }
-#line 1066 "./SysYFParser.cpp"
+#line 1066 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 8: // ConstDecl: CONST BType ConstDefList SEMICOLON
-#line 137 "../../grammar/SysYFParser.yy"
+#line 137 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                             {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ();
     for (auto &node : yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()) {
       node->btype = yystack_[2].value.as < SysYF::SyntaxTree::Type > ();
     }
   }
-#line 1077 "./SysYFParser.cpp"
+#line 1077 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 9: // ConstDefList: ConstDefList COMMA ConstDef
-#line 144 "../../grammar/SysYFParser.yy"
+#line 144 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                         {
     yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()));
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ();
   }
-#line 1086 "./SysYFParser.cpp"
+#line 1086 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 10: // ConstDefList: ConstDef
-#line 148 "../../grammar/SysYFParser.yy"
+#line 148 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                   {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=SysYF::PtrVec<SysYF::SyntaxTree::VarDef>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()));
   }
-#line 1095 "./SysYFParser.cpp"
+#line 1095 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 11: // BType: INT
-#line 154 "../../grammar/SysYFParser.yy"
+#line 154 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
          {
   yylhs.value.as < SysYF::SyntaxTree::Type > ()=SysYF::SyntaxTree::Type::INT;
   }
-#line 1103 "./SysYFParser.cpp"
+#line 1103 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 12: // BType: FLOAT
-#line 157 "../../grammar/SysYFParser.yy"
+#line 157 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
   yylhs.value.as < SysYF::SyntaxTree::Type > ()=SysYF::SyntaxTree::Type::FLOAT;
   }
-#line 1111 "./SysYFParser.cpp"
+#line 1111 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 13: // ConstDef: IDENTIFIER ArrayExpList ASSIGN InitVal
-#line 163 "../../grammar/SysYFParser.yy"
+#line 163 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()=SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->is_constant = true;
@@ -1121,40 +1121,40 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->initializers = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->loc = yylhs.location;
   }
-#line 1125 "./SysYFParser.cpp"
+#line 1125 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 14: // VarDecl: BType VarDefList SEMICOLON
-#line 174 "../../grammar/SysYFParser.yy"
+#line 174 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                   {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ();
     for (auto &node : yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()) {
       node->btype = yystack_[2].value.as < SysYF::SyntaxTree::Type > ();
     }
   }
-#line 1136 "./SysYFParser.cpp"
+#line 1136 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 15: // VarDefList: VarDefList COMMA VarDef
-#line 182 "../../grammar/SysYFParser.yy"
+#line 182 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                   {
     yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()));
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ();
   }
-#line 1145 "./SysYFParser.cpp"
+#line 1145 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 16: // VarDefList: VarDef
-#line 186 "../../grammar/SysYFParser.yy"
+#line 186 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                 {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ()=SysYF::PtrVec<SysYF::SyntaxTree::VarDef>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::VarDef>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()));
   }
-#line 1154 "./SysYFParser.cpp"
+#line 1154 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 17: // VarDef: IDENTIFIER ArrayExpList
-#line 192 "../../grammar/SysYFParser.yy"
+#line 192 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                               {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()=SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->name=yystack_[1].value.as < std::string > ();
@@ -1162,11 +1162,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->is_inited = false;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->loc = yylhs.location;
   }
-#line 1166 "./SysYFParser.cpp"
+#line 1166 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 18: // VarDef: IDENTIFIER ArrayExpList ASSIGN InitVal
-#line 199 "../../grammar/SysYFParser.yy"
+#line 199 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                 {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > () = SysYF::Ptr<SysYF::SyntaxTree::VarDef>(new SysYF::SyntaxTree::VarDef());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->name = yystack_[3].value.as < std::string > ();
@@ -1175,28 +1175,28 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->is_inited = true;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::VarDef> > ()->loc = yylhs.location;
   }
-#line 1179 "./SysYFParser.cpp"
+#line 1179 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 19: // ArrayExpList: ArrayExpList LBRACKET Exp RBRACKET
-#line 209 "../../grammar/SysYFParser.yy"
+#line 209 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                {
     yystack_[3].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()));
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ()=yystack_[3].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1188 "./SysYFParser.cpp"
+#line 1188 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 20: // ArrayExpList: %empty
-#line 213 "../../grammar/SysYFParser.yy"
+#line 213 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                 {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ()=SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
-#line 1196 "./SysYFParser.cpp"
+#line 1196 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 21: // InitVal: Exp
-#line 218 "../../grammar/SysYFParser.yy"
+#line 218 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
             {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->isExp = true;
@@ -1204,28 +1204,28 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->expr = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->loc = yylhs.location;
   }
-#line 1208 "./SysYFParser.cpp"
+#line 1208 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 22: // InitVal: LBRACE InitValList RBRACE
-#line 225 "../../grammar/SysYFParser.yy"
+#line 225 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                              {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ();
   }
-#line 1216 "./SysYFParser.cpp"
+#line 1216 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 23: // InitValList: CommaInitValList InitVal
-#line 230 "../../grammar/SysYFParser.yy"
+#line 230 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                      {
     yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->elementList.push_back(SysYF::Ptr<SysYF::SyntaxTree::InitVal>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()));
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ();
   }
-#line 1225 "./SysYFParser.cpp"
+#line 1225 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 24: // InitValList: %empty
-#line 234 "../../grammar/SysYFParser.yy"
+#line 234 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->isExp = false;
@@ -1234,20 +1234,20 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->expr = nullptr;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->loc = yylhs.location;
   }
-#line 1238 "./SysYFParser.cpp"
+#line 1238 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 25: // CommaInitValList: CommaInitValList InitVal COMMA
-#line 244 "../../grammar/SysYFParser.yy"
+#line 244 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                 {
     yystack_[2].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->elementList.push_back(SysYF::Ptr<SysYF::SyntaxTree::InitVal>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()));
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = yystack_[2].value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ();
   }
-#line 1247 "./SysYFParser.cpp"
+#line 1247 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 26: // CommaInitValList: %empty
-#line 248 "../../grammar/SysYFParser.yy"
+#line 248 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > () = SysYF::Ptr<SysYF::SyntaxTree::InitVal>(new SysYF::SyntaxTree::InitVal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->isExp = false;
@@ -1256,45 +1256,45 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->expr = nullptr;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::InitVal> > ()->loc = yylhs.location;
   }
-#line 1260 "./SysYFParser.cpp"
+#line 1260 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 27: // ExpList: CommaExpList Exp
-#line 258 "../../grammar/SysYFParser.yy"
+#line 258 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                         {
     yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()));
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > () = yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1269 "./SysYFParser.cpp"
+#line 1269 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 28: // ExpList: %empty
-#line 262 "../../grammar/SysYFParser.yy"
+#line 262 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > () = SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
-#line 1277 "./SysYFParser.cpp"
+#line 1277 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 29: // CommaExpList: CommaExpList Exp COMMA
-#line 267 "../../grammar/SysYFParser.yy"
+#line 267 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                    {
     yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()));
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > () = yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1286 "./SysYFParser.cpp"
+#line 1286 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 30: // CommaExpList: %empty
-#line 271 "../../grammar/SysYFParser.yy"
+#line 271 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > () = SysYF::PtrVec<SysYF::SyntaxTree::Expr>();
   }
-#line 1294 "./SysYFParser.cpp"
+#line 1294 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 31: // FuncFParam: BType IDENTIFIER ArrayExpList
-#line 277 "../../grammar/SysYFParser.yy"
+#line 277 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                         {
   yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > () = SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(new SysYF::SyntaxTree::FuncParam());
   yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->param_type = yystack_[2].value.as < SysYF::SyntaxTree::Type > ();
@@ -1302,11 +1302,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
   yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->array_index = yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
   yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->loc = yylhs.location;
 }
-#line 1306 "./SysYFParser.cpp"
+#line 1306 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 32: // FuncFParam: BType IDENTIFIER LRBRACKET ArrayExpList
-#line 284 "../../grammar/SysYFParser.yy"
+#line 284 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                          {
    yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > () = SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(new SysYF::SyntaxTree::FuncParam());
    yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->param_type = yystack_[3].value.as < SysYF::SyntaxTree::Type > ();
@@ -1315,45 +1315,45 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
    yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->array_index.insert(yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->array_index.begin(),nullptr);
    yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()->loc = yylhs.location;
 }
-#line 1319 "./SysYFParser.cpp"
+#line 1319 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 33: // FParamList: CommaFParamList FuncFParam
-#line 294 "../../grammar/SysYFParser.yy"
+#line 294 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                       {
   yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()));
   yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > () = yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > ();
 }
-#line 1328 "./SysYFParser.cpp"
+#line 1328 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 34: // FParamList: %empty
-#line 298 "../../grammar/SysYFParser.yy"
+#line 298 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
         {
   yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > () = SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>();
 }
-#line 1336 "./SysYFParser.cpp"
+#line 1336 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 35: // CommaFParamList: CommaFParamList FuncFParam COMMA
-#line 303 "../../grammar/SysYFParser.yy"
+#line 303 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                 {
   yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::FuncParam>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncParam> > ()));
   yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > () = yystack_[2].value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > ();
 }
-#line 1345 "./SysYFParser.cpp"
+#line 1345 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 36: // CommaFParamList: %empty
-#line 307 "../../grammar/SysYFParser.yy"
+#line 307 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
         {
   yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::FuncParam> > () = SysYF::PtrVec<SysYF::SyntaxTree::FuncParam>();
 }
-#line 1353 "./SysYFParser.cpp"
+#line 1353 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 37: // FuncDef: BType IDENTIFIER LPARENTHESE FParamList RPARENTHESE Block
-#line 311 "../../grammar/SysYFParser.yy"
+#line 311 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                                  {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > () = SysYF::Ptr<SysYF::SyntaxTree::FuncDef>(new SysYF::SyntaxTree::FuncDef());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->ret_type = yystack_[5].value.as < SysYF::SyntaxTree::Type > ();
@@ -1364,11 +1364,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->body = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->loc = yylhs.location;
   }
-#line 1368 "./SysYFParser.cpp"
+#line 1368 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 38: // FuncDef: VOID IDENTIFIER LPARENTHESE FParamList RPARENTHESE Block
-#line 321 "../../grammar/SysYFParser.yy"
+#line 321 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                             {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > () = SysYF::Ptr<SysYF::SyntaxTree::FuncDef>(new SysYF::SyntaxTree::FuncDef());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->ret_type = SysYF::SyntaxTree::Type::VOID;
@@ -1379,65 +1379,65 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->body = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::FuncDef> > ()->loc = yylhs.location;
   }
-#line 1383 "./SysYFParser.cpp"
+#line 1383 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 39: // Block: LBRACE BlockItemList RBRACE
-#line 333 "../../grammar/SysYFParser.yy"
+#line 333 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                  {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > () = SysYF::Ptr<SysYF::SyntaxTree::BlockStmt>(new SysYF::SyntaxTree::BlockStmt());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ()->body = yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ();
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ()->loc = yylhs.location;
   }
-#line 1393 "./SysYFParser.cpp"
+#line 1393 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 40: // BlockItemList: BlockItemList BlockItem
-#line 340 "../../grammar/SysYFParser.yy"
+#line 340 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                      {
     yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().insert(yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().end());
-    yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ();
+    yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = std::move(yystack_[1].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ());
   }
-#line 1402 "./SysYFParser.cpp"
+#line 1402 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 41: // BlockItemList: %empty
-#line 344 "../../grammar/SysYFParser.yy"
+#line 344 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
   }
-#line 1410 "./SysYFParser.cpp"
+#line 1410 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 42: // BlockItem: VarDecl
-#line 349 "../../grammar/SysYFParser.yy"
+#line 349 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().insert(yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().end());
   }
-#line 1419 "./SysYFParser.cpp"
+#line 1419 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 43: // BlockItem: ConstDecl
-#line 353 "../../grammar/SysYFParser.yy"
+#line 353 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
              {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().insert(yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().end(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().begin(), yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::VarDef> > ().end());
   }
-#line 1428 "./SysYFParser.cpp"
+#line 1428 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 44: // BlockItem: Stmt
-#line 357 "../../grammar/SysYFParser.yy"
+#line 357 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
         {
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > () = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();
     yylhs.value.as < SysYF::PtrVec<SysYF::SyntaxTree::Stmt> > ().push_back(SysYF::Ptr<SysYF::SyntaxTree::Stmt>(yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()));
   }
-#line 1437 "./SysYFParser.cpp"
+#line 1437 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 45: // Stmt: LVal ASSIGN Exp SEMICOLON
-#line 363 "../../grammar/SysYFParser.yy"
+#line 363 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                               {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::AssignStmt>(new SysYF::SyntaxTree::AssignStmt());
     temp->target = SysYF::Ptr<SysYF::SyntaxTree::LVal>(yystack_[3].value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > ());
@@ -1445,41 +1445,41 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1449 "./SysYFParser.cpp"
+#line 1449 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 46: // Stmt: Exp SEMICOLON
-#line 370 "../../grammar/SysYFParser.yy"
+#line 370 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::ExprStmt>(new SysYF::SyntaxTree::ExprStmt());
     temp->exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1460 "./SysYFParser.cpp"
+#line 1460 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 47: // Stmt: RETURN OptionRet SEMICOLON
-#line 376 "../../grammar/SysYFParser.yy"
+#line 376 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                               {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::ReturnStmt>(new SysYF::SyntaxTree::ReturnStmt());
     temp->ret = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1471 "./SysYFParser.cpp"
+#line 1471 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 48: // Stmt: Block
-#line 382 "../../grammar/SysYFParser.yy"
+#line 382 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
          {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::BlockStmt> > ();
   }
-#line 1479 "./SysYFParser.cpp"
+#line 1479 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 49: // Stmt: WHILE LPARENTHESE CondExp RPARENTHESE Stmt
-#line 385 "../../grammar/SysYFParser.yy"
+#line 385 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                               {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::WhileStmt>(new SysYF::SyntaxTree::WhileStmt());
     temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[2].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
@@ -1487,46 +1487,46 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1491 "./SysYFParser.cpp"
+#line 1491 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 50: // Stmt: IfStmt
-#line 392 "../../grammar/SysYFParser.yy"
+#line 392 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
            {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ();
   }
-#line 1499 "./SysYFParser.cpp"
+#line 1499 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 51: // Stmt: BREAK SEMICOLON
-#line 395 "../../grammar/SysYFParser.yy"
+#line 395 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = SysYF::Ptr<SysYF::SyntaxTree::BreakStmt>(new SysYF::SyntaxTree::BreakStmt());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1508 "./SysYFParser.cpp"
+#line 1508 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 52: // Stmt: CONTINUE SEMICOLON
-#line 399 "../../grammar/SysYFParser.yy"
+#line 399 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                        {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = SysYF::Ptr<SysYF::SyntaxTree::ContinueStmt>(new SysYF::SyntaxTree::ContinueStmt());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1517 "./SysYFParser.cpp"
+#line 1517 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 53: // Stmt: SEMICOLON
-#line 403 "../../grammar/SysYFParser.yy"
+#line 403 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
              {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = SysYF::Ptr<SysYF::SyntaxTree::EmptyStmt>(new SysYF::SyntaxTree::EmptyStmt());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1526 "./SysYFParser.cpp"
+#line 1526 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 54: // IfStmt: IF LPARENTHESE CondExp RPARENTHESE Stmt
-#line 409 "../../grammar/SysYFParser.yy"
+#line 409 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::IfStmt>(new SysYF::SyntaxTree::IfStmt());
     temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[2].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
@@ -1535,11 +1535,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1539 "./SysYFParser.cpp"
+#line 1539 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 55: // IfStmt: IF LPARENTHESE CondExp RPARENTHESE Stmt ELSE Stmt
-#line 417 "../../grammar/SysYFParser.yy"
+#line 417 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                       {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::IfStmt>(new SysYF::SyntaxTree::IfStmt());
     temp->cond_exp = SysYF::Ptr<SysYF::SyntaxTree::Expr>(yystack_[4].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ());
@@ -1548,38 +1548,38 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Stmt> > ()->loc = yylhs.location;
   }
-#line 1552 "./SysYFParser.cpp"
+#line 1552 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 56: // OptionRet: Exp
-#line 427 "../../grammar/SysYFParser.yy"
+#line 427 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
              {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1560 "./SysYFParser.cpp"
+#line 1560 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 57: // OptionRet: %empty
-#line 430 "../../grammar/SysYFParser.yy"
+#line 430 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = nullptr;
   }
-#line 1568 "./SysYFParser.cpp"
+#line 1568 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 58: // LVal: IDENTIFIER ArrayExpList
-#line 435 "../../grammar/SysYFParser.yy"
+#line 435 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                             {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > () = SysYF::Ptr<SysYF::SyntaxTree::LVal>(new SysYF::SyntaxTree::LVal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > ()->name = yystack_[1].value.as < std::string > ();
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > ()->array_index = yystack_[0].value.as < SysYF::PtrVec<SysYF::SyntaxTree::Expr> > ();
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > ()->loc = yylhs.location;
   }
-#line 1579 "./SysYFParser.cpp"
+#line 1579 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 59: // Exp: PLUS Exp
-#line 447 "../../grammar/SysYFParser.yy"
+#line 447 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                         {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryExpr>(new SysYF::SyntaxTree::UnaryExpr());
     temp->op = SysYF::SyntaxTree::UnaryOp::PLUS;
@@ -1587,11 +1587,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1591 "./SysYFParser.cpp"
+#line 1591 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 60: // Exp: MINUS Exp
-#line 454 "../../grammar/SysYFParser.yy"
+#line 454 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                           {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryExpr>(new SysYF::SyntaxTree::UnaryExpr());
     temp->op = SysYF::SyntaxTree::UnaryOp::MINUS;
@@ -1599,11 +1599,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1603 "./SysYFParser.cpp"
+#line 1603 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 61: // Exp: NOT Exp
-#line 461 "../../grammar/SysYFParser.yy"
+#line 461 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                       {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::UnaryCondExpr>(new SysYF::SyntaxTree::UnaryCondExpr());
     temp->op = SysYF::SyntaxTree::UnaryCondOp::NOT;
@@ -1611,11 +1611,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1615 "./SysYFParser.cpp"
+#line 1615 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 62: // Exp: Exp PLUS Exp
-#line 468 "../../grammar/SysYFParser.yy"
+#line 468 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                 {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
     temp->op = SysYF::SyntaxTree::BinOp::PLUS;
@@ -1624,11 +1624,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1628 "./SysYFParser.cpp"
+#line 1628 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 63: // Exp: Exp MINUS Exp
-#line 476 "../../grammar/SysYFParser.yy"
+#line 476 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
     temp->op = SysYF::SyntaxTree::BinOp::MINUS;
@@ -1637,11 +1637,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1641 "./SysYFParser.cpp"
+#line 1641 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 64: // Exp: Exp MULTIPLY Exp
-#line 484 "../../grammar/SysYFParser.yy"
+#line 484 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
     temp->op = SysYF::SyntaxTree::BinOp::MULTIPLY;
@@ -1650,11 +1650,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1654 "./SysYFParser.cpp"
+#line 1654 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 65: // Exp: Exp DIVIDE Exp
-#line 492 "../../grammar/SysYFParser.yy"
+#line 492 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                   {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
     temp->op = SysYF::SyntaxTree::BinOp::DIVIDE;
@@ -1663,11 +1663,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1667 "./SysYFParser.cpp"
+#line 1667 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 66: // Exp: Exp MODULO Exp
-#line 500 "../../grammar/SysYFParser.yy"
+#line 500 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                   {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryExpr>(new SysYF::SyntaxTree::BinaryExpr());
     temp->op = SysYF::SyntaxTree::BinOp::MODULO;
@@ -1676,19 +1676,19 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1680 "./SysYFParser.cpp"
+#line 1680 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 67: // Exp: LPARENTHESE Exp RPARENTHESE
-#line 508 "../../grammar/SysYFParser.yy"
+#line 508 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[1].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1688 "./SysYFParser.cpp"
+#line 1688 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 68: // Exp: IDENTIFIER LPARENTHESE ExpList RPARENTHESE
-#line 511 "../../grammar/SysYFParser.yy"
+#line 511 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                                {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::FuncCallStmt>(new SysYF::SyntaxTree::FuncCallStmt());
     temp->name = yystack_[3].value.as < std::string > ();
@@ -1696,27 +1696,27 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1700 "./SysYFParser.cpp"
+#line 1700 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 69: // Exp: LVal
-#line 518 "../../grammar/SysYFParser.yy"
+#line 518 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
         {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::LVal> > ();
   }
-#line 1708 "./SysYFParser.cpp"
+#line 1708 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 70: // Exp: Number
-#line 521 "../../grammar/SysYFParser.yy"
+#line 521 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ();
   }
-#line 1716 "./SysYFParser.cpp"
+#line 1716 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 71: // RelExp: RelExp LT Exp
-#line 526 "../../grammar/SysYFParser.yy"
+#line 526 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                     {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::LT;
@@ -1725,11 +1725,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1729 "./SysYFParser.cpp"
+#line 1729 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 72: // RelExp: RelExp LTE Exp
-#line 534 "../../grammar/SysYFParser.yy"
+#line 534 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::LTE;
@@ -1738,11 +1738,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1742 "./SysYFParser.cpp"
+#line 1742 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 73: // RelExp: RelExp GT Exp
-#line 542 "../../grammar/SysYFParser.yy"
+#line 542 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                 {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::GT;
@@ -1751,11 +1751,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1755 "./SysYFParser.cpp"
+#line 1755 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 74: // RelExp: RelExp GTE Exp
-#line 550 "../../grammar/SysYFParser.yy"
+#line 550 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::GTE;
@@ -1764,19 +1764,19 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1768 "./SysYFParser.cpp"
+#line 1768 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 75: // RelExp: Exp
-#line 558 "../../grammar/SysYFParser.yy"
+#line 558 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
        {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1776 "./SysYFParser.cpp"
+#line 1776 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 76: // EqExp: EqExp EQ RelExp
-#line 563 "../../grammar/SysYFParser.yy"
+#line 563 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                      {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::EQ;
@@ -1785,11 +1785,11 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1789 "./SysYFParser.cpp"
+#line 1789 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 77: // EqExp: EqExp NEQ RelExp
-#line 571 "../../grammar/SysYFParser.yy"
+#line 571 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                    {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::NEQ;
@@ -1798,19 +1798,19 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1802 "./SysYFParser.cpp"
+#line 1802 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 78: // EqExp: RelExp
-#line 579 "../../grammar/SysYFParser.yy"
+#line 579 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1810 "./SysYFParser.cpp"
+#line 1810 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 79: // LAndExp: LAndExp LOGICAND EqExp
-#line 584 "../../grammar/SysYFParser.yy"
+#line 584 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                                {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::LAND;
@@ -1819,19 +1819,19 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1823 "./SysYFParser.cpp"
+#line 1823 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 80: // LAndExp: EqExp
-#line 592 "../../grammar/SysYFParser.yy"
+#line 592 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
         {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1831 "./SysYFParser.cpp"
+#line 1831 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 81: // LOrExp: LOrExp LOGICOR LAndExp
-#line 597 "../../grammar/SysYFParser.yy"
+#line 597 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                               {
     auto temp = SysYF::Ptr<SysYF::SyntaxTree::BinaryCondExpr>(new SysYF::SyntaxTree::BinaryCondExpr());
     temp->op = SysYF::SyntaxTree::BinaryCondOp::LOR;
@@ -1840,49 +1840,49 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = temp;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ()->loc = yylhs.location;
   }
-#line 1844 "./SysYFParser.cpp"
+#line 1844 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 82: // LOrExp: LAndExp
-#line 605 "../../grammar/SysYFParser.yy"
+#line 605 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
           {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1852 "./SysYFParser.cpp"
+#line 1852 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 83: // CondExp: LOrExp
-#line 610 "../../grammar/SysYFParser.yy"
+#line 610 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
               {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > () = yystack_[0].value.as < SysYF::Ptr<SysYF::SyntaxTree::Expr> > ();
   }
-#line 1860 "./SysYFParser.cpp"
+#line 1860 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 84: // Number: INTCONST
-#line 615 "../../grammar/SysYFParser.yy"
+#line 615 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                  {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > () = SysYF::Ptr<SysYF::SyntaxTree::Literal>(new SysYF::SyntaxTree::Literal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->literal_type = SysYF::SyntaxTree::Type::INT;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->int_const = yystack_[0].value.as < int > ();
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->loc = yylhs.location;
   }
-#line 1871 "./SysYFParser.cpp"
+#line 1871 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
   case 85: // Number: FLOATCONST
-#line 621 "../../grammar/SysYFParser.yy"
+#line 621 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
                {
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > () = SysYF::Ptr<SysYF::SyntaxTree::Literal>(new SysYF::SyntaxTree::Literal());
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->literal_type = SysYF::SyntaxTree::Type::FLOAT;
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->float_const = yystack_[0].value.as < float > ();
     yylhs.value.as < SysYF::Ptr<SysYF::SyntaxTree::Literal> > ()->loc = yylhs.location;
   }
-#line 1882 "./SysYFParser.cpp"
+#line 1882 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
     break;
 
 
-#line 1886 "./SysYFParser.cpp"
+#line 1886 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
 
             default:
               break;
@@ -2466,9 +2466,9 @@ yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
 
 
 } // yy
-#line 2470 "./SysYFParser.cpp"
+#line 2470 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.cpp"
 
-#line 629 "../../grammar/SysYFParser.yy"
+#line 629 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
 
 
 // Register errors to the driver:

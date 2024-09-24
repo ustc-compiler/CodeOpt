@@ -339,7 +339,7 @@ Block:LBRACE BlockItemList RBRACE{
 
 BlockItemList:BlockItemList BlockItem{
     $1.insert($1.end(), $2.begin(), $2.end());
-    $$ = $1;
+    $$ = std::move($1);
   }
   | %empty{
     $$ = SysYF::PtrVec<SysYF::SyntaxTree::Stmt>();

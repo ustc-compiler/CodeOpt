@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ComSubExprEli.h"
 #include "IRBuilder.h"
 #include "SysYFDriver.h"
 #include "SyntaxTreePrinter.h"
@@ -13,7 +14,7 @@
 void print_help(const std::string& exe_name) {
   std::cout << "Usage: " << exe_name
             << " [ -h | --help ] [ -p | --trace_parsing ] [ -s | --trace_scanning ] [ -emit-ast ] [ -check ]"
-            << " [ -emit-ir ] [ -O2 ] [ -O ] [ -lv ] [ -o <output-file> ]"
+            << " [ -emit-ir ] [ -O2 ] [ -O ] [ -lv ] [ -cse ] [ -o <output-file> ]"
             << " <input-file>"
             << std::endl;
 }
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     bool optimize = false;
 
     bool lv = false;
+    bool cse = false;
 
     std::string filename = "-";
     std::string output_llvm_file = "-";
@@ -71,6 +73,9 @@ int main(int argc, char *argv[])
         else if(argv[i] == std::string("-lv")){
             lv = true;
         }
+        else if(argv[i] == std::string("-cse")){
+            cse = true;
+        }
         //  ...
         else {
             filename = argv[i];
@@ -92,11 +97,15 @@ int main(int argc, char *argv[])
             passmgr.addPass<IR::Mem2Reg>();
             if(optimize_all){
                 passmgr.addPass<IR::LiveVar>();
+                passmgr.addPass<IR::ComSubExprEli>();
                 //  ...
             }
             else {
                 if(lv){
                     passmgr.addPass<IR::LiveVar>();
+                }
+                if(cse){
+                    passmgr.addPass<IR::ComSubExprEli>();
                 }
                 //  ...
             }

@@ -1,6 +1,6 @@
-#line 2 "./SysYFScanner.cpp"
+#line 2 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 
-#line 4 "./SysYFScanner.cpp"
+#line 4 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -571,8 +571,8 @@ static const flex_int16_t yy_rule_linenum[45] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "../../grammar/SysYFScanner.ll"
-#line 2 "../../grammar/SysYFScanner.ll"
+#line 1 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
+#line 2 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 # include <cerrno>
 # include <climits>
 # include <cstdlib>
@@ -616,8 +616,8 @@ std::map<char,int> ch2int = {
     auto mytoken = yy::SysYFParser::make_##name(value, loc);\
     loc.step();\
     return mytoken;
-#line 620 "./SysYFScanner.cpp"
-#line 48 "../../grammar/SysYFScanner.ll"
+#line 620 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
+#line 48 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 #if defined __clang__
 # define CLANG_VERSION (__clang_major__ * 100 + __clang_minor__)
 #endif
@@ -678,14 +678,14 @@ std::map<char,int> ch2int = {
 #  pragma GCC diagnostic ignored "-Wsign-conversion"
 # endif
 #endif
-#line 682 "./SysYFScanner.cpp"
+#line 682 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 #define YY_NO_INPUT 1
-#line 113 "../../grammar/SysYFScanner.ll"
+#line 113 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
   // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns(yyleng);
-#line 687 "./SysYFScanner.cpp"
+#line 687 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 /* Regex abbreviations: */
-#line 689 "./SysYFScanner.cpp"
+#line 689 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 
 #define INITIAL 0
 
@@ -877,11 +877,11 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 129 "../../grammar/SysYFScanner.ll"
+#line 129 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 
-#line 131 "../../grammar/SysYFScanner.ll"
+#line 131 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
  /* keyword */
-#line 885 "./SysYFScanner.cpp"
+#line 885 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -958,190 +958,190 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 132 "../../grammar/SysYFScanner.ll"
+#line 132 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(FLOAT);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 133 "../../grammar/SysYFScanner.ll"
+#line 133 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(INT);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 134 "../../grammar/SysYFScanner.ll"
+#line 134 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(RETURN);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 135 "../../grammar/SysYFScanner.ll"
+#line 135 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(VOID);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 136 "../../grammar/SysYFScanner.ll"
+#line 136 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(CONST);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 137 "../../grammar/SysYFScanner.ll"
+#line 137 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(BREAK);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 138 "../../grammar/SysYFScanner.ll"
+#line 138 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(CONTINUE);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 139 "../../grammar/SysYFScanner.ll"
+#line 139 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(WHILE);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 140 "../../grammar/SysYFScanner.ll"
+#line 140 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(IF);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 141 "../../grammar/SysYFScanner.ll"
+#line 141 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(ELSE);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 143 "../../grammar/SysYFScanner.ll"
+#line 143 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LT);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 144 "../../grammar/SysYFScanner.ll"
+#line 144 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LTE);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 145 "../../grammar/SysYFScanner.ll"
+#line 145 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(GT);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 146 "../../grammar/SysYFScanner.ll"
+#line 146 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(GTE);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 147 "../../grammar/SysYFScanner.ll"
+#line 147 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(EQ);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 148 "../../grammar/SysYFScanner.ll"
+#line 148 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(NEQ);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 149 "../../grammar/SysYFScanner.ll"
+#line 149 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(NOT);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 150 "../../grammar/SysYFScanner.ll"
+#line 150 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LOGICAND);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 151 "../../grammar/SysYFScanner.ll"
+#line 151 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LOGICOR);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 152 "../../grammar/SysYFScanner.ll"
+#line 152 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(PLUS);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 153 "../../grammar/SysYFScanner.ll"
+#line 153 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(MINUS);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 154 "../../grammar/SysYFScanner.ll"
+#line 154 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(MULTIPLY);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 155 "../../grammar/SysYFScanner.ll"
+#line 155 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(DIVIDE);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 156 "../../grammar/SysYFScanner.ll"
+#line 156 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(MODULO);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 157 "../../grammar/SysYFScanner.ll"
+#line 157 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(ASSIGN);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 158 "../../grammar/SysYFScanner.ll"
+#line 158 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(SEMICOLON);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 159 "../../grammar/SysYFScanner.ll"
+#line 159 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(COMMA);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 160 "../../grammar/SysYFScanner.ll"
+#line 160 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LPARENTHESE);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 161 "../../grammar/SysYFScanner.ll"
+#line 161 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(RPARENTHESE);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 162 "../../grammar/SysYFScanner.ll"
+#line 162 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LBRACKET);} 
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 163 "../../grammar/SysYFScanner.ll"
+#line 163 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(RBRACKET);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 164 "../../grammar/SysYFScanner.ll"
+#line 164 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LBRACE);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 165 "../../grammar/SysYFScanner.ll"
+#line 165 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(RBRACE);}
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 168 "../../grammar/SysYFScanner.ll"
+#line 168 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(LRBRACKET);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 169 "../../grammar/SysYFScanner.ll"
+#line 169 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {loc.step();}
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 170 "../../grammar/SysYFScanner.ll"
+#line 170 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {loc.lines(yyleng); loc.step();}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 171 "../../grammar/SysYFScanner.ll"
+#line 171 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {std::string s = yytext;
                           size_t n = std::count(s.begin(), s.end(), '\n');
                           for (size_t i = 0; i < n; i++) loc.lines(1);}
@@ -1149,12 +1149,12 @@ YY_RULE_SETUP
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 174 "../../grammar/SysYFScanner.ll"
+#line 174 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {loc.lines(1);loc.step();}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 175 "../../grammar/SysYFScanner.ll"
+#line 175 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {std::string dec = yytext;
                            unsigned sum = 0;
                            int len = dec.size();
@@ -1166,7 +1166,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 183 "../../grammar/SysYFScanner.ll"
+#line 183 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {std::string hex = yytext;
                            unsigned sum = 0;
                            int len = hex.size();
@@ -1178,7 +1178,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 191 "../../grammar/SysYFScanner.ll"
+#line 191 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {std::string oct = yytext;
                            unsigned sum = 0;
                            int len = oct.size();
@@ -1190,29 +1190,29 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 199 "../../grammar/SysYFScanner.ll"
+#line 199 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_TYPE_TOKEN(IDENTIFIER, yytext);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 200 "../../grammar/SysYFScanner.ll"
+#line 200 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_TYPE_TOKEN(FLOATCONST, std::stod(yytext));}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 201 "../../grammar/SysYFScanner.ll"
+#line 201 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {RET_NOTYPE_TOKEN(END);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 202 "../../grammar/SysYFScanner.ll"
+#line 202 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 {std::cout << "Error in scanner!" << '\n'; exit(1);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 203 "../../grammar/SysYFScanner.ll"
+#line 203 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 ECHO;
 	YY_BREAK
-#line 1216 "./SysYFScanner.cpp"
+#line 1216 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFScanner.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2329,7 +2329,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 203 "../../grammar/SysYFScanner.ll"
+#line 203 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFScanner.ll"
 
 
 int yyFlexLexer::yylex() {
