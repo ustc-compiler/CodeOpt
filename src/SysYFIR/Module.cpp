@@ -76,7 +76,7 @@ Ptr<PointerType> Module::get_pointer_type(Ptr<Type> contained)
 {
     if( pointer_map_.find(contained) == pointer_map_.end() )
     {
-        pointer_map_[contained] = PointerType::create(contained);
+        pointer_map_[contained] = PointerType::create(contained, shared_from_this());
     }
     return pointer_map_[contained];
 }
@@ -85,7 +85,7 @@ Ptr<ArrayType> Module::get_array_type(Ptr<Type> contained, unsigned num_elements
 {
     if( array_map_.find({contained, num_elements}) == array_map_.end() )
     {
-        array_map_[{contained, num_elements}] = ArrayType::create(contained, num_elements);
+        array_map_[{contained, num_elements}] = ArrayType::create(contained, num_elements, shared_from_this());
     }
     return array_map_[{contained, num_elements}];
 }

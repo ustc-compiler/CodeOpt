@@ -132,7 +132,7 @@ void IRBuilder::visit(SyntaxTree::FuncDef &node) {
             }
         }
     }
-    fun_type = FunctionType::create(ret_type, param_types);
+    fun_type = FunctionType::create(ret_type, param_types, module);
     auto fun = Function::create(fun_type, node.name, module);
     scope.push(node.name, fun);
     cur_fun = fun;
@@ -265,7 +265,7 @@ void IRBuilder::visit(SyntaxTree::VarDef &node) {
                     }
                     cur_size++;
                 }
-                auto initializer = ConstantArray::create(array_type, init_val);
+                auto initializer = ConstantArray::create(array_type, init_val, module);
                 var = GlobalVariable::create(node.name, module, array_type, true, initializer);
                 scope.push(node.name, var);
             }
@@ -305,7 +305,7 @@ void IRBuilder::visit(SyntaxTree::VarDef &node) {
                     }
                     cur_size++;
                 }
-                auto initializer = ConstantArray::create(array_type, init_val);
+                auto initializer = ConstantArray::create(array_type, init_val, module);
                 std::string const_name = "__const." + cur_fun->get_name() + "." + node.name;
                 std::string const_num = "";
                 int suffix = 0;
@@ -387,7 +387,7 @@ void IRBuilder::visit(SyntaxTree::VarDef &node) {
                         }
                         cur_size++;
                     }
-                    auto initializer = ConstantArray::create(array_type, init_val);
+                    auto initializer = ConstantArray::create(array_type, init_val, module);
                     var = GlobalVariable::create(node.name, module, array_type, false, initializer);
                     scope.push(node.name, var);
                 } else {

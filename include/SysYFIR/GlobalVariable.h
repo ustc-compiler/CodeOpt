@@ -1,7 +1,6 @@
 #ifndef _SYSYF_GLOBALVARIABLE_H_
 #define _SYSYF_GLOBALVARIABLE_H_
 
-#include "Module.h"
 #include "User.h"
 #include "Constant.h"
 

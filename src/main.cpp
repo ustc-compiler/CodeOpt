@@ -71,9 +71,11 @@ int main(int argc, char *argv[])
             optimize = true;
         }
         else if(argv[i] == std::string("-lv")){
+            optimize = true;
             lv = true;
         }
         else if(argv[i] == std::string("-cse")){
+            optimize = true;
             cse = true;
         }
         //  ...

@@ -3,6 +3,7 @@
 #include "User.h"
 #include "Value.h"
 #include "Type.h"
+#include <memory>
 
 namespace SysYF
 {
@@ -11,11 +12,12 @@ namespace IR
 class Constant : public User
 {
 protected:
-    explicit Constant(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0)
-    : User(ty, name, num_ops) {}
-    void init(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0) {}
+    explicit Constant(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0, Ptr<Module> m=nullptr)
+    : User(ty, name, num_ops), parent_(m) {}
+    void init(Ptr<Type> ty, const std::string &name = "", unsigned num_ops = 0);
     // int value;
 public:
+    WeakPtr<Module> parent_;
     ~Constant() = default;
 };
 
@@ -23,9 +25,9 @@ class ConstantInt : public Constant
 {
 private:
     int value_;
-    explicit ConstantInt(Ptr<Type> ty, int val) 
-        : Constant(ty,"",0),value_(val) {}
-    void init(Ptr<Type> ty, int val);
+    explicit ConstantInt(Ptr<Type> ty, int val, Ptr<Module> m) 
+        : Constant(ty,"",0,m),value_(val) {}
+    void init(Ptr<Type> ty, int val, Ptr<Module> m);
 
 public:
     
@@ -40,9 +42,9 @@ class ConstantFloat : public Constant
 {
 private:
     float value_;
-    explicit ConstantFloat(Ptr<Type>  ty,float val) 
-        : Constant(ty,"",0),value_(val) {}
-    void init(Ptr<Type> ty, float val);
+    explicit ConstantFloat(Ptr<Type>  ty,float val, Ptr<Module> m) 
+        : Constant(ty,"",0,m),value_(val) {}
+    void init(Ptr<Type> ty, float val, Ptr<Module> m);
 
 public:
     
@@ -56,8 +58,8 @@ class ConstantArray : public Constant
 {
 private:
     PtrVec<Constant> const_array;
-    explicit ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
-    void init(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
+    explicit ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m);
+    void init(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m);
 
 public:
     
@@ -67,7 +69,7 @@ public:
 
     unsigned get_size_of_array() { return const_array.size(); } 
 
-    static Ptr<ConstantArray> create(Ptr<ArrayType> ty, const PtrVec<Constant> &val);
+    static Ptr<ConstantArray> create(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m);
 
     virtual std::string print() override;
 };
@@ -75,9 +77,9 @@ public:
 class ConstantZero : public Constant 
 {
 private:
-    explicit ConstantZero(Ptr<Type> ty)
-        : Constant(ty,"",0) {}
-    void init(Ptr<Type> ty);
+    explicit ConstantZero(Ptr<Type> ty, Ptr<Module> m)
+        : Constant(ty,"",0,m) {}
+    void init(Ptr<Type> ty, Ptr<Module> m);
 
 public:
     static Ptr<ConstantZero> create(Ptr<Type> ty, Ptr<Module> m);

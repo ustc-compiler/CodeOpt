@@ -9,19 +9,24 @@ namespace SysYF
 {
 namespace IR
 {
-void ConstantInt::init(Ptr<Type> ty, int val)
+
+void Constant::init(Ptr<Type> ty, const std::string &name, unsigned num_ops) {
+    parent_.lock()->add_constant(dynamic_pointer_cast<Constant>(shared_from_this()));
+}
+
+void ConstantInt::init(Ptr<Type> ty, int val, Ptr<Module> m)
 {
     Constant::init(ty, "", 0);
 }
 
 Ptr<ConstantInt> ConstantInt::create(int val, Ptr<Module> m)
 {
-    RET_AFTER_INIT(ConstantInt, Type::get_int32_type(m), val);
+    RET_AFTER_INIT(ConstantInt, Type::get_int32_type(m), val, m);
 }
 
 Ptr<ConstantInt> ConstantInt::create(bool val, Ptr<Module> m)
 {
-    RET_AFTER_INIT(ConstantInt, Type::get_int1_type(m), val?1:0);
+    RET_AFTER_INIT(ConstantInt, Type::get_int1_type(m), val?1:0, m);
 }
 
 std::string ConstantInt::print()
@@ -41,14 +46,14 @@ std::string ConstantInt::print()
     return const_ir;
 }
 
-void ConstantFloat::init(Ptr<Type> ty, float val)
+void ConstantFloat::init(Ptr<Type> ty, float val, Ptr<Module> m)
 {
     Constant::init(ty, "", 0);
 }
 
 Ptr<ConstantFloat> ConstantFloat::create(float val, Ptr<Module> m)
 {
-    RET_AFTER_INIT(ConstantFloat, Type::get_float_type(m), val);
+    RET_AFTER_INIT(ConstantFloat, Type::get_float_type(m), val, m);
 }
 
 std::string ConstantFloat::print()
@@ -63,13 +68,13 @@ std::string ConstantFloat::print()
     return fp_ir;
 }
 
-ConstantArray::ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
-    : Constant(ty, "", val.size()) 
+ConstantArray::ConstantArray(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m)
+    : Constant(ty, "", val.size(), m) 
 {
 
 }
 
-void ConstantArray::init(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
+void ConstantArray::init(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m)
 {
     Constant::init(ty, "", val.size());
     for (unsigned int i = 0; i < val.size(); i++)
@@ -81,9 +86,9 @@ Ptr<Constant> ConstantArray::get_element_value(int index) {
     return this->const_array[index];
 }
 
-Ptr<ConstantArray> ConstantArray::create(Ptr<ArrayType> ty, const PtrVec<Constant> &val)
+Ptr<ConstantArray> ConstantArray::create(Ptr<ArrayType> ty, const PtrVec<Constant> &val, Ptr<Module> m)
 {
-    RET_AFTER_INIT(ConstantArray, ty, val);
+    RET_AFTER_INIT(ConstantArray, ty, val, m);
 }
 
 std::string ConstantArray::print()
@@ -103,14 +108,14 @@ std::string ConstantArray::print()
     return const_ir;
 }
 
-void ConstantZero::init(Ptr<Type> ty)
+void ConstantZero::init(Ptr<Type> ty, Ptr<Module> m)
 {
     Constant::init(ty, "", 0);
 }
 
 Ptr<ConstantZero> ConstantZero::create(Ptr<Type> ty, Ptr<Module> m) 
 {
-    RET_AFTER_INIT(ConstantZero, ty);
+    RET_AFTER_INIT(ConstantZero, ty, m);
 }
 
 std::string ConstantZero::print()

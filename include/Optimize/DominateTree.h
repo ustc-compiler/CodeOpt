@@ -5,13 +5,14 @@
 #include "Module.h"
 #include "Pass.h"
 #include "internal_types.h"
+#include <memory>
 
 namespace SysYF {
 namespace IR {
 
 class DominateTree: public Pass {
 public:
-    explicit DominateTree(Ptr<Module> m): Pass(m) {}
+    explicit DominateTree(WeakPtr<Module> m): Pass(m) {}
     void execute() final;
     void get_revserse_post_order(Ptr<Function> f);
     void get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock>& visited);
@@ -20,9 +21,9 @@ public:
     Ptr<BasicBlock> intersect(Ptr<BasicBlock> b1, Ptr<BasicBlock> b2);
     const std::string get_name() const override {return name;}
 private:
-    PtrList<BasicBlock> reverse_post_order;
-    Map<Ptr<BasicBlock>, int> bb2int;
-    PtrVec<BasicBlock> doms;
+    WeakPtrList<BasicBlock> reverse_post_order;
+    WeakPtrMap<BasicBlock, int> bb2int;
+    WeakPtrVec<BasicBlock> doms;
     const std::string name = "DominateTree";
 };
 

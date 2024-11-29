@@ -14,7 +14,7 @@ Function::Function(Ptr<FunctionType> ty, const std::string &name, Ptr<Module> pa
 }
 
 void Function::init(Ptr<FunctionType> ty, const std::string &name, Ptr<Module> parent) {
-    parent_->add_function(dynamic_pointer_cast<Function>(shared_from_this()));
+    get_parent()->add_function(dynamic_pointer_cast<Function>(shared_from_this()));
     build_args();
 }
 
@@ -45,7 +45,7 @@ unsigned Function::get_num_basic_blocks() const
 
 Ptr<Module> Function::get_parent() const
 {
-    return parent_;
+    return parent_.lock();
 }
 
 void Function::remove(Ptr<BasicBlock>  bb)
@@ -53,11 +53,11 @@ void Function::remove(Ptr<BasicBlock>  bb)
     basic_blocks_.remove(bb); 
     for (auto pre : bb->get_pre_basic_blocks()) 
     {
-        pre->remove_succ_basic_block(bb);
+        pre.lock()->remove_succ_basic_block(bb);
     }
     for (auto succ : bb->get_succ_basic_blocks()) 
     {
-        succ->remove_pre_basic_block(bb);
+        succ.lock()->remove_pre_basic_block(bb);
     }
 }
 

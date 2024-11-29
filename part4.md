@@ -22,7 +22,7 @@
   }
   ```
 
-  **B4-1** 请在报告[doc/reports/B4.md](doc/reports/B4.md)中说明你实现的公告子表达式删除算法的设计思路。
+  **B4-1** 请在报告[doc/reports/B4.md](doc/reports/B4.md)中说明你实现的公共子表达式删除算法的设计思路。
 
   **B4-2** `void类指令, phi, alloca, load, call, cmp, fcmp指令`中是否存在一些指令可以在公共子表达式删除优化中分析？如果要分析，需要考虑哪些因素？
 
@@ -34,5 +34,7 @@
 
 - **任务4-2**
 
-  - **B4-3**. 基于你对LLVM IR Module的理解，在[`include/Optimize/Check.h`](include/Optimize/Check.h)和[`src/Optimize/Check.cpp`](src/Optimize/Check.cpp)中编写相应的约定验证代码，并在[`src/main.cpp`](src/main.cpp)或其他合适的位置插入相应的代码来利用你所写的检查器检查是否满足约定。将你检查的内容记录在报告[doc/reports/B4.md](doc/reports/B4.md)中，并说明检查理由。将检查器插入的代码位置记录在报告中，说明理由。
+  - **B4-3**. 基于你对LLVM IR Module的理解，在[`include/Optimize/Check.h`](include/Optimize/Check.h)和[`src/Optimize/Check.cpp`](src/Optimize/Check.cpp)中编写相应的约定验证代码，并在[`src/main.cpp`](src/main.cpp)或其他合适的位置插入相应的代码来利用你所写的检查器检查优化后的IR是否满足约定。将你检查的内容记录在报告[doc/reports/B4.md](doc/reports/B4.md)中，并说明检查理由。将检查器插入的代码位置记录在报告中，说明理由。
+
+  > 检查Pass合理即可，主要是为优化Pass服务。
 

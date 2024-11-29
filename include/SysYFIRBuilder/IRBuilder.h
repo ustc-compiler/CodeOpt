@@ -13,6 +13,19 @@ namespace SysYF
 {
 namespace IR
 {
+
+class UnreachableException: public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Unreachable code reached!";
+    }
+};
+
+
+/**
+ * @brief Scope stores the map from variables/functions in AST to LLVM IR Value
+ * 
+ */
 class Scope {
 public:
     // enter a new scope
@@ -102,6 +115,9 @@ private:
     Scope scope;
     Ptr<Module> module;
 
+    Ptr<Function> cur_func; // function analyzed currently
+    Ptr<Value> visitee_val; // the Value provided by the visitee
+
     IRBuilder() {
         module = Module::create("SysYF code");
         builder = IRStmtBuilder::create(nullptr, module);
@@ -111,21 +127,21 @@ private:
         auto TyFloat = Type::get_float_type(module);
         auto TyFloatPtr = Type::get_float_ptr_type(module);
 
-        auto input_type = FunctionType::create(TyInt32, {});
+        auto input_type = FunctionType::create(TyInt32, {}, module);
         auto get_int =
             Function::create(
                     input_type,
                     "get_int",
                     module);
 
-        input_type = FunctionType::create(TyFloat, {});
+        input_type = FunctionType::create(TyFloat, {}, module);
         auto get_float =
             Function::create(
                     input_type,
                     "get_float",
                     module);
 
-        input_type = FunctionType::create(TyInt32, {});
+        input_type = FunctionType::create(TyInt32, {}, module);
         auto get_char =
             Function::create(
                     input_type,
@@ -135,7 +151,7 @@ private:
         PtrVec<Type>  input_params;
         PtrVec<Type> ().swap(input_params);
         input_params.push_back(TyInt32Ptr);
-        input_type = FunctionType::create(TyInt32, input_params);
+        input_type = FunctionType::create(TyInt32, input_params, module);
         auto get_int_array =
             Function::create(
                     input_type,
@@ -144,7 +160,7 @@ private:
 
         PtrVec<Type> ().swap(input_params);
         input_params.push_back(TyFloatPtr);
-        input_type = FunctionType::create(TyInt32, input_params);
+        input_type = FunctionType::create(TyInt32, input_params, module);
         auto get_float_array =
             Function::create(
                     input_type,
@@ -154,7 +170,7 @@ private:
         PtrVec<Type>  output_params;
         PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
-        auto output_type = FunctionType::create(TyVoid, output_params);
+        auto output_type = FunctionType::create(TyVoid, output_params, module);
         auto put_int =
             Function::create(
                     output_type,
@@ -163,7 +179,7 @@ private:
 
         PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyFloat);
-        output_type = FunctionType::create(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params, module);
         auto put_float =
             Function::create(
                     output_type,
@@ -172,7 +188,7 @@ private:
 
         PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
-        output_type = FunctionType::create(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params, module);
         auto put_char =
             Function::create(
                     output_type,
@@ -182,7 +198,7 @@ private:
         PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
         output_params.push_back(TyInt32Ptr);
-        output_type = FunctionType::create(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params, module);
         auto put_int_array =
             Function::create(
                     output_type,
@@ -192,7 +208,7 @@ private:
         PtrVec<Type> ().swap(output_params);
         output_params.push_back(TyInt32);
         output_params.push_back(TyFloatPtr);
-        output_type = FunctionType::create(TyVoid, output_params);
+        output_type = FunctionType::create(TyVoid, output_params, module);
         auto put_float_array =
             Function::create(
                     output_type,

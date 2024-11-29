@@ -11,7 +11,6 @@
 #include <set>
 
 #include "User.h"
-#include "Module.h"
 #include "BasicBlock.h"
 #include "Type.h"
 
@@ -68,7 +67,7 @@ private:
     PtrList<BasicBlock> basic_blocks_;    // basic blocks
     PtrList<Argument> arguments_;         // arguments
     std::vector<PtrSet<Value>> vreg_set_;
-    Ptr<Module> parent_;
+    WeakPtr<Module> parent_;
     std::set<int> unused_reg_num_;
     unsigned seq_cnt_;
     // unsigned num_args_;
@@ -84,8 +83,8 @@ public:
                                 unsigned arg_no = 0);
     ~Argument() = default;
 
-    inline const Ptr<Function> get_parent() const { return parent_; }
-    inline       Ptr<Function> get_parent()       { return parent_; }
+    inline const Ptr<Function> get_parent() const { return parent_.lock(); }
+    inline       Ptr<Function> get_parent()       { return parent_.lock(); }
 
     /// For example in "void foo(int a, float b)" a is 0 and b is 1.
     unsigned get_arg_no() const {
@@ -101,7 +100,7 @@ private:
     explicit Argument(Ptr<Type> ty, const std::string &name = "", Ptr<Function> f = nullptr,
                     unsigned arg_no = 0)
         : Value(ty, name), parent_(f), arg_no_(arg_no) {}
-    Ptr<Function> parent_;
+    WeakPtr<Function> parent_;
     unsigned arg_no_;  // argument No.
 };
 

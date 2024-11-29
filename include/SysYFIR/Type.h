@@ -83,16 +83,16 @@ public:
 
 protected:
     explicit Type(TypeID tid, Ptr<Module> m);
-    void init(TypeID tid, Ptr<Module> m) {}
+    void init(TypeID tid, Ptr<Module> m);
 
 private:
     TypeID tid_;
-    Ptr<Module> m_;
+    WeakPtr<Module> m_;
 };
 
 class IntegerType : public Type {
 public:
-    static Ptr<IntegerType> create(unsigned num_bits, Ptr<Module> m );
+    static Ptr<IntegerType> create(unsigned num_bits, Ptr<Module> m);
 
     unsigned get_num_bits();
 private:
@@ -111,21 +111,19 @@ private:
 
 class FunctionType : public Type {
 public:
-    static Ptr<FunctionType> create(Ptr<Type> result, PtrVec<Type> params);
+    static Ptr<FunctionType> create(Ptr<Type> result, PtrVec<Type> params, Ptr<Module> m);
     static bool is_valid_return_type(Ptr<Type> ty);
     static bool is_valid_argument_type(Ptr<Type> ty);
 
     unsigned get_num_of_args() const;
 
     Ptr<Type> get_param_type(unsigned i) const;
-    PtrVec<Type>::iterator param_begin() { return args_.begin(); }
-    PtrVec<Type>::iterator param_end() { return args_.end(); }
     Ptr<Type> get_return_type() const;
 private:
-    explicit FunctionType(Ptr<Type> result, PtrVec<Type> params);
-    void init(Ptr<Type> result, PtrVec<Type> params) { Type::init(FunctionTyID, nullptr); }
-    Ptr<Type> result_;
-    PtrVec<Type>  args_;
+    explicit FunctionType(Ptr<Type> result, PtrVec<Type> params, Ptr<Module> m);
+    void init(Ptr<Type> result, PtrVec<Type> params, Ptr<Module> m) { Type::init(FunctionTyID, m); }
+    WeakPtr<Type> result_;
+    WeakPtrVec<Type>  args_;
 };
 
 class ArrayType : public Type {
@@ -133,28 +131,28 @@ public:
     static bool is_valid_element_type(Ptr<Type> ty);
 
     static Ptr<ArrayType> get(Ptr<Type> contained, unsigned num_elements);
-    static Ptr<ArrayType> create(Ptr<Type> contained, unsigned num_elements);
+    static Ptr<ArrayType> create(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m);
 
-    Ptr<Type> get_element_type() const { return contained_; }
+    Ptr<Type> get_element_type() const { return contained_.lock(); }
     unsigned get_num_of_elements() const { return num_elements_; }
 
 private:
-    explicit ArrayType(Ptr<Type> contained, unsigned num_elements);
-    void init(Ptr<Type> contained, unsigned num_elements) { Type::init(ArrayTyID, nullptr); }
-    Ptr<Type> contained_;   // The element type of the array.
+    explicit ArrayType(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m);
+    void init(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m) { Type::init(ArrayTyID, m); }
+    WeakPtr<Type> contained_;   // The element type of the array.
     unsigned num_elements_;  // Number of elements in the array.
 };
 
 class PointerType : public Type {
 public:
-    Ptr<Type> get_element_type() const { return contained_; }
+    Ptr<Type> get_element_type() const { return contained_.lock(); }
     static Ptr<PointerType> get(Ptr<Type> contained);
-    static Ptr<PointerType> create(Ptr<Type> contained);
+    static Ptr<PointerType> create(Ptr<Type> contained, Ptr<Module> m);
 
 private:
-    explicit PointerType(Ptr<Type> contained);
-    void init(Ptr<Type> contained) { Type::init(PointerTyID, nullptr); }
-    Ptr<Type> contained_;   // The element type of the ptr.
+    explicit PointerType(Ptr<Type> contained, Ptr<Module> m);
+    void init(Ptr<Type> contained, Ptr<Module> m) { Type::init(PointerTyID, m); }
+    WeakPtr<Type> contained_;   // The element type of the ptr.
 };
 
 }

@@ -1,7 +1,11 @@
 #include "LiveVar.h"
+#include "BasicBlock.h"
+#include "Value.h"
+#include "internal_types.h"
 #include <fstream>
 
 #include <algorithm>
+#include <memory>
 
 namespace SysYF
 {
@@ -10,9 +14,9 @@ namespace IR
 
 void LiveVar::execute() {
     //  请不要修改该代码。在被评测时不要在中间的代码中重新调用set_print_name
-    module->set_print_name();
+    module.lock()->set_print_name();
 
-    for (auto func : this->module->get_functions()) {
+    for (auto func : this->module.lock()->get_functions()) {
         if (func->get_basic_blocks().empty()) {
             continue;
         } else {
@@ -31,7 +35,7 @@ void LiveVar::execute() {
 void LiveVar::dump() {
     std::fstream f;
     f.open(lvdump, std::ios::out);
-    for (auto &func: module->get_functions()) {
+    for (auto &func: module.lock()->get_functions()) {
         for (auto &bb: func->get_basic_blocks()) {
             f << bb->get_name() << std::endl;
             auto &in = bb->get_live_in();
@@ -40,16 +44,16 @@ void LiveVar::dump() {
             auto sorted_out = sort_by_name(out);
             f << "in:\n";
             for (auto in_v: sorted_in) {
-                if(in_v->get_name() != "")
+                if(in_v.lock()->get_name() != "")
                 {
-                    f << in_v->get_name() << " ";
+                    f << in_v.lock()->get_name() << " ";
                 }
             }
             f << "\n";
             f << "out:\n";
             for (auto out_v: sorted_out) {
-                if(out_v->get_name() != ""){
-                    f << out_v->get_name() << " ";
+                if(out_v.lock()->get_name() != ""){
+                    f << out_v.lock()->get_name() << " ";
                 }
             }
             f << "\n";
@@ -59,12 +63,12 @@ void LiveVar::dump() {
 }
 
 
-bool ValueCmp(Ptr<Value> a, Ptr<Value> b) {
-    return a->get_name() < b->get_name();
+bool ValueCmp(WeakPtr<Value> a, WeakPtr<Value> b) {
+    return a.lock()->get_name() < b.lock()->get_name();
 }
 
-PtrVec<Value> sort_by_name(PtrSet<Value> &val_set) {
-    PtrVec<Value> result;
+WeakPtrVec<Value> sort_by_name(WeakPtrSet<Value> &val_set) {
+    WeakPtrVec<Value> result;
     result.assign(val_set.begin(), val_set.end());
     std::sort(result.begin(), result.end(), ValueCmp);
     return result;

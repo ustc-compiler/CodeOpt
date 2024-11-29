@@ -10,7 +10,7 @@ namespace IR{
 class LiveVar : public Pass
 {
 public:
-    LiveVar(Ptr<Module> m) : Pass(m) {}
+    LiveVar(WeakPtr<Module> m) : Pass(m) {}
     void execute() final;
     const std::string get_name() const override {return name;}
     void dump();
@@ -19,8 +19,8 @@ private:
     const std::string name = "LiveVar";
 };
 
-bool ValueCmp(Ptr<Value> a, Ptr<Value> b);
-PtrVec<Value> sort_by_name(PtrSet<Value> &val_set);
+bool ValueCmp(WeakPtr<Value> a, WeakPtr<Value> b);
+WeakPtrVec<Value> sort_by_name(WeakPtrSet<Value> &val_set);
 const std::string lvdump = "live_var.out";
 
 }

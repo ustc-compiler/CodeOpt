@@ -18,10 +18,12 @@
 
 同时保留了`-emit-ast`参数用于从AST复原代码，`-check`参数用于静态检查。
 
-若要开启单项优化，`-lv`代表开启活跃变量分析，`-cse`代表开启公共子表达式删除。如果需要开启优化或者分析，则必须在命令行中搭配`-O`参数使用，否则无效。比如，若你想开启活跃变量分析或者其他分析优化遍，就需要使用如下命令：
+同时新增了 `-O` 命令行参数，用于开始 Mem2Reg pass 和 DominateTree pass 。
+
+若要开启单项优化，`-lv`代表开启活跃变量分析，`-cse`代表开启公共子表达式删除，开启这些优化的同时也会开启 Mem2Reg pass 和 DominateTree pass。例如，若你想开启活跃变量分析或者其他分析优化遍，就需要使用如下命令：
 
 ```shell
-./compiler -emit-ir -O -lv test.sy -o test.ll
+./compiler -emit-ir -lv test.sy -o test.ll
 ```
 
 **注意：**以下两条命令产生的IR是不同的:
@@ -34,7 +36,7 @@
 ./compiler -emit-ir test.sy -o test.ll
 ```
 
-原因在于`-O`选项会开启Mem2Reg pass，IR会变成SSA格式。
+原因在于`-O`选项会开启Mem2Reg pass，可以消除部分栈分配指令`alloca`。
 
 有关flag详情，可以参见`src/main.cpp`。
 
@@ -44,7 +46,7 @@
 
   `Pass`类是所有分析与优化Pass的基类（比如Mem2Reg、DominateTree、LiveVar等），定义在[`include/Optimize/Pass.h`](include/Optimize/Pass.h)中。该基类中有两个纯虚函数需要子类重写：一个是`virtual void execute() = 0`，该函数是pass的总控函数，该函数会被调用去执行该pass；另一个是`virtual const std::string get_name() const = 0`，该函数用于获得该pass的名字。
 
-  该基类中有一个成员变量`Module* module`，被子类继承。这里`module`含义表示一个编译单元，是一个源程序文件对应的中间表示。
+  该基类中有一个成员变量`Ptr<Module> module`，可以被子类访问。这里`module`表示一个编译单元，是一个源程序文件对应的中间表示。
 
   本实验中，你所实现的分析和优化pass均需继承自该类。你需要重写上述的`execute`函数和`get_name`函数。可以参考给出的[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp)和[`src/Optimize/DominateTree.cpp`](src/Optimize/DominateTree.cpp)是如何继承Pass类并实现对应功能的。
 
@@ -61,6 +63,12 @@
   `Mem2Reg`用于将IR转换成为SSA形式的IR。以LLVM IR为例，在生成IR时，局部变量被生成为alloca/load/store的形式。用 alloca 指令来“声明”变量，得到一个指向该变量的指针，用 store 指令来把值存在变量里，用 load 指令来把值读出。LLVM 在 mem2reg 这个 pass 中，会识别出上述这种模式的 alloca，把它提升为 SSA value(register)，在提升为 SSA value时会对应地消除 store 与 load，修改为 SSA 的 def-use/use-def 关系，并且在适当的位置安插 Phi 和 进行变量重命名。本次实验中，助教给出了Mem2Reg的一种实现(见[`src/Optimize/Mem2Reg.cpp`](src/Optimize/Mem2Reg.cpp))，在开启优化时会开启Mem2Reg，将IR转换为SSA形式的IR。因此本实验中的所有优化均基于SSA形式的IR。
 
   > 参考链接: [LLVM对mem2reg的说明](https://llvm.org/docs/Passes.html#mem2reg-promote-memory-to-register), [LLVM的mem2reg实现](https://llvm.org/doxygen/Mem2Reg_8cpp_source.html)
+
+## 类型与API说明
+
+为了防止`std::shared_ptr`循环引用导致的内存泄漏，助教提供了[`WeakPtr`](./include/internal_types.h#L35)，并定义了相关的容器类型，包括[`WeakPtrSet`](include/internal_types.h#L41), [`WeakPtrList`](include/internal_types.h#L57), [`WeakPtrMap`](include/internal_types.h#L90)和[`WeakPtrVec`](include/internal_types.h#L93)。
+
+对于`WeakPtrSet`，提供了包括[`setUnion`](include/internal_types.h#L63), [`setDiff`](include/internal_types.h#L73), [`setIntersect`](include/internal_types.h#L83)等操作。
 
 ## 使用Log方便调试
 

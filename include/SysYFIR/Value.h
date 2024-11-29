@@ -18,7 +18,7 @@ class Value;
 
 struct Use
 {
-    Ptr<Value> val_;
+    WeakPtr<Value> val_;
     unsigned arg_no_;     // the no. of operand, e.g., func(a, b), a is 0, b is 1
     Use(Ptr<Value> val, unsigned no) : val_(val), arg_no_(no) {}
 };
@@ -28,7 +28,7 @@ class Value : public std::enable_shared_from_this<Value>
 public:
     ~Value() = default;
 
-    Ptr<Type> get_type() const { return type_; }
+    Ptr<Type> get_type() const { return type_.lock(); }
 
     std::list<Use> &get_use_list() { return use_list_; }
 
@@ -49,11 +49,17 @@ public:
 
     virtual std::string print() = 0;
 
+    // cast to Instruction, BasicBlock, Function, ...
+    template <typename T>
+    Ptr<T> as() {
+        return dynamic_pointer_cast<T>(shared_from_this());
+    }
+
 protected:
     explicit Value(Ptr<Type> ty, const std::string &name = "");
 
 private:
-    Ptr<Type> type_;
+    WeakPtr<Type> type_;
     std::list<Use> use_list_;   // who use this value
     std::string name_;    // should we put name field here ?
 };

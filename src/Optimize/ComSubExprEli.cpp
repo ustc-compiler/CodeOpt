@@ -7,7 +7,6 @@ namespace SysYF {
 namespace IR {
 
 void ComSubExprEli::execute() {
-
 }
 
 bool ComSubExprEli::is_valid_expr(Ptr<Instruction> inst) {
@@ -21,7 +20,6 @@ bool ComSubExprEli::is_valid_expr(Ptr<Instruction> inst) {
         || inst->is_fcmp()
     );
 }
-
 
 }
 }

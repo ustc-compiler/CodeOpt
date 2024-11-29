@@ -4,7 +4,7 @@ namespace SysYF {
 namespace IR {
 
 void RDominateTree::execute() {
-    for(auto f:module->get_functions()){
+    for(auto f:module.lock()->get_functions()){
         if(f->get_basic_blocks().empty()){
             continue;
         }
@@ -22,9 +22,9 @@ void RDominateTree::get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock> &visit
     visited.insert(bb);
     auto parents = bb->get_pre_basic_blocks();
     for(auto parent : parents){
-        auto is_visited = visited.find(parent);
+        auto is_visited = visited.find(parent.lock());
         if(is_visited==visited.end()){
-            get_post_order(parent,visited);
+            get_post_order(parent.lock(),visited);
         }
     }
     bb2int[bb] = reverse_post_order.size();
@@ -74,14 +74,14 @@ void RDominateTree::get_bb_irdom(Ptr<Function> f) {
             auto rpreds = bb->get_succ_basic_blocks();
             Ptr<BasicBlock> new_irdom = nullptr;
             for(auto rpred_bb:rpreds){
-                if(rdoms[bb2int[rpred_bb]] != nullptr){
-                    new_irdom = rpred_bb;
+                if(rdoms[bb2int[rpred_bb.lock()]] != nullptr){
+                    new_irdom = rpred_bb.lock();
                     break;
                 }
             }
             for(auto rpred_bb:rpreds){
-                if(rdoms[bb2int[rpred_bb]] != nullptr){
-                    new_irdom = intersect(rpred_bb, new_irdom);
+                if(rdoms[bb2int[rpred_bb.lock()]] != nullptr){
+                    new_irdom = intersect(rpred_bb.lock(), new_irdom);
                 }
             }
             if(rdoms[bb2int[bb]] != new_irdom){
@@ -113,9 +113,9 @@ void RDominateTree::get_bb_rdom_front(Ptr<Function> f) {
         if(b_rpred.size() >= 2){
             for(auto rpred:b_rpred){
                 auto runner = rpred;
-                while(runner!=rdoms[bb2int[bb]]){
-                    runner->add_rdom_frontier(bb);
-                    runner = rdoms[bb2int[runner]];
+                while(runner.lock()!=rdoms[bb2int[bb]]){
+                    runner.lock()->add_rdom_frontier(bb);
+                    runner = rdoms[bb2int[runner.lock()]];
                 }
             }
         }

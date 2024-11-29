@@ -6,22 +6,22 @@ namespace SysYF {
 namespace IR {
 
 void Mem2Reg::execute(){
-    for(auto fun: module->get_functions()){
+    for(auto fun: module.lock()->get_functions()){
         if(fun->get_basic_blocks().empty())continue;
         func_ = fun;
         lvalue_connection.clear();
         no_union_set.clear();
         insideBlockForwarding();
         genPhi();
-        module->set_print_name();
+        module.lock()->set_print_name();
         valueDefineCounting();
-        valueForwarding(func_->get_entry_block());
+        valueForwarding(func_.lock()->get_entry_block());
         removeAlloc();
     }
 }
 
 void Mem2Reg::insideBlockForwarding(){
-    for(auto bb: func_->get_basic_blocks()){
+    for(auto bb: func_.lock()->get_basic_blocks()){
         Map<Ptr<Value>, Ptr<Instruction>> defined_list;
         Map<Ptr<Instruction>, Ptr<Value>> forward_list;
         Map<Ptr<Value>, Ptr<Value>> new_value;
@@ -62,7 +62,7 @@ void Mem2Reg::insideBlockForwarding(){
             auto inst = submap.first; 
             auto value = submap.second;
             for(auto use: inst->get_use_list()){
-                auto use_inst = dynamic_pointer_cast<Instruction>(use.val_);
+                auto use_inst = dynamic_pointer_cast<Instruction>(use.val_.lock());
                 use_inst->set_operand(use.arg_no_, value);
             }
             bb->delete_instr(inst);
@@ -76,7 +76,7 @@ void Mem2Reg::insideBlockForwarding(){
 void Mem2Reg::genPhi(){
     PtrSet<Value> globals;
     Map<Ptr<Value>, PtrSet<BasicBlock>> defined_in_block;
-    for(auto bb: func_->get_basic_blocks()){
+    for(auto bb: func_.lock()->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!isLocalVarOp(inst))continue;
             if(inst->get_instr_type() == Instruction::OpID::load){
@@ -104,24 +104,24 @@ void Mem2Reg::genPhi(){
         size_t iter_pointer = 0;
         for(; iter_pointer < queue.size(); iter_pointer++){
             for(auto bb_domfront: queue[iter_pointer]->get_dom_frontier()){
-                if(bb_phi_list.find(bb_domfront) != bb_phi_list.end()){
-                    auto phis = bb_phi_list.find(bb_domfront);
+                if(bb_phi_list.find(bb_domfront.lock()) != bb_phi_list.end()){
+                    auto phis = bb_phi_list.find(bb_domfront.lock());
                     if(phis->second.find(var) == phis->second.end()){
                         phis->second.insert(var);
                         auto newphi = PhiInst::create_phi(var->get_type()->get_pointer_element_type(), 
-                            bb_domfront);
+                            bb_domfront.lock());
                         newphi->set_lval(var);
-                        bb_domfront->add_instr_begin(newphi);
-                        queue.push_back(bb_domfront);
+                        bb_domfront.lock()->add_instr_begin(newphi);
+                        queue.push_back(bb_domfront.lock());
                     }
                 }
                 else{
                     auto newphi = PhiInst::create_phi(var->get_type()->get_pointer_element_type(), 
-                            bb_domfront);
+                            bb_domfront.lock());
                     newphi->set_lval(var);
-                    bb_domfront->add_instr_begin(newphi);                  
-                    queue.push_back(bb_domfront);
-                    bb_phi_list.insert({bb_domfront, {var}});
+                    bb_domfront.lock()->add_instr_begin(newphi);                  
+                    queue.push_back(bb_domfront.lock());
+                    bb_phi_list.insert({bb_domfront.lock(), {var}});
                 }
             }
         }
@@ -129,8 +129,8 @@ void Mem2Reg::genPhi(){
 }
 
 void Mem2Reg::valueDefineCounting(){
-    define_var = Map<Ptr<BasicBlock>, PtrVec<Value>>();
-    for(auto bb: func_->get_basic_blocks()){
+    define_var = {};
+    for(auto bb: func_.lock()->get_basic_blocks()){
         define_var.insert({bb, {}});
         for(auto inst: bb->get_instructions()){
             if(inst->get_instr_type() == Instruction::OpID::phi){
@@ -186,7 +186,7 @@ void Mem2Reg::valueForwarding(Ptr<BasicBlock> bb){
     }
 
     for(auto succbb: bb->get_succ_basic_blocks()){
-        for(auto inst: succbb->get_instructions()){
+        for(auto inst: succbb.lock()->get_instructions()){
             if(inst->get_instr_type() == Instruction::OpID::phi){
                 auto phi = dynamic_pointer_cast<PhiInst>(inst);
                 auto lvalue = phi->get_lval();
@@ -209,16 +209,16 @@ void Mem2Reg::valueForwarding(Ptr<BasicBlock> bb){
     }
 
     for(auto succbb: bb->get_succ_basic_blocks()){
-        if(visited.find(succbb)!=visited.end())continue;
-        valueForwarding(succbb);
+        if(visited.find(succbb.lock())!=visited.end())continue;
+        valueForwarding(succbb.lock());
     }
 
     // for(auto inst: bb->get_instructions()){
         auto var_set = define_var.find(bb)->second;
         for(auto var: var_set){
-            if(value_status.find(var) == value_status.end())continue;
-            if(value_status.find(var)->second.size() == 0)continue;
-            value_status.find(var)->second.pop_back();
+            if(value_status.find(var.lock()) == value_status.end())continue;
+            if(value_status.find(var.lock())->second.size() == 0)continue;
+            value_status.find(var.lock())->second.pop_back();
         }
     // }
 
@@ -228,7 +228,7 @@ void Mem2Reg::valueForwarding(Ptr<BasicBlock> bb){
 } 
 
 void Mem2Reg::removeAlloc(){
-    for(auto bb: func_->get_basic_blocks()){
+    for(auto bb: func_.lock()->get_basic_blocks()){
         PtrSet<Instruction> delete_list;
         for(auto inst: bb->get_instructions()){
             if(inst->get_instr_type() != Instruction::OpID::alloca)continue;
@@ -244,7 +244,7 @@ void Mem2Reg::removeAlloc(){
 
 void Mem2Reg::phiStatistic(){
     Map<Ptr<Value>, Ptr<Value>> value_map;
-    for(auto bb: func_->get_basic_blocks()){
+    for(auto bb: func_.lock()->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!inst->is_phi())continue;
             auto phi_value = dynamic_pointer_cast<Value>(inst);
@@ -253,7 +253,7 @@ void Mem2Reg::phiStatistic(){
             }
         }
     }
-    for(auto bb: func_->get_basic_blocks()){
+    for(auto bb: func_.lock()->get_basic_blocks()){
         for(auto inst: bb->get_instructions()){
             if(!inst->is_phi())continue;
             auto phi_value = dynamic_pointer_cast<Value>(inst);
@@ -269,11 +269,11 @@ void Mem2Reg::phiStatistic(){
                 value_map.insert({phi_value, reduced_value});
             }
             for(auto opr: inst->get_operands()){
-                if(dynamic_pointer_cast<BasicBlock>(opr))continue;
-                if(dynamic_pointer_cast<Constant>(opr))continue;
-                if(no_union_set.find(opr) != no_union_set.end())continue;
-                if(value_map.find(opr) != value_map.end()){
-                    auto opr_reduced_value = value_map.find(opr)->second;
+                if(dynamic_pointer_cast<BasicBlock>(opr.lock()))continue;
+                if(dynamic_pointer_cast<Constant>(opr.lock()))continue;
+                if(no_union_set.find(opr.lock()) != no_union_set.end())continue;
+                if(value_map.find(opr.lock()) != value_map.end()){
+                    auto opr_reduced_value = value_map.find(opr.lock())->second;
                     if(opr_reduced_value != reduced_value){
 #ifdef DEBUG
                         std::cout << "conflict! " << opr->get_name() << " -> " << opr_reduced_value->get_name();
@@ -282,16 +282,16 @@ void Mem2Reg::phiStatistic(){
                     }
                 }
                 else{
-                    if(lvalue_connection.find(opr)!=lvalue_connection.end()){
-                        auto bounded_lval = lvalue_connection.find(opr)->second;
-                        if(bounded_lval != reduced_value){
+                    if(lvalue_connection.find(opr.lock())!=lvalue_connection.end()){
+                        auto bounded_lval = lvalue_connection.find(opr.lock())->second;
+                        if(bounded_lval.lock() != reduced_value){
 #ifdef DEBUG
                             std::cout << "conflict! " << opr->get_name() << " -> " << bounded_lval->get_name();
                             std::cout << " " << phi_value->get_name() << " -> " << reduced_value->get_name() << "\n";
 #endif
                         }
                         else{
-                            value_map.insert({opr, reduced_value});
+                            value_map.insert({opr.lock(), reduced_value});
                         }
                     }
                     else{
@@ -316,7 +316,7 @@ void Mem2Reg::phiStatistic(){
     }
 
     for(const auto& iter: reversed_value_map){
-        func_->get_vreg_set().push_back(iter.second);
+        func_.lock()->get_vreg_set().push_back(iter.second);
     }
 }
 

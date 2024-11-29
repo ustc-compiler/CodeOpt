@@ -2,21 +2,29 @@ cmake_minimum_required(VERSION 3.5)
 
 project(SysYFCompiler)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -Wextra -Wno-unused -Wshadow -g -pedantic")
+# required by clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# if not set, set CMAKE_BUILD_TYPE to Debug
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
 
-# add macros to generate Bison & Flex Cpp code from grammar
-# find_package(BISON REQUIRED)
-# find_package(FLEX REQUIRED)
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-# BISON_TARGET(SysYFParser ${CMAKE_CURRENT_SOURCE_DIR}/grammar/SysYFParser.yy ${CMAKE_CURRENT_BINARY_DIR}/SysYFParser.cpp
-#              COMPILE_FLAGS "-Wall -Wcounterexamples --defines=${CMAKE_CURRENT_BINARY_DIR}/SysYFParser.h")
-# FLEX_TARGET(SysYFScanner ${CMAKE_CURRENT_SOURCE_DIR}/grammar/SysYFScanner.ll  ${CMAKE_CURRENT_BINARY_DIR}/SysYFScanner.cpp
-#             COMPILE_FLAGS "--debug --c++")
-# ADD_FLEX_BISON_DEPENDENCY(SysYFScanner SysYFParser)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -Wextra -Wno-unused -Wshadow -g -pedantic")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Asan")
+    # see https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#index-fsanitize_003daddress and https://github.com/google/sanitizers/wiki/AddressSanitizer for explanation of -fsanitize=address
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -Wextra -Wno-unused -Wshadow -g -pedantic -fsanitize=address -fno-omit-frame-pointer")
+else()
+    message(WARNING "Unknown build type: ${CMAKE_BUILD_TYPE}. Using default flags.")
+endif()
+
+# for ninja diagnostics color, see https://stackoverflow.com/questions/73349743/ninja-build-system-gcc-clang-doesnt-output-diagnostic-colors
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
 
 # include generated files in project environment
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

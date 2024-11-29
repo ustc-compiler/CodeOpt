@@ -14,7 +14,7 @@ namespace IR {
 
 class RDominateTree : public Pass{//reverse dominate tree
 public:
-    explicit RDominateTree(Ptr<Module> m): Pass(m){}
+    explicit RDominateTree(WeakPtr<Module> m): Pass(m){}
     void execute()final;
     void get_revserse_post_order(Ptr<Function>  f);
     void get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock>& visited);

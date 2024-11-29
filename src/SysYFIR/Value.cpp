@@ -28,7 +28,7 @@ std::string Value::get_name() const
 void Value::replace_all_use_with(Ptr<Value> new_val)
 {
     for (auto use : use_list_) {
-        auto val = dynamic_pointer_cast<User>(use.val_);
+        auto val = dynamic_pointer_cast<User>(use.val_.lock());
 #ifdef DEBUG
         assert(val && "new_val is not a user");
 #endif
@@ -38,7 +38,7 @@ void Value::replace_all_use_with(Ptr<Value> new_val)
 
 void Value::remove_use(Ptr<Value> val)
 {
-    auto is_val = [val] (const Use &use) { return use.val_ == val; };
+    auto is_val = [val] (const Use &use) { return use.val_.lock() == val; };
     use_list_.remove_if(is_val);
 }
 

@@ -24,7 +24,7 @@ BasicBlock::BasicBlock(Ptr<Module> m, const std::string &name = "",
 void BasicBlock::init(Ptr<Module> m, const std::string &name = "",
                       Ptr<Function> parent = nullptr)
 {
-    parent_->add_basic_block(dynamic_pointer_cast<BasicBlock>(shared_from_this()));
+    parent_.lock()->add_basic_block(dynamic_pointer_cast<BasicBlock>(shared_from_this()));
 }
 
 Ptr<Module> BasicBlock::get_module()
@@ -96,9 +96,9 @@ std::string BasicBlock::print()
     }
     for (auto bb : this->get_pre_basic_blocks() )
     {
-        if( bb != *this->get_pre_basic_blocks().begin() )
+        if( bb.lock() != (*this->get_pre_basic_blocks().begin()).lock() )
             bb_ir += ", ";
-        bb_ir += print_as_op(bb, false);
+        bb_ir += print_as_op(bb.lock(), false);
     }
     
     // print prebb

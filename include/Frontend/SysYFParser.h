@@ -42,16 +42,16 @@
 // especially those whose name start with YY_ or yy_.  They are
 // private implementation details that can be changed or removed.
 
-#ifndef YY_YY_HOME_CJB_MYGIT_USTC_COMPILER_2024FALLOPT_BUILD_SYSYFPARSER_H_INCLUDED
-# define YY_YY_HOME_CJB_MYGIT_USTC_COMPILER_2024FALLOPT_BUILD_SYSYFPARSER_H_INCLUDED
+#ifndef YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
+# define YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED
 // "%code requires" blocks.
-#line 12 "/home/cjb/mygit/ustc-compiler/2024fallopt/grammar/SysYFParser.yy"
+#line 12 "../../grammar/SysYFParser.yy"
 
 #include <string>
 #include "SyntaxTree.h"
 class SysYFDriver;
 
-#line 55 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.h"
+#line 55 "./SysYFParser.h"
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -191,7 +191,7 @@ class SysYFDriver;
 #endif
 
 namespace yy {
-#line 195 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.h"
+#line 195 "./SysYFParser.h"
 
 
 
@@ -2903,9 +2903,9 @@ switch (yykind)
 
 
 } // yy
-#line 2907 "/home/cjb/mygit/ustc-compiler/2024fallopt/build/SysYFParser.h"
+#line 2907 "./SysYFParser.h"
 
 
 
 
-#endif // !YY_YY_HOME_CJB_MYGIT_USTC_COMPILER_2024FALLOPT_BUILD_SYSYFPARSER_H_INCLUDED
+#endif // !YY_YY_HOME_CJB_COMPILER_EDUCODER_EDUCODER_2021FALL_COMPILER_IR_LAB_SYSYF_TA_BUILD_SYSYFPARSER_H_INCLUDED

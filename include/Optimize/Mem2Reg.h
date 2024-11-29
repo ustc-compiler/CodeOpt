@@ -9,21 +9,22 @@
 #include "Module.h"
 #include "Pass.h"
 #include "internal_types.h"
+#include <memory>
 
 namespace SysYF {
 namespace IR {
 
 class Mem2Reg : public Pass{
 private:
-	Ptr<Function> func_;
-	Ptr<IRBuilder> builder;
-	Map<Ptr<BasicBlock>, PtrVec<Value>> define_var;
+    WeakPtr<Function> func_;
+    WeakPtr<IRBuilder> builder;
+    WeakPtrMap<BasicBlock, WeakPtrVec<Value>> define_var;
     const std::string name = "Mem2Reg";
-	Map<Ptr<Value>, Ptr<Value>> lvalue_connection;
-	PtrSet<Value> no_union_set;
+    WeakPtrMap<Value, WeakPtr<Value>> lvalue_connection;
+    WeakPtrSet<Value> no_union_set;
 
 public:
-	explicit Mem2Reg(Ptr<Module> m) : Pass(m) {}
+	explicit Mem2Reg(WeakPtr<Module> m) : Pass(m) {}
 	~Mem2Reg(){};
 	void execute() final;
 	void genPhi();

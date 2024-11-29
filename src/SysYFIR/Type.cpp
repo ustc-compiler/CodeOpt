@@ -15,6 +15,10 @@ Type::Type(TypeID tid, Ptr<Module> m)
     m_ = m;
 }
 
+void Type::init(TypeID tid, Ptr<Module> m) {
+    m->add_type(shared_from_this());
+}
+
 Ptr<Type> Type::create(TypeID tid, Ptr<Module> m)
 {
     RET_AFTER_INIT(Type, tid, m);
@@ -22,7 +26,7 @@ Ptr<Type> Type::create(TypeID tid, Ptr<Module> m)
 
 Ptr<Module> Type::get_module()
 {
-    return m_;
+    return m_.lock();
 }
 
 bool Type::is_eq_type(Ptr<Type> ty1, Ptr<Type> ty2)
@@ -75,7 +79,7 @@ Ptr<PointerType> Type::get_float_ptr_type(Ptr<Module> m)
     return m->get_float_ptr_type();
 }
 
-Ptr<Type> Type::get_pointer_element_type(){ 
+Ptr<Type> Type::get_pointer_element_type(){
     if( this->is_pointer_type() )
         return static_pointer_cast<PointerType>(shared_from_this())->get_element_type();
     else
@@ -89,30 +93,30 @@ Ptr<Type> Type::get_array_element_type(){
         return nullptr;
 }
 
-int Type::get_size() 
+int Type::get_size()
 {
-    if (this->is_integer_type()) 
+    if (this->is_integer_type())
     {
         auto bits = static_pointer_cast<IntegerType>(shared_from_this())->get_num_bits() / 8;
-        return bits > 0 ? bits : 1;        
+        return bits > 0 ? bits : 1;
     }
-    if (this->is_float_type()) 
+    if (this->is_float_type())
     {
-        return 4;        
+        return 4;
     }
-    if (this->is_array_type()) 
+    if (this->is_array_type())
     {
         auto element_size = static_pointer_cast<ArrayType>(shared_from_this())->get_element_type()->get_size();
         auto num_elements = static_pointer_cast<ArrayType>(shared_from_this())->get_num_of_elements();
         return element_size * num_elements;
     }
-    if (this->is_pointer_type()) 
+    if (this->is_pointer_type())
     {
-        if (this->get_pointer_element_type()->is_array_type()) 
+        if (this->get_pointer_element_type()->is_array_type())
         {
             return this->get_pointer_element_type()->get_size();
-        } 
-        else 
+        }
+        else
         {
             return 4;
         }
@@ -193,8 +197,8 @@ Ptr<FloatType> FloatType::create(Ptr<Module> m )
     RET_AFTER_INIT(FloatType, m);
 }
 
-FunctionType::FunctionType(Ptr<Type> result, PtrVec<Type>  params)
-    : Type(Type::FunctionTyID, nullptr)
+FunctionType::FunctionType(Ptr<Type> result, PtrVec<Type>  params, Ptr<Module> m)
+    : Type(Type::FunctionTyID, m)
 {
 #ifdef DEBUG
     assert(is_valid_return_type(result) && "Invalid return type for function!");
@@ -210,9 +214,9 @@ FunctionType::FunctionType(Ptr<Type> result, PtrVec<Type>  params)
     }
 }
 
-Ptr<FunctionType> FunctionType::create(Ptr<Type> result, PtrVec<Type>  params)
+Ptr<FunctionType> FunctionType::create(Ptr<Type> result, PtrVec<Type> params, Ptr<Module> m)
 {
-    RET_AFTER_INIT(FunctionType, result, params);
+    RET_AFTER_INIT(FunctionType, result, params, m);
 }
 
 bool FunctionType::is_valid_return_type(Ptr<Type> ty)
@@ -232,15 +236,15 @@ unsigned FunctionType::get_num_of_args() const
 
 Ptr<Type> FunctionType::get_param_type(unsigned i) const
 {
-    return args_[i];
+    return args_[i].lock();
 }
 
 Ptr<Type> FunctionType::get_return_type() const
 {
-    return result_;
+    return result_.lock();
 }
 
-ArrayType::ArrayType(Ptr<Type> contained, unsigned num_elements)
+ArrayType::ArrayType(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m)
     : Type(Type::ArrayTyID, contained->get_module()), num_elements_(num_elements)
 {
 #ifdef DEBUG
@@ -259,15 +263,15 @@ Ptr<ArrayType> ArrayType::get(Ptr<Type> contained, unsigned num_elements)
     return contained->get_module()->get_array_type(contained, num_elements);
 }
 
-Ptr<ArrayType> ArrayType::create(Ptr<Type> contained, unsigned num_elements)
+Ptr<ArrayType> ArrayType::create(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m)
 {
-    RET_AFTER_INIT(ArrayType, contained, num_elements);
+    RET_AFTER_INIT(ArrayType, contained, num_elements, m);
 }
 
-PointerType::PointerType(Ptr<Type> contained)
+PointerType::PointerType(Ptr<Type> contained, Ptr<Module> m)
     : Type(Type::PointerTyID, contained->get_module()), contained_(contained)
 {
-    
+
 }
 
 Ptr<PointerType> PointerType::get(Ptr<Type> contained)
@@ -275,9 +279,9 @@ Ptr<PointerType> PointerType::get(Ptr<Type> contained)
     return contained->get_module()->get_pointer_type(contained);
 }
 
-Ptr<PointerType> PointerType::create(Ptr<Type> contained)
+Ptr<PointerType> PointerType::create(Ptr<Type> contained, Ptr<Module> m)
 {
-    RET_AFTER_INIT(PointerType, contained);
+    RET_AFTER_INIT(PointerType, contained, m);
 }
 
 }

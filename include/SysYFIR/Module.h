@@ -39,6 +39,8 @@ public:
     void add_function(Ptr<Function> f);
     PtrList<Function> &get_functions();
     void add_global_variable(Ptr<GlobalVariable> g);
+    void add_type(Ptr<Type> t) { all_types_.push_back(t); }
+    void add_constant(Ptr<Constant> c) { all_constants_.push_back(c); }
     PtrList<GlobalVariable> &get_global_variable();
     std::string get_instr_op_name( Instruction::OpID instr ) { return instr_id2string_[instr]; }
     void set_print_name();
@@ -65,6 +67,8 @@ private:
     
     std::map<Ptr<Type> , Ptr<PointerType>> pointer_map_;
     std::map<std::pair<Ptr<Type> ,int>, Ptr<ArrayType> > array_map_; 
+    std::vector<Ptr<Type>> all_types_;
+    std::vector<Ptr<Constant>> all_constants_;
 };
 
 }

@@ -5,6 +5,8 @@
 #include "Instruction.h"
 #include "IRPrinter.h"
 #include "internal_macros.h"
+#include "internal_types.h"
+#include <set>
 
 #ifdef DEBUG
 #include <cassert>
@@ -24,7 +26,7 @@ Instruction::Instruction(Ptr<Type> ty, OpID id, unsigned num_ops, Ptr<BasicBlock
 
 void Instruction::insert_to_bb()
 { 
-    parent_ -> add_instruction(dynamic_pointer_cast<Instruction>(shared_from_this())); 
+    parent_.lock()-> add_instruction(dynamic_pointer_cast<Instruction>(shared_from_this())); 
 }
 
 void Instruction::init(Ptr<Type> ty, OpID id, unsigned num_ops, Ptr<BasicBlock> parent) 
@@ -34,12 +36,12 @@ void Instruction::init(Ptr<Type> ty, OpID id, unsigned num_ops, Ptr<BasicBlock> 
 
 Ptr<Function> Instruction::get_function()
 { 
-    return parent_->get_parent(); 
+    return parent_.lock()->get_parent(); 
 }
 
 Ptr<Module> Instruction::get_module() 
 { 
-    return parent_->get_module(); 
+    return parent_.lock()->get_module(); 
 }
 
 BinaryInst::BinaryInst(Ptr<Type> ty, OpID id, Ptr<Value> v1, Ptr<Value> v2, Ptr<BasicBlock> bb)
@@ -477,7 +479,7 @@ Ptr<Type> GetElementPtrInst::get_element_type(Ptr<Value> ptr, PtrVec<Value>  idx
 
 Ptr<Type> GetElementPtrInst::get_element_type() const
 {
-    return element_ty_;
+    return element_ty_.lock();
 }
 
 Ptr<GetElementPtrInst> GetElementPtrInst::create_gep(Ptr<Value> ptr, PtrVec<Value>  idxs, Ptr<BasicBlock> bb)
@@ -601,7 +603,7 @@ Ptr<AllocaInst> AllocaInst::create_alloca(Ptr<Type> ty, Ptr<BasicBlock> bb)
 
 Ptr<Type> AllocaInst::get_alloca_type() const
 {
-    return alloca_ty_;
+    return alloca_ty_.lock();
 }
 
 std::string AllocaInst::print()
@@ -635,7 +637,7 @@ Ptr<ZextInst> ZextInst::create_zext(Ptr<Value> val, Ptr<Type> ty, Ptr<BasicBlock
 
 Ptr<Type> ZextInst::get_dest_type() const
 {
-    return dest_ty_;
+    return dest_ty_.lock();
 }
 
 std::string ZextInst::print()
@@ -673,7 +675,7 @@ Ptr<FpToSiInst> FpToSiInst::create_fptosi(Ptr<Value> val, Ptr<Type> ty, Ptr<Basi
 
 Ptr<Type> FpToSiInst::get_dest_type() const
 {
-    return dest_ty_;
+    return dest_ty_.lock();
 }
 
 std::string FpToSiInst::print()
@@ -711,7 +713,7 @@ Ptr<SiToFpInst> SiToFpInst::create_sitofp(Ptr<Value> val, Ptr<Type> ty, Ptr<Basi
 
 Ptr<Type> SiToFpInst::get_dest_type() const
 {
-    return dest_ty_;
+    return dest_ty_.lock();
 }
 
 std::string SiToFpInst::print()
@@ -763,6 +765,7 @@ std::string PhiInst::print()
     instr_ir += " ";
     instr_ir += this->get_operand(0)->get_type()->print();
     instr_ir += " ";
+    std::set<Ptr<Value>> known_blocks = {};
     for (unsigned int i = 0; i < this->get_num_operand()/2; i++)
     {
         if( i > 0 )
@@ -772,15 +775,16 @@ std::string PhiInst::print()
         instr_ir += ", ";
         instr_ir += print_as_op(this->get_operand(2*i+1), false);
         instr_ir += " ]";
+        known_blocks.insert(this->get_operand(2*i+1));
     }
     if ( this->get_num_operand()/2 < this->get_parent()->get_pre_basic_blocks().size() )
     {
         for ( auto pre_bb : this->get_parent()->get_pre_basic_blocks() )
         {
-            if (std::find(this->get_operands().begin(), this->get_operands().end(), static_pointer_cast<Value>(pre_bb)) == this->get_operands().end())
+            if (known_blocks.find(pre_bb.lock()) == known_blocks.end())
             {
                 // find a pre_bb is not in phi
-                instr_ir += ", [ undef, " +print_as_op(pre_bb, false)+" ]";
+                instr_ir += ", [ undef, " +print_as_op(pre_bb.lock(), false)+" ]";
             }
         }
     }

@@ -8,7 +8,7 @@ namespace SysYF {
 namespace IR {
 
 void DominateTree::execute() {
-    for (auto f: module->get_functions()) {
+    for (auto f: module.lock()->get_functions()) {
         if (f->get_basic_blocks().empty()) {
             continue;
         }
@@ -21,9 +21,9 @@ void DominateTree::get_post_order(Ptr<BasicBlock> bb, PtrSet<BasicBlock> &visite
     visited.insert(bb);
     auto children = bb->get_succ_basic_blocks();
     for (auto child: children) {
-        auto is_visited = visited.find(child);
+        auto is_visited = visited.find(child.lock());
         if (is_visited == visited.end()) {
-            get_post_order(child, visited);
+            get_post_order(child.lock(), visited);
         }
     }
     bb2int[bb] = reverse_post_order.size();
@@ -47,7 +47,7 @@ void DominateTree::get_bb_idom(Ptr<Function> f) {
     auto root = f->get_entry_block();
     auto root_id = bb2int[root];
     for(int i = 0;i < root_id;i++){
-        doms.push_back(nullptr);
+        doms.push_back({});
     }
 
     doms.push_back(root);
@@ -56,23 +56,23 @@ void DominateTree::get_bb_idom(Ptr<Function> f) {
     while(changed){
         changed = false;
         for(auto bb:reverse_post_order){
-            if(bb == root){
+            if(bb.lock() == root){
                 continue;
             }
-            auto preds = bb->get_pre_basic_blocks();
+            auto preds = bb.lock()->get_pre_basic_blocks();
             Ptr<BasicBlock> new_idom = nullptr;
             for(auto pred_bb:preds){
-                if(doms[bb2int[pred_bb]] != nullptr){
-                    new_idom = pred_bb;
+                if(doms[bb2int[pred_bb.lock()]].lock() != nullptr){
+                    new_idom = pred_bb.lock();
                     break;
                 }
             }
             for(auto pred_bb:preds){
-                if(doms[bb2int[pred_bb]] != nullptr){
-                    new_idom = intersect(pred_bb,new_idom);
+                if(doms[bb2int[pred_bb.lock()]].lock() != nullptr){
+                    new_idom = intersect(pred_bb.lock(),new_idom);
                 }
             }
-            if(doms[bb2int[bb]] != new_idom){
+            if(doms[bb2int[bb]].lock() != new_idom){
                 doms[bb2int[bb]] = new_idom;
                 changed = true;
             }
@@ -80,8 +80,7 @@ void DominateTree::get_bb_idom(Ptr<Function> f) {
     }
 
     for(auto bb:reverse_post_order){
-        bb->set_idom(doms[bb2int[bb]]);
-    }
+        bb.lock()->set_idom(doms[bb2int[bb]].lock()); }
 }
 
 void DominateTree::get_bb_dom_front(Ptr<Function> f) {
@@ -90,9 +89,9 @@ void DominateTree::get_bb_dom_front(Ptr<Function> f) {
         if(b_pred.size() >= 2){
             for(auto pred:b_pred){
                 auto runner = pred;
-                while(runner!=doms[bb2int[b]]){
-                    runner->add_dom_frontier(b);
-                    runner = doms[bb2int[runner]];
+                while(runner.lock()!=doms[bb2int[b]].lock()){
+                    runner.lock()->add_dom_frontier(b);
+                    runner = doms[bb2int[runner.lock()]];
                 }
             }
         }
@@ -104,10 +103,10 @@ Ptr<BasicBlock> DominateTree::intersect(Ptr<BasicBlock> b1, Ptr<BasicBlock> b2) 
     auto finger2 = b2;
     while(finger1 != finger2){
         while(bb2int[finger1]<bb2int[finger2]){
-            finger1 = doms[bb2int[finger1]];
+            finger1 = doms[bb2int[finger1]].lock();
         }
         while(bb2int[finger2]<bb2int[finger1]){
-            finger2 = doms[bb2int[finger2]];
+            finger2 = doms[bb2int[finger2]].lock();
         }
     }
     return finger1;

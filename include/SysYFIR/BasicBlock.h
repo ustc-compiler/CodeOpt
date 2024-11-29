@@ -3,10 +3,12 @@
 
 #include "Value.h"
 #include "Instruction.h"
-#include "Module.h"
-#include "Function.h"
+#include "internal_macros.h"
+#include "internal_types.h"
 
+#include <algorithm>
 #include <list>
+#include <memory>
 #include <set>
 #include <string>
 
@@ -28,19 +30,25 @@ public:
     }
 
     // return parent, or null if none.
-    Ptr<Function> get_parent() { return parent_; }
+    Ptr<Function> get_parent() { return parent_.lock(); }
     
     Ptr<Module> get_module();
 
     /****************api about cfg****************/
 
-    PtrList<BasicBlock> &get_pre_basic_blocks() { return pre_bbs_; }
-    PtrList<BasicBlock> &get_succ_basic_blocks() { return succ_bbs_; }
+    auto& get_pre_basic_blocks() { return pre_bbs_; }
+    auto& get_succ_basic_blocks() { return succ_bbs_; }
     void add_pre_basic_block(Ptr<BasicBlock> bb) { pre_bbs_.push_back(bb); }
     void add_succ_basic_block(Ptr<BasicBlock> bb) { succ_bbs_.push_back(bb); }
 
-    void remove_pre_basic_block(Ptr<BasicBlock> bb) { pre_bbs_.remove(bb); }
-    void remove_succ_basic_block(Ptr<BasicBlock> bb) { succ_bbs_.remove(bb); }
+    void remove_pre_basic_block(Ptr<BasicBlock> bb) {
+        auto match = [bb](const WeakPtr<BasicBlock> &ptr) { return ptr.lock() == bb; };
+        pre_bbs_.remove_if(match);
+    }
+    void remove_succ_basic_block(Ptr<BasicBlock> bb) {
+        auto match = [bb](const WeakPtr<BasicBlock> &ptr) { return ptr.lock() == bb; };
+        succ_bbs_.remove_if(match);
+    }
 
     /****************api about cfg****************/
 
@@ -71,27 +79,28 @@ public:
 
     /****************api about dominate tree****************/
     void set_idom(Ptr<BasicBlock> bb){idom_ = bb;}
-    Ptr<BasicBlock> get_idom(){return idom_;}
+    auto get_idom(){return idom_;}
     void add_dom_frontier(Ptr<BasicBlock> bb){dom_frontier_.insert(bb);}
     void add_rdom_frontier(Ptr<BasicBlock> bb){rdom_frontier_.insert(bb);}
     void clear_rdom_frontier(){rdom_frontier_.clear();}
     auto add_rdom(Ptr<BasicBlock> bb){return rdoms_.insert(bb);}
     void clear_rdom(){rdoms_.clear();}
-    PtrSet<BasicBlock> &get_dom_frontier(){return dom_frontier_;}
-    PtrSet<BasicBlock> &get_rdom_frontier(){return rdom_frontier_;}
-    PtrSet<BasicBlock> &get_rdoms(){return rdoms_;}
+    auto& get_dom_frontier(){return dom_frontier_;}
+    auto& get_rdom_frontier(){return rdom_frontier_;}
+    auto& get_rdoms(){return rdoms_;}
 
     /****************api about live var****************/
-    bool set_live_in(PtrSet<Value> in){
-        if (live_in == in) {
+
+    bool set_live_in(WeakPtrSet<Value> in){
+        if (WeakPtrSetEq(live_in, in)) {
             return false;
         } else {
             live_in = in;
             return true;
         }
     }
-    bool set_live_out(PtrSet<Value> out){
-        if (live_out == out) {
+    bool set_live_out(WeakPtrSet<Value> out){
+        if (WeakPtrSetEq(live_out, out)) {
             return false;
         } else {
             live_out = out;
@@ -99,24 +108,24 @@ public:
         }
     }
 
-    PtrSet<Value>& get_live_in(){return live_in;}
-    PtrSet<Value>& get_live_out(){return live_out;}
+    auto& get_live_in(){return live_in;}
+    auto& get_live_out(){return live_out;}
     
 private:
     explicit BasicBlock(Ptr<Module> m, const std::string &name ,
                         Ptr<Function> parent );
     void init(Ptr<Module> m, const std::string &name ,
                         Ptr<Function> parent );
-    PtrList<BasicBlock> pre_bbs_;
-    PtrList<BasicBlock> succ_bbs_;
+    WeakPtrList<BasicBlock> pre_bbs_;
+    WeakPtrList<BasicBlock> succ_bbs_;
     PtrList<Instruction> instr_list_;
-    PtrSet<BasicBlock> dom_frontier_;
-    PtrSet<BasicBlock> rdom_frontier_;
-    PtrSet<BasicBlock> rdoms_;
-    Ptr<BasicBlock> idom_;
-    PtrSet<Value> live_in;
-    PtrSet<Value> live_out;
-    Ptr<Function> parent_;
+    WeakPtrSet<BasicBlock> dom_frontier_;
+    WeakPtrSet<BasicBlock> rdom_frontier_;
+    WeakPtrSet<BasicBlock> rdoms_;
+    WeakPtr<BasicBlock> idom_;
+    WeakPtrSet<Value> live_in;
+    WeakPtrSet<Value> live_out;
+    WeakPtr<Function> parent_;
 };
 
 }

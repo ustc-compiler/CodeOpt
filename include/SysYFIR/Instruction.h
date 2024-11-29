@@ -4,7 +4,8 @@
 #include "User.h"
 #include "Type.h"
 #include "Constant.h"
-#include "BasicBlock.h"
+#include "internal_types.h"
+#include <memory>
 
 namespace SysYF
 {
@@ -49,8 +50,8 @@ public:
         fptosi,
         sitofp,
     };
-    inline const Ptr<BasicBlock> get_parent() const { return parent_; }
-    inline Ptr<BasicBlock> get_parent() { return parent_; }
+    inline const Ptr<BasicBlock> get_parent() const { return parent_.lock(); }
+    inline Ptr<BasicBlock> get_parent() { return parent_.lock(); }
     void set_parent(Ptr<BasicBlock> parent) { this->parent_ = parent; }
     // Return the function this instruction belongs to.
     Ptr<Function> get_function();
@@ -134,7 +135,7 @@ private:
     OpID op_id_;
     int id_;
     unsigned num_ops_;
-    Ptr<BasicBlock> parent_;
+    WeakPtr<BasicBlock> parent_;
     // must be called after Instruction() in any derived class
     void insert_to_bb();
     
@@ -304,7 +305,7 @@ public:
     virtual std::string print() override;
 
 private:
-    Ptr<Type> element_ty_;
+    WeakPtr<Type> element_ty_;
 };
 
 class StoreInst : public Instruction
@@ -353,7 +354,7 @@ public:
     virtual std::string print() override;
 
 private:
-    Ptr<Type> alloca_ty_;
+    WeakPtr<Type> alloca_ty_;
 };
 
 class ZextInst : public Instruction
@@ -370,7 +371,7 @@ public:
     virtual std::string print() override;
 
 private:
-    Ptr<Type> dest_ty_;
+    WeakPtr<Type> dest_ty_;
 };
 
 class FpToSiInst : public Instruction
@@ -387,7 +388,7 @@ public:
     virtual std::string print() override;
 
 private:
-    Ptr<Type> dest_ty_;
+    WeakPtr<Type> dest_ty_;
 };
 
 class SiToFpInst : public Instruction
@@ -404,7 +405,7 @@ public:
     virtual std::string print() override;
 
 private:
-    Ptr<Type> dest_ty_;
+    WeakPtr<Type> dest_ty_;
 };
 
 class PhiInst : public Instruction

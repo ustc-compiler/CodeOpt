@@ -1,4 +1,7 @@
 #include "User.h"
+#include "internal_types.h"
+#include <memory>
+#include <vector>
 #ifdef DEBUG
 #include <cassert>
 #endif
@@ -12,17 +15,12 @@ User::User(Ptr<Type> ty, const std::string &name , unsigned num_ops)
 {
     // if (num_ops_ > 0)
     //   operands_.reset(new std::list<Ptr<Value> >());
-    operands_.resize(num_ops_, nullptr);
-}
-
-PtrVec<Value>& User::get_operands()
-{
-    return operands_;
+    operands_.resize(num_ops_);
 }
 
 Ptr<Value> User::get_operand(unsigned i) const
 {
-    return operands_[i];
+    return operands_[i].lock();
 }
 
 void User::set_operand(unsigned i, Ptr<Value> v)
@@ -50,13 +48,13 @@ unsigned User::get_num_operand() const
 void User::remove_use_of_ops()
 {
     for (auto op : operands_) {
-        op->remove_use(shared_from_this());
+        op.lock()->remove_use(shared_from_this());
     }
 }
 
 void User::remove_operands(int index1,int index2){
     for(int i=index1;i<=index2;i++){
-        operands_[i]->remove_use(shared_from_this());
+        operands_[i].lock()->remove_use(shared_from_this());
     }
     operands_.erase(operands_.begin()+index1,operands_.begin()+index2+1);
     // std::cout<<operands_.size()<<std::endl;

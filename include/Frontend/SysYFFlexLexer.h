@@ -23,6 +23,9 @@ public:
     // Use the superclass's constructor:
     using yyFlexLexer::yyFlexLexer;
 
+    // Tell the compiler we want both the `yylex` from yyFlexLexer and SysYFFlexLexer
+    using yyFlexLexer::yylex;
+
     // Provide the interface to `yylex`; `flex` will emit the
     // definition into `SysYFScanner.cpp`:
     yy::SysYFParser::symbol_type yylex(SysYFDriver& driver);
