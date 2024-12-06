@@ -6,8 +6,8 @@
 
 # 实验说明
 
-本次实验为合作实验，请在[doc/reports/contribution.md](doc/reports/contribution.md)中填写贡献详述和贡献比。
-  
+本次实验为合作实验，任务自由分配，请在[doc/reports/contribution.md](doc/reports/contribution.md)中填写贡献详述和贡献比。**请在头歌平台的组长账号中提交测评**。
+
 ## 必做关卡
 
 必做部分共有四关（[支配树](part1.md)、[Mem2Reg](part2.md)、[活跃变量分析](part3.md)、[优化](part4.md)）。

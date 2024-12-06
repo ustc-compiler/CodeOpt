@@ -33,5 +33,5 @@
   和上课时所讲的活跃变量分析不同，本次实验的活跃变量分析需要考虑phi指令，而数据流方程：$\rm OUT[B] =\cup_{S是B的后继}IN[S]$ 的定义蕴含着基本块S入口处活跃的变量在基本块S所有前驱的出口处都是活跃的。  
   由于`phi`指令的特殊性(`phi`指令文档见[doc/SysYFIR.md Phi小节](doc/SysYFIR.md#phi))，例如`%0 = phi [%op1, %bb1], [%op2, %bb2]`如果使用如上数据流方程，则默认此`phi`指令同时产生了`op1`与`op2`的活跃性，而事实上只有控制流从`%bb1`传过来才有`%op1`的活跃性，从`%bb2`传过来才有`%op2`的活跃性。因此你需要对此数据流方程做一些修改。
 
-
+  参考[--dot-cfg选项](https://www.llvm.org/docs/Passes.html#dot-cfg-print-cfg-of-function-to-dot-file)，你可以使用`opt --dot-cfg <xxx.ll>`生成包含控制流图CFG的`.dot`文件(`opt`一般会和`clang`一起安装)，然后使用`dot -Tpng -o <xxx.png> <xxx.dot>`生成特定函数的CFG对应的png图片。`dot`工具可以通过`sudo apt-get install graphviz`安装。
 
