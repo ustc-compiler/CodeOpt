@@ -32,7 +32,6 @@ public:
 	void valueDefineCounting();
 	void valueForwarding(Ptr<BasicBlock> bb);
 	void removeAlloc();
-	void phiStatistic();
     const std::string get_name() const override {return name;}
 
 	bool isLocalVarOp(Ptr<Instruction> inst){
