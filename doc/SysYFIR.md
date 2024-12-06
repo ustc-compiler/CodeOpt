@@ -290,6 +290,9 @@
   - instr_list_：指令链表
   - pre_bbs_： bb前驱集合
   - succ_bbs_：bb后继集合
+  - live_in: bb live_in集合
+  - live_out: bb live_out集合
+  - parent_: bb的父bb
   
 - API: 
 
@@ -301,11 +304,15 @@
   // 返回BB块所属的Module
   Ptr<Module> get_module();
   // 返回BB块的终止指令(ret|br)，若BB块最后一条指令不是终止指令返回null
-  Ptr<Instruction> get_terminator();
+  const Ptr<Instruction> get_terminator();
   // 将instr指令添加到此BB块指令链表结尾，调用IRBuilder里来创建函数会自动调用此方法
   void add_instruction(Ptr<Instruction> instr);
+  // 将instr指令添加到此BB块指令链表中的instr_pos位置。instr_pos是BB块指令链表的迭代器
+  void add_instruction(PtrList<Instruction>::iterator instr_pos, Ptr<Instruction> instr);
   // 将instr指令添加到此BB块指令链表开头
   void add_instr_begin(Ptr<Instruction> instr);
+  // 在此BB块指令链表中找到对应的指令，返回指向指令的迭代器
+  PtrList<Instruction>::iterator find_instruction(Ptr<Instruction> instr);
   // 将instr指令从BB块指令链表中移除，同时调用api维护好instr的操作数的use链表
   void delete_instr(Ptr<Instruction> instr);
   // BB块中指令数为空返回true
@@ -326,6 +333,12 @@
   void remove_succ_basic_block(Ptr<BasicBlock> bb) // 移除后继块
   /****************api about cfg****************/
   
+  /****************api about live var****************/
+  bool set_live_in(WeakPtrSet<Value> in); // 设置当前BB live_in集合为in。当live_in和in不同时返回true，表示已更新，否则返回false
+  bool set_live_out(WeakPtrSet<Value> out); // 设置当前BB live_out集合为out。当live_out和out不同时返回true，表示已更新，否则返回false
+  auto& get_live_in(); // 返回当前BB live_in集合
+  auto& get_live_out(); // 返回当前BB live_out集合
+  /****************api about live var****************/
   ```
   
   
@@ -345,8 +358,8 @@
       ```cpp
       int get_value() // 返回该常数类型中存的常数值
       static int get_value(Ptr<ConstantInt> const_val)// 返回该常数类型const_val中存的常数值
-      static Ptr<ConstantInt> get(int val, Ptr<Module> m) // 以val值来创建常数类
-      static Ptr<ConstantInt> get(bool val, Ptr<Module> m) // 以val值来创建bool常数类
+      static Ptr<ConstantInt> create(int val, Ptr<Module> m) // 以val值来创建常数类
+      static Ptr<ConstantInt> create(bool val, Ptr<Module> m) // 以val值来创建bool常数类
       ```
     
   - ConstantFloat
@@ -359,8 +372,9 @@
     - API
     
       ```cpp
-      static Ptr<ConstantFloat> get(float val, Ptr<Module> m) // 以val值创建并返回浮点数常量类
       float get_value() // 返回该常数类型中存的常数值
+      static float get_value(Ptr<ConstantFloat> const_val) // 返回该常数类型const_val中存的常数值
+      static Ptr<ConstantFloat> create(float val, Ptr<Module> m) // 以val值创建并返回浮点数常量类
       ```
     
   - ConstantZero
@@ -370,7 +384,7 @@
     - API
     
       ```cpp
-      static Ptr<ConstantZero> get(Ptr<Type> ty, Ptr<Module> m);// 创建并返回ConstantZero常量类
+      static Ptr<ConstantZero> create(Ptr<Type> ty, Ptr<Module> m);// 创建并返回ConstantZero常量类
       ```
     
   - ConstantArray
@@ -393,32 +407,36 @@
 - API
 
   ```cpp
-  static Ptr<Function> create(Ptr<FunctionType> ty, const std::string &name, Ptr<Module> parent);
   // 创建并返回Function，参数依次是待创建函数类型ty、函数名字name(不可为空)、函数所属的Module
-  Ptr<FunctionType> get_function_type() const;
+  static Ptr<Function> create(Ptr<FunctionType> ty, const std::string &name, Ptr<Module> parent);
   // 返回此函数类的函数类型
+  Ptr<FunctionType> get_function_type() const;
+   // 返回此函数类型的返回值类型
   Ptr<Type> get_return_type() const;
-  // 返回此函数类型的返回值类型
-  void add_basic_block(Ptr<BasicBlock> bb);
   // 将bb添加至Function的bb链表上（调用bb里的创建函数时会自动调用此函数挂在function的bb链表上）
-  unsigned get_num_of_args() const;
+  void add_basic_block(Ptr<BasicBlock> bb);
   // 得到函数形参数数量
-  unsigned get_num_basic_blocks() const;
+  unsigned get_num_of_args() const;
   // 得到函数基本块数量
-  Ptr<Module> get_parent() const;
+  unsigned get_num_basic_blocks() const;
   // 得到函数所属的Module
-  PtrList<Argument>::iterator arg_begin() 
+  Ptr<Module> get_parent() const;
   // 得到函数形参的list的起始迭代器
-  PtrList<Argument>::iterator arg_end()
+  PtrList<Argument>::iterator arg_begin() 
   // 得到函数形参的list的终止迭代器
-  void remove(Ptr<BasicBlock>  bb)
+  PtrList<Argument>::iterator arg_end()
   // 从函数的bb链表中删除一个bb
-  PtrList<BasicBlock> &get_basic_blocks()
+  void remove(Ptr<BasicBlock>  bb)
+  // 返回该函数的入口bb
+  Ptr<BasicBlock> get_entry_block()
   // 返回函数bb链表
-  PtrList<Argument> &get_args()
+  PtrList<BasicBlock> &get_basic_blocks()
   // 返回函数的形参链表
-  void set_instr_name();
+  PtrList<Argument> &get_args()
+  // 是否是声明（没有函数体）
+  bool is_declaration()
   // 给函数中未命名的基本块和指令命名
+  void set_instr_name();
   ```
 
   
@@ -480,18 +498,12 @@
 - API
 
   ```cpp
-  Ptr<Type> get_void_type();
-  // 得到IR中的void类型其他类型可以用类似的API得到(推荐取得类型采用lab3助教提供的方法Type::get())
-  void add_function(Ptr<Function> f);
-  // 将f挂在module的function链表上，在function被创建的时候会自动调用此方法来添加function
-  void add_global_variable(Ptr<GlobalVariable> g);
-  // 将g挂在module的GlobalVariable链表上，在GlobalVariable被创建的时候会自动调用此方法来添加GlobalVariable
-  PtrList<GlobalVariable> &get_global_variable();
-  // 获取全局变量列表
-  std::string get_instr_op_name( Instruction::OpID instr )；
-  // 获取instr对应的指令名(打印ir时调用)
-  void set_print_name();
-  // 设置打印ir的指令与bb名字；
+  Ptr<Type> get_void_type(); // 得到IR中的void类型。其他类型可以用类似的API得到(推荐取得类型采用lab3助教提供的方法Type::get())
+  void add_function(Ptr<Function> f); // 将f挂在module的function链表上，在function被创建的时候会自动调用此方法来添加function
+  void add_global_variable(Ptr<GlobalVariable> g); // 将g挂在module的GlobalVariable链表上，在GlobalVariable被创建的时候会自动调用此方法来添加GlobalVariable
+  PtrList<GlobalVariable> &get_global_variable(); // 获取全局变量列表
+  std::string get_instr_op_name( Instruction::OpID instr )； // 获取instr对应的指令名(打印ir时调用)
+  void set_print_name(); // 设置打印ir的指令与bb名字；
   ```
   
   
@@ -501,6 +513,7 @@
 - 成员
   
   - tid_：枚举类型，表示type的类型（包含VoidType、LabelType、FloatType、Int1、Int32、ArrayType、PointerType）
+  - m_：所在module
   
 - 子类
   - IntegerType
@@ -528,14 +541,12 @@
     - API
     
       ```cpp
-      static Ptr<FunctionType> get(Ptr<Type> result, PtrVec<Type> params);
-      // 返回函数类型，参数依次是返回值类型result，形参类型列表params
-      unsigned get_num_of_args() const;
-      // 返回形参个数
-      Ptr<Type> get_param_type(unsigned i) const;
-      // 返回第i个形参的类型
-      Ptr<Type> get_return_type() const;
-      // 返回函数类型中的返回值类型
+      static Ptr<FunctionType> create(Ptr<Type> result, PtrVec<Type> params); // 返回函数类型，参数依次是返回值类型result，形参类型列表params
+      static bool is_valid_return_type(Ptr<Type> ty); // 判定是否是有效的返回类型（integer 和 void）
+      static bool is_valid_argument_type(Ptr<Type> ty); // 判定是否是有效的参数类型（integer 和 pointer）
+      unsigned get_num_of_args() const; // 返回形参个数
+      Ptr<Type> get_param_type(unsigned i) const; // 返回第i个形参的类型
+      Ptr<Type> get_return_type() const; // 返回函数类型中的返回值类型
       ```
   - ArrayType
     - 含义：数组类型
@@ -547,12 +558,11 @@
     - API
     
       ```cpp
-      static Ptr<ArrayType> get(Ptr<Type> contained, unsigned num_elements);
-      // 返回数组类型，参数依次是 数组元素的类型contained，数组元素个数num_elements
-      Ptr<Type> get_element_type() const
-      // 返回数组元素类型
-      unsigned get_num_of_elements() const
-      // 返回数组元素个数
+      static bool is_valid_element_type(Ptr<Type> ty);
+      static Ptr<ArrayType> get(Ptr<Type> contained, unsigned num_elements); // 返回数组类型，参数依次是 数组元素的类型contained，数组元素个数num_elements
+      static Ptr<ArrayType> create(Ptr<Type> contained, unsigned num_elements, Ptr<Module> m)；// 创建数组类型
+      Ptr<Type> get_element_type() const // 返回数组元素类型
+      unsigned get_num_of_elements() const // 返回数组元素个数
       ```
   - PointerType
     - 含义：指针类型
@@ -564,13 +574,10 @@
     - API
     
       ```cpp
-      Ptr<Type> get_element_type() const { return contained_; }
-      // 返回指针指向的类型
-      static Ptr<PointerType> get(Ptr<Type> contained);
-      // 返回contained类型的指针类型
+      Ptr<Type> get_element_type() const { return contained_; } // 返回指针指向的类型
+      static Ptr<PointerType> get(Ptr<Type> contained); // 返回contained类型的指针类型
       Ptr<Type> get_pointer_element_type();// 若是PointerType则返回指向的类型，若不是则返回nullptr。
-      static Ptr<PointerType> create(Ptr<Type> contained);
-      // 创建指向contained类型的指针类型
+      static Ptr<PointerType> create(Ptr<Type> contained, Ptr<Module> m); // 创建指向contained类型的指针类型
       ```
   
 - API
@@ -580,6 +587,9 @@
   static Ptr<Type> get_void_type(Ptr<Module> m);// 得到void类型
   Ptr<Type> get_pointer_element_type();// 若是PointerType则返回指向的类型，若不是则返回nullptr。
   Ptr<Type> get_array_element_type();// 若是ArrayType则返回指向的类型，若不是则返回nullptr。
+  int get_size(); // 返回类型大小
+  Ptr<Module> get_module(); // 返回所在module
+  std::string print(); // 打印类型
   ```
   
   
@@ -622,15 +632,13 @@
   ```cpp
   Ptr<Type> get_type() const //返回这个操作数的类型
   std::list<Use> &get_use_list() // 返回value的使用者链表
-  void add_use(Ptr<Value> val, unsigned arg_no = 0);
-  // 添加val至this的使用者链表上
-  void replace_all_use_with(Ptr<Value> new_val);
-  // 将this在所有的地方用new_val替代，并且维护好use_def与def_use链表
-  void remove_use(Ptr<Value> val);
-  // 将val从this的use_list_中移除
+  void add_use(Ptr<Value> val, unsigned arg_no = 0); // 添加val至this的使用者链表上
+  bool set_name(std::string name); // 设置name。当name为空时设置成功返回true，否则返回false
+  std::string get_name() const; // 返回name
+  void replace_all_use_with(Ptr<Value> new_val); // 将this在所有的地方用new_val替代，并且维护好use_def与def_use链表
+  void remove_use(Ptr<Value> val); // 将val从this的use_list_中移除
   template <typename T>
-  Ptr<T> as();
-  // Ptr<Value> value通过value->as<Function>()转为子类型指针Ptr<Function>，封装了dynamic_pointer_cast
+  Ptr<T> as(); // Ptr<Value> value通过value->as<Function>()转为子类型指针Ptr<Function>，封装了dynamic_pointer_cast
   ```
 
 ### 总结
