@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Check.h"
 #include "ComSubExprEli.h"
 #include "IRBuilder.h"
 #include "SysYFDriver.h"
@@ -100,6 +101,7 @@ int main(int argc, char *argv[])
             if(optimize_all){
                 passmgr.addPass<IR::LiveVar>();
                 passmgr.addPass<IR::ComSubExprEli>();
+                passmgr.addPass<IR::Check>();
                 //  ...
             }
             else {
@@ -108,6 +110,7 @@ int main(int argc, char *argv[])
                 }
                 if(cse){
                     passmgr.addPass<IR::ComSubExprEli>();
+                    passmgr.addPass<IR::Check>();
                 }
                 //  ...
             }

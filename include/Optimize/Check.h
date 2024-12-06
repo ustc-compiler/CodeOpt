@@ -14,7 +14,7 @@ class Check: public Pass {
 private:
     const std::string name = "Check";
 public:
-    explicit Check(Ptr<Module> m): Pass(m) {}
+    explicit Check(WeakPtr<Module> m): Pass(m) {}
     ~Check() {}
     void execute() final;
     const std::string get_name() const override {return name;}
