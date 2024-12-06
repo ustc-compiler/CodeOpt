@@ -4,7 +4,7 @@
 为了方便同学们在实验中 debug，为大家设计了一个C++简单实用的分级日志工具。该工具将日志输出信息从低到高分成四种等级：`DEBUG`，`INFO`，`WARNING`，`ERROR`。通过设定环境变量`LOGV`的值，来选择输出哪些等级的日志。`LOGV`的取值是**0～3**,分别对应到上述的4种级别(`0:DEBUG`,`1:INFO`,`2:WARNING`,`3:ERROR`)。此外输出中还会包含打印该日志的代码所在位置。
 
 ## 使用
-项目编译好之后，可以在`build`目录下运行`test_logging`，该文件的源代码在`tests/test_logging.cpp`。用法如下：
+项目编译好之后，可以在`build`目录下运行`test_logging`，该文件的源代码在`src/Log/test_logging.cpp`。用法如下：
 ```cpp
 // 引入头文件
 #include "logging.hpp"

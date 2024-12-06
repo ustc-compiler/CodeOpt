@@ -20,7 +20,7 @@
 
 同时新增了 `-O` 命令行参数，用于开始 Mem2Reg pass 和 DominateTree pass 。
 
-若要开启单项优化，`-lv`代表开启活跃变量分析，`-cse`代表开启公共子表达式删除，开启这些优化的同时也会开启 Mem2Reg pass 和 DominateTree pass。例如，若你想开启活跃变量分析或者其他分析优化遍，就需要使用如下命令：
+若要开启单项优化，`-lv`代表开启活跃变量分析，`-cse`代表开启公共子表达式删除，开启这些优化的同时也会开启 Mem2Reg pass 和 DominateTree pass。例如，若你想开启活跃变量分析，就需要使用如下命令：
 
 ```shell
 ./compiler -emit-ir -lv test.sy -o test.ll
