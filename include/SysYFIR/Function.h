@@ -64,6 +64,7 @@ private:
     PtrList<BasicBlock> basic_blocks_;    // basic blocks
     PtrList<Argument> arguments_;         // arguments
     WeakPtr<Module> parent_;
+    unsigned seq_cnt_;
     // unsigned num_args_;
     // We don't need this, all value inside function should be unnamed
     // std::map<std::string, Ptr<Value>> sym_table_;   // Symbol table of args/instructions
