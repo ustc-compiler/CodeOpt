@@ -52,8 +52,6 @@ public:
 		else
 			return false;
 	}
-	// void DeleteLS();
-	//可加一个遍历删除空phi节点
 };
 
 }
