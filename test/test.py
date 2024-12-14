@@ -94,6 +94,7 @@ if __name__ == "__main__":
         "./Test/Easy",
         "./Test/Medium",
         "./Test/Hard",
+        "./Opt/CSE"
     ]
     # you can only modify this to add your testcase
     parser = argparse.ArgumentParser(description="Test script")
