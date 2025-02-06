@@ -14,6 +14,32 @@
 
 > 每一关的文档除了在头歌平台关卡中展示外，也在代码仓库中存在，命名为partN.md。文档中的仓库内相对链接在头歌平台关卡界面中失效。
 
+## 项目结构说明
+
+```
+- <your repo>
+   | grammar/       # 存放文法文件：  SysYFScanner.ll、 SysYFParser.yy
+   | include/       # 存放头文件
+     | AST/            # 抽象语法树相关
+     | ErrorReporter/  # 错误报告相关
+     | Frontend/       # 编译器前端相关
+     | Log/            # 日志相关
+     | Optimize/       # 优化相关
+     | SysYFIR/        # SysYF IR相关
+     | SysYFIRBuilder/ # SysYF IR构建器相关
+     | *.h             # 包含internal_macros.h、internal_types.h
+   | src/           # 存放C++程序文件
+     | …/              # 包含与include中的各个子目录
+     | main.cpp        # 主程序
+   | lib/           # SysYF语言库（IO）
+   | test/          # 测试脚本，测试输入和测试预期输出
+   | doc/           # 存放提供的SysYF、IR等说明文档，以及需要提交的文档等
+     | reports/        # 存放要提交的实验报告（各关）及组内成员贡献
+   | CMakeLists.txt # cmake项目配置脚本
+   | part0.md~part4.md # 关卡文档
+   | id.txt         # 组长学号
+```
+
 ## 编译命令的flag说明
 
 本实验中新增了`-O2`命令行参数，使用`-O2`参数将开启全部优化（默认不开启）。例如：
